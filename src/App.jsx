@@ -1126,7 +1126,7 @@ export default function App() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  // Determine active domain
+  // Determine active domain (Full taxonomy)
   const activeDomain = useMemo(() => {
     if (currentRoute.startsWith('/competency-domains/')) {
       const slug = currentRoute.substring(20);
@@ -1135,15 +1135,24 @@ export default function App() {
     return null;
   }, [currentRoute]);
 
+  // Determine active AI Teen domain
+  const activeAiTeenDomain = useMemo(() => {
+    if (currentRoute.startsWith('/ai-teen/')) {
+      const slug = currentRoute.substring(9);
+      return competencyData.find((d) => d.slug === slug) || null;
+    }
+    return null;
+  }, [currentRoute]);
+
   // Reset open states when entering a new domain (all collapsed by default)
   useEffect(() => {
-    if (activeDomain) {
+    if (activeDomain || activeAiTeenDomain) {
       setOpenAreas({});
       setOpenCompetencies({});
       setOpenOverview({});
       setOpenSkills({});
     }
-  }, [activeDomain]);
+  }, [activeDomain, activeAiTeenDomain]);
 
   const toggleArea = (id) => {
     setOpenAreas((prev) => ({ ...prev, [id]: !prev[id] }));
@@ -1268,10 +1277,9 @@ export default function App() {
             <button
               onClick={() => {
                 navigate('/ai-teen');
-                setActiveCoreCode(null);
               }}
               className={`px-3 py-1.5 rounded-full font-bold transition-all flex items-center gap-1.5 ${
-                currentRoute === '/ai-teen'
+                currentRoute.startsWith('/ai-teen')
                   ? 'bg-orange-50 text-[#cc4e2d] border border-orange-200 shadow-sm'
                   : 'text-stone-700 hover:text-[#cc4e2d] hover:bg-stone-50'
               }`}
@@ -1341,10 +1349,9 @@ export default function App() {
           <button
             onClick={() => {
               navigate('/ai-teen');
-              setActiveCoreCode(null);
             }}
             className={`px-3 py-1.5 rounded-lg shrink-0 flex items-center gap-1 transition-all ${
-              currentRoute === '/ai-teen'
+              currentRoute.startsWith('/ai-teen')
                 ? 'bg-orange-50 text-[#cc4e2d] border border-orange-200 shadow-sm font-bold'
                 : 'text-stone-700 hover:text-stone-900'
             }`}
@@ -2435,10 +2442,10 @@ Provide:
           </div>
         )}
 
-        {/* ================= VIEW 3: AI TEEN COMPETENCY FRAMEWORK (CORE 4 TAXONOMY) ================= */}
+        {/* ================= VIEW 3A: AI TEEN COMPETENCY FRAMEWORK (4 CORE DOMAINS OVERVIEW) ================= */}
         {currentRoute === '/ai-teen' && (
-          <div className="space-y-8">
-            {/* Hero Header — Minimalist Style */}
+          <div className="space-y-10">
+            {/* Hero Header */}
             <div className="text-center max-w-2xl mx-auto space-y-2 py-1">
               <h1 className="text-3xl sm:text-4xl font-extrabold text-[#111111] tracking-tight">
                 {lang === 'VI' ? 'Khung Năng Lực AI Teen' : 'AI Teen Competency Framework'}
@@ -2450,583 +2457,630 @@ Provide:
               </p>
             </div>
 
-            {/* CORE 4 INTERACTIVE TREE */}
-            <div className="space-y-8">
-                {/* 4 Core Competency Selector Cards */}
-                <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
-                  {[
-                    {
-                      code: 'GenAI',
-                      name_vi: 'Generative AI',
-                      name_en: 'Generative AI',
-                      domainSlug: 'domain-generative-ai',
-                      role: 'primary',
-                      spike_vi: 'Mục tiêu: Level 2',
-                      spike_en: 'Target: Level 2',
-                      icon: Sparkles
-                    },
-                    {
-                      code: 'CU',
-                      name_vi: 'Customer Understanding',
-                      name_en: 'Customer Understanding',
-                      domainSlug: 'domain-customer-understanding',
-                      role: 'supporting',
-                      spike_vi: 'Mục tiêu: Level 1',
-                      spike_en: 'Target: Level 1',
-                      icon: Users
-                    },
-                    {
-                      code: 'DPD',
-                      name_vi: 'Digital Product Development',
-                      name_en: 'Digital Product Development',
-                      domainSlug: 'domain-digital-product-development',
-                      role: 'supporting',
-                      spike_vi: 'Mục tiêu: Level 1',
-                      spike_en: 'Target: Level 1',
-                      icon: Layers
-                    },
-                    {
-                      code: 'LRN',
-                      name_vi: 'Learning',
-                      name_en: 'Learning',
-                      domainSlug: 'domain-learning',
-                      role: 'supporting',
-                      spike_vi: 'Mục tiêu: Level 1',
-                      spike_en: 'Target: Level 1',
-                      icon: BookOpen
-                    }
-                  ].map((c) => {
-                    const IconComp = c.icon;
-                    const isSelected = activeCoreCode === c.code;
-                    const isPrimary = c.role === 'primary';
-                    const displayName = lang === 'VI' ? c.name_vi : c.name_en;
-                    const displaySpike = lang === 'VI' ? c.spike_vi : c.spike_en;
+            {/* 4 Core Competency Discovery Cards Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-5xl mx-auto">
+              {[
+                {
+                  code: 'GenAI',
+                  name_vi: 'Trí Tuệ Nhân Tạo Sinh (GenAI)',
+                  name_en: 'Generative AI (GenAI)',
+                  domainSlug: 'domain-generative-ai',
+                  short_name: 'GENAI',
+                  role: 'primary',
+                  spike_vi: 'Mục tiêu: Level 2',
+                  spike_en: 'Target: Level 2',
+                  desc_vi: 'Làm chủ công nghệ trí tuệ nhân tạo sinh, kỹ thuật prompt đa tầng, đánh giá độ tin cậy và ứng dụng AI kiến tạo sản phẩm số.',
+                  desc_en: 'Master generative AI technology, multi-stage prompt engineering, model validation, and AI-assisted product creation.',
+                  color: '#cc4e2d',
+                  icon: Sparkles
+                },
+                {
+                  code: 'CU',
+                  name_vi: 'Thấu Hiểu Khách Hàng',
+                  name_en: 'Customer Understanding',
+                  domainSlug: 'domain-customer-understanding',
+                  short_name: 'CU',
+                  role: 'supporting',
+                  spike_vi: 'Mục tiêu: Level 1',
+                  spike_en: 'Target: Level 1',
+                  desc_vi: 'Năng lực đồng cảm sâu sắc, phỏng vấn tìm hiểu nỗi đau người dùng và kiến tạo giải pháp chạm đúng nhu cầu cốt lõi.',
+                  desc_en: 'Deep empathy, user pain-point interviewing, and creating solutions that address core authentic human needs.',
+                  color: '#0284c7',
+                  icon: Users
+                },
+                {
+                  code: 'DPD',
+                  name_vi: 'Phát Triển Sản Phẩm Số',
+                  name_en: 'Digital Product Development',
+                  domainSlug: 'domain-digital-product-development',
+                  short_name: 'DPD',
+                  role: 'supporting',
+                  spike_vi: 'Mục tiêu: Level 1',
+                  spike_en: 'Target: Level 1',
+                  desc_vi: 'Năng lực biến ý tưởng thành sản phẩm số hoàn chỉnh qua thiết kế trải nghiệm UX, lập trình và kiểm thử với sự hỗ trợ của AI.',
+                  desc_en: 'Transform ideas into working digital products via UX design, rapid coding, and testing with AI assistance.',
+                  color: '#059669',
+                  icon: Layers
+                },
+                {
+                  code: 'LRN',
+                  name_vi: 'Năng Lực Tự Học',
+                  name_en: 'Learning & Reflection',
+                  domainSlug: 'domain-learning',
+                  short_name: 'LRN',
+                  role: 'supporting',
+                  spike_vi: 'Mục tiêu: Level 1',
+                  spike_en: 'Target: Level 1',
+                  desc_vi: 'Khả năng tự định hướng, khai thác tri thức, phản tư liên tục và làm chủ các kỹ năng mới trong kỷ nguyên số.',
+                  desc_en: 'Self-directed learning, knowledge acquisition, iterative reflection, and mastering new digital skills.',
+                  color: '#7c3aed',
+                  icon: BookOpen
+                }
+              ].map((c) => {
+                const IconComp = c.icon;
+                const d = competencyData.find((item) => item.slug === c.domainSlug);
+                const areasCount = d?.competency_areas?.length || 0;
+                const compCount = d?.competency_areas?.reduce(
+                  (acc, a) => acc + (a.competencies?.length || 0),
+                  0
+                ) || 0;
+                const isPrimary = c.role === 'primary';
 
-                    return (
-                      <div
-                        key={c.code}
-                        onClick={() => {
-                          if (isSelected) {
-                            setActiveCoreCode(null);
-                          } else {
-                            setActiveCoreCode(c.code);
-                            // Reset all open states — user opens cards manually
-                            setOpenAreas({});
-                            setOpenCompetencies({});
-                            setOpenOverview({});
-                            setOpenSkills({});
-                          }
-                        }}
-                        className={`p-5 rounded-2xl border cursor-pointer transition-all flex flex-col justify-between relative ${
-                          isSelected
-                            ? isPrimary
-                              ? 'bg-stone-900 text-white border-[#cc4e2d] shadow-xl ring-2 ring-[#cc4e2d] ring-offset-2'
-                              : 'bg-stone-900 text-white border-stone-800 shadow-xl ring-2 ring-stone-600 ring-offset-2'
-                            : isPrimary
-                            ? 'bg-white text-stone-900 border-stone-200 hover:border-stone-400 hover:shadow-sm'
-                            : 'bg-white text-stone-900 border-stone-200 hover:border-stone-400 hover:shadow-sm'
-                        }`}
-                      >
-                        <div>
-                          <div className="mb-3">
-                            <div
-                              className={`p-2.5 rounded-xl inline-flex ${
-                                isSelected
-                                  ? isPrimary ? 'bg-orange-400/20 text-orange-300' : 'bg-white/10 text-stone-300'
-                                  : isPrimary ? 'bg-orange-100 text-orange-900' : 'bg-stone-100 text-stone-700'
-                              }`}
-                            >
-                              <IconComp className="w-5 h-5" />
-                            </div>
+                return (
+                  <div
+                    key={c.code}
+                    onClick={() => navigate(`/ai-teen/${c.domainSlug}`)}
+                    className="eco-card group relative bg-white border border-stone-200 rounded-3xl p-7 cursor-pointer flex flex-col justify-between shadow-sm hover:shadow-xl hover:border-orange-300 transition-all duration-300"
+                  >
+                    <div>
+                      {/* Top Header & Icon */}
+                      <div className="flex items-start justify-between gap-4 mb-4">
+                        <div className="flex items-center gap-3.5">
+                          <div
+                            className="w-12 h-12 rounded-2xl flex items-center justify-center shrink-0 transition-transform duration-300 group-hover:scale-110"
+                            style={{
+                              backgroundColor: `${c.color}15`,
+                              color: c.color
+                            }}
+                          >
+                            <IconComp className="w-6 h-6" />
                           </div>
-                          <h3 className={`font-extrabold text-sm leading-snug ${isSelected ? 'text-white' : 'text-stone-900'}`}>
-                            {displayName}
-                          </h3>
+                          <div>
+                            <h3 className="font-extrabold text-lg text-stone-900 group-hover:text-[#cc4e2d] transition-colors leading-snug">
+                              {lang === 'VI' ? c.name_vi : c.name_en}
+                            </h3>
+                            <span className="text-[11px] font-bold text-stone-400 uppercase tracking-wider">
+                              {c.short_name}
+                            </span>
+                          </div>
                         </div>
 
-                        <div className="mt-4 pt-3 border-t border-stone-100/20 flex items-center justify-between text-[11px] font-bold">
-                          <span className={isSelected ? (isPrimary ? 'text-orange-300' : 'text-stone-300') : (isPrimary ? 'text-[#cc4e2d]' : 'text-stone-600')}>
-                            {displaySpike}
-                          </span>
-                          <ChevronDown
-                            className={`w-4 h-4 transition-transform ${
-                              isSelected ? 'rotate-180 text-orange-400' : 'text-stone-400'
-                            }`}
-                          />
-                        </div>
+                        {/* Spike Target Badge */}
+                        <span
+                          className={`px-2.5 py-1 rounded-full text-[10px] font-bold tracking-wide shrink-0 ${
+                            isPrimary
+                              ? 'bg-orange-100 text-[#cc4e2d] border border-orange-200'
+                              : 'bg-stone-100 text-stone-600 border border-stone-200'
+                          }`}
+                        >
+                          {lang === 'VI' ? c.spike_vi : c.spike_en}
+                        </span>
                       </div>
-                    );
-                  })}
+
+                      {/* Description */}
+                      <p className="text-sm text-stone-600 line-clamp-3 leading-relaxed mb-6">
+                        {lang === 'VI' ? c.desc_vi : c.desc_en}
+                      </p>
+                    </div>
+
+                    {/* Footer Stats & Explore button */}
+                    <div className="pt-4 border-t border-stone-100 flex items-center justify-between text-xs">
+                      <span className="font-semibold text-stone-500">
+                        {areasCount} {lang === 'VI' ? 'Khu vực' : 'Areas'} | {compCount}{' '}
+                        {lang === 'VI' ? 'Năng lực' : 'Competencies'}
+                      </span>
+                      <span className="font-bold text-[#cc4e2d] flex items-center gap-1 group-hover:translate-x-1.5 transition-transform">
+                        {lang === 'VI' ? 'Khám phá' : 'Explore'} <ChevronRight className="w-4 h-4" />
+                      </span>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
+
+        {/* ================= VIEW 3B: AI TEEN COMPETENCY DOMAIN DETAIL (FOCUSED VIEW - IMAGE 1 REPLICA) ================= */}
+        {currentRoute.startsWith('/ai-teen/') && activeAiTeenDomain && (
+          <div className="space-y-6">
+            {/* Domain Breadcrumb Header */}
+            <div className="bg-stone-50 border border-stone-200 rounded-2xl p-6">
+              <div className="flex flex-wrap items-center justify-between gap-4">
+                <div>
+                  <button
+                    onClick={() => navigate('/ai-teen')}
+                    className="text-xs font-bold text-[#cc4e2d] hover:underline flex items-center gap-1 mb-2 cursor-pointer"
+                  >
+                    ← {lang === 'VI' ? 'Tất cả Khung Năng Lực AI Teen' : 'All AI Teen Competencies'}
+                  </button>
+                  <div className="flex items-center gap-3">
+                    <div
+                      className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0"
+                      style={{
+                        backgroundColor: `${activeAiTeenDomain.color || '#cc4e2d'}15`,
+                        color: activeAiTeenDomain.color || '#cc4e2d'
+                      }}
+                    >
+                      {(() => {
+                        const IconComp = getDomainIcon(activeAiTeenDomain.slug);
+                        return <IconComp className="w-5 h-5" />;
+                      })()}
+                    </div>
+                    <div>
+                      <h2 className="text-2xl sm:text-3xl font-extrabold text-[#111111]">
+                        {lang === 'VI' ? activeAiTeenDomain.name_vi || activeAiTeenDomain.name : activeAiTeenDomain.name}
+                      </h2>
+                      <span className="text-xs font-bold text-stone-400 uppercase tracking-wider">
+                        {activeAiTeenDomain.short_name || 'AI TEEN'}
+                      </span>
+                    </div>
+                  </div>
                 </div>
 
-                {/* EXPANDED DETAILED TREE (IMAGE 1 REPLICA) */}
-                {activeCoreCode && (
-                  <div className="bg-stone-50/50 rounded-3xl border border-stone-200 p-6 sm:p-8 space-y-6 shadow-sm">
-                    {(() => {
-                      const domainSlugMap = {
-                        GenAI: 'domain-generative-ai',
-                        CU: 'domain-customer-understanding',
-                        DPD: 'domain-digital-product-development',
-                        LRN: 'domain-learning'
-                      };
-                      const activeSlug = domainSlugMap[activeCoreCode];
-                      const d = competencyData.find((item) => item.slug === activeSlug);
+                <div className="flex items-center gap-3">
+                  <span className="px-3 py-1 rounded-full bg-white border border-stone-200 text-stone-700 text-xs font-bold shadow-2xs">
+                    {activeAiTeenDomain.competency_areas?.length || 0} {lang === 'VI' ? 'Lĩnh vực' : 'Areas'}
+                  </span>
+                  <span className="px-3 py-1 rounded-full bg-white border border-stone-200 text-stone-700 text-xs font-bold shadow-2xs">
+                    {activeAiTeenDomain.competency_areas?.reduce((acc, a) => acc + (a.competencies?.length || 0), 0) || 0}{' '}
+                    {lang === 'VI' ? 'Năng lực' : 'Competencies'}
+                  </span>
+                  <span className={`px-3 py-1 rounded-full text-xs font-bold shadow-2xs ${
+                    activeAiTeenDomain.slug === 'domain-generative-ai'
+                      ? 'bg-orange-100 text-[#cc4e2d] border border-orange-200'
+                      : 'bg-stone-100 text-stone-700 border border-stone-200'
+                  }`}>
+                    {activeAiTeenDomain.slug === 'domain-generative-ai'
+                      ? (lang === 'VI' ? 'Mục tiêu: Level 2 (Mũi nhọn)' : 'Target: Level 2 (Primary)')
+                      : (lang === 'VI' ? 'Mục tiêu: Level 1 (Hỗ trợ)' : 'Target: Level 1 (Supporting)')}
+                  </span>
+                </div>
+              </div>
 
-                      if (!d) return null;
+              {/* Toolbar: Reset & Reading vs Editing Mode */}
+              <div className="mt-5 pt-4 border-t border-stone-200/80 flex flex-wrap items-center justify-between gap-3">
+                <p className="text-xs text-stone-500 max-w-xl leading-relaxed">
+                  {lang === 'VI' ? activeAiTeenDomain.description_vi || activeAiTeenDomain.description : activeAiTeenDomain.description}
+                </p>
 
-                      const isPrimaryDomain = activeCoreCode === 'GenAI';
+                <div className="flex items-center gap-2">
+                  {(Object.keys(customTargetLevels).length > 0 || Object.keys(customSkillRoles).length > 0) && (
+                    <button
+                      type="button"
+                      onClick={handleResetAllCustomizations}
+                      className="px-2.5 py-1.5 text-[11px] font-bold text-stone-600 hover:text-stone-900 bg-white hover:bg-stone-50 border border-stone-200 rounded-xl flex items-center gap-1.5 transition-all shadow-2xs"
+                      title={lang === 'VI' ? 'Khôi phục tất cả Target Level & Role về mặc định' : 'Reset all Target Levels and Roles'}
+                    >
+                      <RotateCcw className="w-3 h-3 text-stone-400" />
+                      <span>{lang === 'VI' ? 'Khôi phục' : 'Reset'}</span>
+                    </button>
+                  )}
+                  {/* Reading Mode vs Editing Mode segmented button */}
+                  <div className="inline-flex p-0.5 bg-stone-200/90 rounded-xl border border-stone-300/70 shadow-2xs">
+                    <button
+                      type="button"
+                      onClick={() => setRubricViewMode('reading')}
+                      className={`px-3 py-1.5 text-xs font-bold rounded-lg flex items-center gap-1.5 transition-all ${
+                        rubricViewMode === 'reading'
+                          ? 'bg-white text-stone-900 shadow-xs'
+                          : 'text-stone-600 hover:text-stone-900'
+                      }`}
+                    >
+                      <Eye className="w-3.5 h-3.5 text-stone-500" />
+                      <span>{lang === 'VI' ? 'Đọc' : 'Read'}</span>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setRubricViewMode('editing')}
+                      className={`px-3 py-1.5 text-xs font-bold rounded-lg flex items-center gap-1.5 transition-all ${
+                        rubricViewMode === 'editing'
+                          ? 'bg-[#cc4e2d] text-white shadow-xs'
+                          : 'text-stone-600 hover:text-stone-900'
+                      }`}
+                    >
+                      <Edit3 className="w-3.5 h-3.5" />
+                      <span>{lang === 'VI' ? 'Chọn Target' : 'Edit Target'}</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
 
-                      return (
-                        <div className="space-y-6">
-                          <div className="flex items-center justify-between pb-4 border-b border-stone-200">
-                            <div className="flex items-center gap-3">
-                              <span className={`w-3 h-7 rounded-full ${isPrimaryDomain ? 'bg-[#cc4e2d]' : 'bg-stone-600'}`}></span>
-                              <div>
-                                <div className="flex items-center gap-2">
-                                  <h3 className="text-xl font-black text-stone-900">
-                                    {lang === 'VI' ? d.name_vi || d.name : d.name}
-                                  </h3>
-                                </div>
+            {/* Accordion List of Competency Areas */}
+            <div className="space-y-4">
+              {(() => {
+                const activeCoreCode = activeAiTeenDomain.slug === 'domain-generative-ai' ? 'GenAI'
+                  : activeAiTeenDomain.slug === 'domain-customer-understanding' ? 'CU'
+                  : activeAiTeenDomain.slug === 'domain-digital-product-development' ? 'DPD'
+                  : 'LRN';
+                const isPrimaryDomain = activeCoreCode === 'GenAI';
 
-                              </div>
-                            </div>
-                            <div className="flex items-center gap-2">
-                              {(Object.keys(customTargetLevels).length > 0 || Object.keys(customSkillRoles).length > 0) && (
-                                <button
-                                  type="button"
-                                  onClick={handleResetAllCustomizations}
-                                  className="px-2.5 py-1.5 text-[11px] font-bold text-stone-600 hover:text-stone-900 bg-white hover:bg-stone-50 border border-stone-200 rounded-xl flex items-center gap-1.5 transition-all shadow-2xs"
-                                  title={lang === 'VI' ? 'Khôi phục tất cả Target Level & Role về mặc định' : 'Reset all Target Levels and Roles'}
-                                >
-                                  <RotateCcw className="w-3 h-3 text-stone-400" />
-                                  <span>{lang === 'VI' ? 'Khôi phục' : 'Reset'}</span>
-                                </button>
-                              )}
-                              {/* Reading Mode vs Editing Mode segmented button */}
-                              <div className="inline-flex p-0.5 bg-stone-200/90 rounded-xl border border-stone-300/70 shadow-2xs">
-                                <button
-                                  type="button"
-                                  onClick={() => setRubricViewMode('reading')}
-                                  className={`px-3 py-1.5 text-xs font-bold rounded-lg flex items-center gap-1.5 transition-all ${
-                                    rubricViewMode === 'reading'
-                                      ? 'bg-white text-stone-900 shadow-xs'
-                                      : 'text-stone-600 hover:text-stone-900'
-                                  }`}
-                                >
-                                  <Eye className="w-3.5 h-3.5 text-stone-500" />
-                                  <span>{lang === 'VI' ? 'Đọc' : 'Read'}</span>
-                                </button>
-                                <button
-                                  type="button"
-                                  onClick={() => setRubricViewMode('editing')}
-                                  className={`px-3 py-1.5 text-xs font-bold rounded-lg flex items-center gap-1.5 transition-all ${
-                                    rubricViewMode === 'editing'
-                                      ? 'bg-[#cc4e2d] text-white shadow-xs'
-                                      : 'text-stone-600 hover:text-stone-900'
-                                  }`}
-                                >
-                                  <Edit3 className="w-3.5 h-3.5" />
-                                  <span>{lang === 'VI' ? 'Chọn Target' : 'Edit Target'}</span>
-                                </button>
-                              </div>
-                              <button
-                                onClick={() => setActiveCoreCode(null)}
-                                className="px-3 py-1.5 rounded-xl bg-stone-200/80 hover:bg-stone-300 text-stone-700 text-xs font-bold"
-                              >
-                                {lang === 'VI' ? 'Thu gọn' : 'Collapse'}
-                              </button>
+                return activeAiTeenDomain.competency_areas?.map((area, aIdx) => {
+                  const isAreaOpen = !!openAreas[area.id];
+                  const areaTitle = lang === 'VI' ? area.name_vi || area.name : area.name;
+
+                  return (
+                    <div
+                      key={area.id}
+                      className="bg-white rounded-2xl border border-stone-200 shadow-sm overflow-hidden"
+                    >
+                      {/* Area Header (Image 1 Style) */}
+                      <div
+                        onClick={() => toggleArea(area.id)}
+                        className="p-5 flex items-center justify-between cursor-pointer hover:bg-orange-50/20 transition-colors"
+                      >
+                        <div className="flex items-center gap-3">
+                          <div className={`w-8 h-8 rounded-lg flex items-center justify-center font-bold text-xs ${
+                            isPrimaryDomain ? 'bg-orange-100/60 text-[#cc4e2d]' : 'bg-stone-100 text-stone-700'
+                          }`}>
+                            <Layers className="w-4 h-4" />
+                          </div>
+                          <div>
+                            <div className="flex items-center gap-2 flex-wrap">
+                              <h4 className="font-extrabold text-stone-900 text-base">
+                                {areaTitle}
+                              </h4>
+                              <CompetencyTooltip
+                                title={areaTitle}
+                                description={area.description || (lang === 'VI' ? `Khu vực năng lực trọng tâm bao gồm ${area.competencies?.length || 0} năng lực chuyên sâu.` : `Core competency area covering ${area.competencies?.length || 0} competencies.`)}
+                                whyItMatters={lang === 'VI' ? 'Định hình năng lực tư duy, công nghệ và ứng dụng thực tế theo tiêu chuẩn quốc tế.' : 'Forms mindset, technology and hands-on applied competencies.'}
+                                onPromptClick={() => setSelectedPromptSkill({ name: areaTitle, code: `Area-${aIdx + 1}` })}
+                                lang={lang}
+                                badgeText={lang === 'VI' ? 'Khu Vực Năng Lực' : 'Competency Area'}
+                              />
                             </div>
                           </div>
+                        </div>
+                        <ChevronDown
+                          className={`w-5 h-5 text-stone-400 transition-transform ${
+                            isAreaOpen ? 'rotate-180 text-[#cc4e2d]' : ''
+                          }`}
+                        />
+                      </div>
 
-                          {/* AREAS LIST (Accordion đơn: đóng các area khác khi mở mới) */}
-                          <div className="space-y-4">
-                            {d.competency_areas?.map((area, aIdx) => {
-                              const isAreaOpen = !!openAreas[area.id];
-                              const areaTitle = lang === 'VI' ? area.name_vi || area.name : area.name;
+                      {/* Area Body: Competencies List */}
+                      {isAreaOpen && (
+                        <div className="p-4 sm:p-6 bg-stone-50/40 border-t border-stone-100 space-y-6">
+                          {area.competencies?.map((comp, cIdx) => {
+                            const isCompOpen = openCompetencies[comp.id] !== false; // default open
+                            const compTitle = lang === 'VI' ? comp.name_vi || comp.name : comp.name;
 
-                              return (
+                            // Filter only top-level Conan1 skills (parent_id is null)
+                            const parentSkills = (comp.competency_skills || []).filter((s) => !s.parent_id);
+                            const topLevelSkills = parentSkills.length > 0 ? parentSkills : (comp.competency_skills || []);
+
+                            return (
+                              <div
+                                key={comp.id}
+                                className="bg-white rounded-2xl border border-stone-200 shadow-sm overflow-hidden"
+                              >
+                                {/* Competency Header */}
                                 <div
-                                  key={area.id}
-                                  className="bg-white rounded-2xl border border-stone-200 shadow-sm overflow-hidden"
+                                  onClick={() => toggleCompetency(comp.id)}
+                                  className="p-4 sm:p-5 flex items-center justify-between cursor-pointer hover:bg-stone-50 transition-colors border-b border-stone-100"
                                 >
-                                  {/* Area Header */}
-                                  <div
-                                    onClick={() => {
-                                      setOpenAreas((prev) => ({
-                                        [area.id]: !prev[area.id]
-                                      }));
-                                    }}
-                                    className="p-5 flex items-center justify-between cursor-pointer hover:bg-orange-50/20 transition-colors"
-                                  >
-                                    <div className="flex items-center gap-3">
-                                      <div className={`w-8 h-8 rounded-lg flex items-center justify-center font-bold text-xs ${
-                                        isPrimaryDomain ? 'bg-orange-100/60 text-[#cc4e2d]' : 'bg-stone-100 text-stone-700'
-                                      }`}>
-                                        <Layers className="w-4 h-4" />
-                                      </div>
-                                      <div>
-                                        <div className="flex items-center gap-2 flex-wrap">
-                                          <h4 className="font-extrabold text-stone-900 text-base">
-                                            {areaTitle}
-                                          </h4>
-                                          <CompetencyTooltip
-                                            title={areaTitle}
-                                            description={area.description || (lang === 'VI' ? `Khu vực năng lực trọng tâm bao gồm ${area.competencies?.length || 0} năng lực chuyên sâu.` : `Core competency area covering ${area.competencies?.length || 0} competencies.`)}
-                                            whyItMatters={lang === 'VI' ? 'Định hình năng lực tư duy, công nghệ và ứng dụng thực tế theo tiêu chuẩn quốc tế.' : 'Forms mindset, technology and hands-on applied competencies.'}
-                                            onPromptClick={() => setSelectedPromptSkill({ name: areaTitle, code: `Area-${aIdx + 1}` })}
-                                            lang={lang}
-                                            badgeText={lang === 'VI' ? 'Khu Vực Năng Lực' : 'Competency Area'}
-                                          />
-                                        </div>
-
-                                      </div>
+                                  <div className="flex items-center gap-3">
+                                    <span className={`w-2.5 h-2.5 rounded-full ${isPrimaryDomain ? 'bg-[#cc4e2d]' : 'bg-stone-500'} shrink-0`}></span>
+                                    <div className="flex items-center gap-2 flex-wrap">
+                                      <h5 className="font-bold text-stone-900 text-sm sm:text-base">
+                                        {compTitle}
+                                      </h5>
+                                      {/* Inline info tooltip with embedded Prompt AI */}
+                                      <CompetencyTooltip
+                                        title={compTitle}
+                                        description={lang === 'VI' ? comp.description_vi || comp.description : comp.description}
+                                        whyItMatters={lang === 'VI' ? comp.why_it_matters_vi || comp.why_it_matters : comp.why_it_matters}
+                                        onPromptClick={() => setSelectedPromptSkill({
+                                          name: compTitle,
+                                          code: `${aIdx + 1}.${cIdx + 1}`
+                                        })}
+                                        lang={lang}
+                                        badgeText={`Competency ${aIdx + 1}.${cIdx + 1}`}
+                                      />
                                     </div>
-                                    <ChevronDown
-                                      className={`w-5 h-5 text-stone-400 transition-transform ${
-                                        isAreaOpen ? 'rotate-180 text-[#cc4e2d]' : ''
-                                      }`}
-                                    />
                                   </div>
+                                  <ChevronDown
+                                    className={`w-4 h-4 text-stone-400 transition-transform ${
+                                      isCompOpen ? 'rotate-180 text-[#cc4e2d]' : ''
+                                    }`}
+                                  />
+                                </div>
 
-                                  {/* Area Body: Competencies List */}
-                                  {isAreaOpen && (
-                                    <div className="p-4 sm:p-6 bg-stone-50/40 border-t border-stone-100 space-y-6">
-                                      {area.competencies?.map((comp, cIdx) => {
-                                        const isCompOpen = openCompetencies[comp.id] !== false; // default open
-                                        const compTitle = lang === 'VI' ? comp.name_vi || comp.name : comp.name;
+                                {/* Competency Body */}
+                                {isCompOpen && (
+                                  <div className="p-4 sm:p-6 space-y-6">
 
-                                        // Filter only top-level Conan1 skills (parent_id is null)
-                                        const parentSkills = (comp.competency_skills || []).filter((s) => !s.parent_id);
-                                        const topLevelSkills = parentSkills.length > 0 ? parentSkills : (comp.competency_skills || []);
+                                    {/* SKILLS & RUBRIC ASSESSMENT LIST (CONAN1 ALIGNED) */}
+                                    <div className="space-y-4">
+                                      {(() => {
+                                        // Pre-calculate counts
+                                        const skillRoleList = topLevelSkills.map((skill) => {
+                                          const skillKey = skill.id || skill.name;
+                                          const teenData = getAiTeenSkillData(skill.name, comp.name, activeCoreCode, lang, skill.id, skill);
+                                          const role = customSkillRoles[skillKey] || teenData.skillRole || 'out_of_scope';
+                                          return { skill, skillKey, teenData, role };
+                                        });
+
+                                        const inScopeCount = skillRoleList.filter((item) => item.role !== 'out_of_scope').length;
+                                        const outOfScopeCount = skillRoleList.length - inScopeCount;
+
+                                        // If editing mode, always show all so user can adjust roles; if reading mode, obey showOutOfScope toggle
+                                        const displayedSkillItems = (rubricViewMode === 'editing' || showOutOfScope || outOfScopeCount === 0)
+                                          ? skillRoleList
+                                          : skillRoleList.filter((item) => item.role !== 'out_of_scope');
 
                                         return (
-                                          <div
-                                            key={comp.id}
-                                            className="bg-white rounded-2xl border border-stone-200 shadow-sm overflow-hidden"
-                                          >
-                                            {/* Competency Header */}
-                                            <div
-                                              onClick={() => toggleCompetency(comp.id)}
-                                              className="p-4 sm:p-5 flex items-center justify-between cursor-pointer hover:bg-stone-50 transition-colors border-b border-stone-100"
-                                            >
-                                              <div className="flex items-center gap-3">
-                                                <span className={`w-2.5 h-2.5 rounded-full ${isPrimaryDomain ? 'bg-[#cc4e2d]' : 'bg-stone-500'} shrink-0`}></span>
-                                                <div className="flex items-center gap-2 flex-wrap">
-                                                  <h5 className="font-bold text-stone-900 text-sm sm:text-base">
-                                                    {compTitle}
-                                                  </h5>
-                                                  {/* Inline info tooltip with embedded Prompt AI */}
-                                                  <CompetencyTooltip
-                                                    title={compTitle}
-                                                    description={lang === 'VI' ? comp.description_vi || comp.description : comp.description}
-                                                    whyItMatters={lang === 'VI' ? comp.why_it_matters_vi || comp.why_it_matters : comp.why_it_matters}
-                                                    onPromptClick={() => setSelectedPromptSkill({
-                                                      name: compTitle,
-                                                      code: `${aIdx + 1}.${cIdx + 1}`
-                                                    })}
-                                                    lang={lang}
-                                                    badgeText={`Competency ${aIdx + 1}.${cIdx + 1}`}
-                                                  />
-                                                </div>
-                                              </div>
-                                              <ChevronDown
-                                                className={`w-4 h-4 text-stone-400 transition-transform ${
-                                                  isCompOpen ? 'rotate-180 text-[#cc4e2d]' : ''
-                                                }`}
-                                              />
-                                            </div>
+                                          <>
+                                            {/* Skills List */}
+                                            <div className="space-y-4">
+                                              {displayedSkillItems.map(({ skill, skillKey, teenData, role }, sIdx) => {
+                                                const isSkillOpen = openSkills[skill.id] !== false; // open by default
+                                                const { examples, misconceptions } = getSkillExamplesAndMisconceptions(
+                                                  skill.name,
+                                                  lang,
+                                                  skill.name_vi
+                                                );
+                                                const skillTitle = lang === 'VI' ? teenData.name_vi : (teenData.name_en || skill.name);
+                                                const isCustomTarget = customTargetLevels[skillKey] !== undefined;
+                                                const defaultTarget = role === 'primary' ? 2 : (role === 'supporting' ? 1 : null);
+                                                const effectiveTargetLevel = isCustomTarget ? customTargetLevels[skillKey] : defaultTarget;
+                                                const isEditing = rubricViewMode === 'editing';
 
-                                            {/* Competency Body */}
-                                            {isCompOpen && (
-                                              <div className="p-4 sm:p-6 space-y-6">
-
-                                                {/* SKILLS & RUBRIC ASSESSMENT LIST (CONAN1 ALIGNED) */}
-                                                <div className="space-y-4">
-                                                  {(() => {
-                                                    // Pre-calculate counts
-                                                    const skillRoleList = topLevelSkills.map((skill) => {
-                                                      const skillKey = skill.id || skill.name;
-                                                      const teenData = getAiTeenSkillData(skill.name, comp.name, activeCoreCode, lang, skill.id, skill);
-                                                      const role = customSkillRoles[skillKey] || teenData.skillRole || 'out_of_scope';
-                                                      return { skill, skillKey, teenData, role };
-                                                    });
-
-                                                    const inScopeCount = skillRoleList.filter((item) => item.role !== 'out_of_scope').length;
-                                                    const outOfScopeCount = skillRoleList.length - inScopeCount;
-
-                                                    // If editing mode, always show all so user can adjust roles; if reading mode, obey showOutOfScope toggle
-                                                    const displayedSkillItems = (rubricViewMode === 'editing' || showOutOfScope || outOfScopeCount === 0)
-                                                      ? skillRoleList
-                                                      : skillRoleList.filter((item) => item.role !== 'out_of_scope');
-
-                                                    return (
-                                                      <>
-
-                                                        {/* Skills List */}
-                                                        <div className="space-y-4">
-                                                          {displayedSkillItems.map(({ skill, skillKey, teenData, role }, sIdx) => {
-                                                            const isSkillOpen = openSkills[skill.id] !== false; // open by default
-                                                            const { examples, misconceptions } = getSkillExamplesAndMisconceptions(
-                                                              skill.name,
-                                                              lang,
-                                                              skill.name_vi
-                                                            );
-                                                            const skillTitle = lang === 'VI' ? teenData.name_vi : (teenData.name_en || skill.name);
-                                                            const isCustomTarget = customTargetLevels[skillKey] !== undefined;
-                                                            const defaultTarget = role === 'primary' ? 2 : (role === 'supporting' ? 1 : null);
-                                                            const effectiveTargetLevel = isCustomTarget ? customTargetLevels[skillKey] : defaultTarget;
-                                                            const isEditing = rubricViewMode === 'editing';
-
-                                                            return (
-                                                              <div
-                                                                key={skill.id}
-                                                                className={`rounded-2xl border border-stone-200 bg-white overflow-hidden shadow-2xs transition-all ${
-                                                                  role === 'out_of_scope' ? 'opacity-75' : ''
-                                                                }`}
-                                                              >
-                                                                {/* Skill Header */}
-                                                                <div
-                                                                  onClick={() => toggleSkill(skill.id)}
-                                                                  className="p-4 bg-stone-50/70 flex flex-col sm:flex-row sm:items-center justify-between gap-3 cursor-pointer hover:bg-stone-100/60 transition-colors border-b border-stone-200/60"
-                                                                >
-                                                                  <div className="flex items-center gap-3">
-                                                                    <ChevronRight
-                                                                      className={`w-4 h-4 text-stone-400 transition-transform shrink-0 ${
-                                                                        isSkillOpen ? 'rotate-90 text-[#cc4e2d]' : ''
-                                                                      }`}
-                                                                    />
-                                                                    <div className={`w-7 h-7 rounded-lg flex items-center justify-center font-bold text-xs shrink-0 ${
-                                                                      role === 'primary'
-                                                                        ? 'bg-orange-100 text-[#cc4e2d]'
-                                                                        : role === 'supporting'
-                                                                        ? 'bg-sky-100 text-sky-800'
-                                                                        : 'bg-stone-100 text-stone-500'
-                                                                    }`}>
-                                                                      <Target className="w-4 h-4" />
-                                                                    </div>
-                                                                    <div>
-                                                                      <div className="flex flex-wrap items-center gap-2">
-                                                                        <span className="font-extrabold text-stone-900 text-sm">
-                                                                          {skillTitle}
-                                                                        </span>
-
-                                                                        {/* Role Badge in Reading Mode - Sleek Lucide Target Indicator */}
-                                                                        {!isEditing && (
-                                                                          <>
-                                                                            {role === 'primary' && (
-                                                                              <span
-                                                                                title={lang === 'VI' ? 'Kỹ năng Trọng Tâm Mũi Nhọn' : 'Primary Focus Skill'}
-                                                                                className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md bg-orange-50 text-[#cc4e2d] border border-orange-200/80 cursor-help"
-                                                                              >
-                                                                                <Target className="w-3.5 h-3.5 text-[#cc4e2d]" />
-                                                                                <span className="text-[10px] font-bold">{lang === 'VI' ? 'Mũi Nhọn' : 'Primary'}</span>
-                                                                              </span>
-                                                                            )}
-                                                                            {role === 'supporting' && (
-                                                                              <span
-                                                                                title={lang === 'VI' ? 'Kỹ năng Trọng Tâm Hỗ Trợ' : 'Supporting Focus Skill'}
-                                                                                className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md bg-sky-50 text-sky-700 border border-sky-200/70 cursor-help"
-                                                                              >
-                                                                                <Target className="w-3 h-3 opacity-60 text-sky-600" />
-                                                                                <span className="text-[10px] font-medium">{lang === 'VI' ? 'Hỗ Trợ' : 'Supporting'}</span>
-                                                                              </span>
-                                                                            )}
-                                                                          </>
-                                                                        )}
-
-                                                                        {/* Info Tooltip with embedded Prompt AI */}
-                                                                        <CompetencyTooltip
-                                                                          title={skillTitle}
-                                                                          description={lang === 'VI' ? teenData.desc_vi || skill.description_vi || skill.description : (teenData.desc_en || skill.description)}
-                                                                          whyItMatters={lang === 'VI' ? teenData.guidingQuestion_vi || teenData.why_it_matters_vi || skill.why_it_matters : (teenData.guidingQuestion_en || skill.why_it_matters)}
-                                                                          onPromptClick={() => setSelectedPromptSkill({
-                                                                            name: skillTitle,
-                                                                            code: `S${sIdx + 1}`
-                                                                          })}
-                                                                          lang={lang}
-                                                                          badgeText={lang === 'VI' ? 'Kỹ Năng Thực Hành' : 'Skill Practice'}
-                                                                        />
-                                                                      </div>
-                                                                    </div>
-                                                                  </div>
-
-                                                                  {/* Controls (Editing Mode: Role Switcher / Reading Mode: Clean) */}
-                                                                  {isEditing && (
-                                                                    <div className="flex items-center gap-2 self-start sm:self-auto shrink-0">
-                                                                      <div
-                                                                        onClick={(e) => e.stopPropagation()}
-                                                                        className="inline-flex p-0.5 bg-stone-200/80 rounded-xl border border-stone-300/80 text-[10px] font-bold"
-                                                                      >
-                                                                        <button
-                                                                          type="button"
-                                                                          onClick={() => handleSetSkillRole(skillKey, skillTitle, 'primary')}
-                                                                          className={`px-2 py-1 rounded-lg transition-all ${
-                                                                            role === 'primary'
-                                                                              ? 'bg-[#cc4e2d] text-stone-950 font-black shadow-xs'
-                                                                              : 'text-stone-600 hover:text-stone-900'
-                                                                          }`}
-                                                                        >
-                                                                          {lang === 'VI' ? 'Mũi Nhọn' : 'Primary'}
-                                                                        </button>
-                                                                        <button
-                                                                          type="button"
-                                                                          onClick={() => handleSetSkillRole(skillKey, skillTitle, 'supporting')}
-                                                                          className={`px-2 py-1 rounded-lg transition-all ${
-                                                                            role === 'supporting'
-                                                                              ? 'bg-sky-600 text-white font-black shadow-xs'
-                                                                              : 'text-stone-600 hover:text-stone-900'
-                                                                          }`}
-                                                                        >
-                                                                          {lang === 'VI' ? 'Hỗ Trợ' : 'Supporting'}
-                                                                        </button>
-                                                                        <button
-                                                                          type="button"
-                                                                          onClick={() => handleSetSkillRole(skillKey, skillTitle, 'out_of_scope')}
-                                                                          className={`px-2 py-1 rounded-lg transition-all ${
-                                                                            role === 'out_of_scope'
-                                                                              ? 'bg-stone-700 text-white font-black shadow-xs'
-                                                                              : 'text-stone-600 hover:text-stone-900'
-                                                                          }`}
-                                                                        >
-                                                                          {lang === 'VI' ? 'Ngoài Phạm Vi' : 'Out of Scope'}
-                                                                        </button>
-                                                                      </div>
-                                                                    </div>
-                                                                  )}
-                                                                </div>
-
-                                                                {/* Skill Body: Building21 4-Level Rubrics & Evidence Box */}
-                                                                {isSkillOpen && (
-                                                                  <div className="p-4 sm:p-6 space-y-6 bg-white">
-                                                                    {/* Guiding Question & Description (Minimalist Text, No Card) */}
-                                                                    <div className="space-y-3 pb-2 border-b border-stone-100">
-                                                                      {/* Guiding Question */}
-                                                                      <div className="pl-3.5 border-l-2 border-[#cc4e2d] space-y-0.5">
-                                                                        <span className="text-[10px] font-extrabold uppercase tracking-wider text-[#cc4e2d] block">
-                                                                          {lang === 'VI' ? 'Câu hỏi định hướng' : 'Guiding Question'}
-                                                                        </span>
-                                                                        <p className="italic text-stone-800 font-medium text-xs sm:text-[13px] leading-relaxed">
-                                                                          "{lang === 'VI' ? teenData.guidingQuestion_vi : (teenData.guidingQuestion_en || teenData.guidingQuestion_vi)}"
-                                                                        </p>
-                                                                      </div>
-
-                                                                      {/* Description */}
-                                                                      <p className="text-xs text-stone-600 leading-relaxed pl-3.5">
-                                                                        <strong className="text-stone-900 font-bold">{lang === 'VI' ? 'Mô tả kỹ năng: ' : 'Description: '}</strong>
-                                                                        {lang === 'VI' ? teenData.desc_vi : (teenData.desc_en || teenData.desc_vi)}
-                                                                      </p>
-                                                                    </div>
-
-                                                                    {/* 5-LEVEL LEARNING CONTINUUM & DISCRETE BINARY INDICATORS (BUILDING 21 CBE STYLE) */}
-                                                                    <div className="space-y-3">
-                                                                      <div className="flex items-center justify-between">
-                                                                        <span className="text-[11px] font-black uppercase tracking-wider text-stone-600 flex items-center gap-1.5">
-                                                                          <Sliders className="w-3.5 h-3.5 text-[#cc4e2d]" />
-                                                                          <span>{lang === 'VI' ? 'Chuỗi Năng Lực Học Tập' : 'Learning Continuum'}</span>
-                                                                        </span>
-                                                                        <div className="flex items-center gap-2">
-                                                                          {isEditing ? (
-                                                                            <span className="text-[10px] font-extrabold text-[#cc4e2d] bg-orange-50 px-2 py-0.5 rounded border border-orange-200 flex items-center gap-1 animate-pulse">
-                                                                              <Edit3 className="w-3 h-3" />
-                                                                              <span>{lang === 'VI' ? 'Nhấp ô để chọn Target' : 'Click to set Target'}</span>
-                                                                            </span>
-                                                                          ) : (
-                                                                            <span className="text-[10px] font-bold text-stone-400">
-                                                                              {lang === 'VI' ? 'Chuẩn Đánh Giá Building 21 CBE' : 'Building 21 CBE Standards'}
-                                                                            </span>
-                                                                          )}
-                                                                        </div>
-                                                                      </div>
-
-                                                                      <div className="grid grid-cols-1 md:grid-cols-5 gap-3 text-xs">
-                                                                        {teenData.rubricLevels.map((lvl) => {
-                                                                          const isTarget = role !== 'out_of_scope' && lvl.level === effectiveTargetLevel;
-
-                                                                          return (
-                                                                            <div
-                                                                              key={lvl.level}
-                                                                              onClick={() => {
-                                                                                if (isEditing) {
-                                                                                  handleSetTargetLevel(skillKey, skillTitle, lvl.level);
-                                                                                }
-                                                                              }}
-                                                                              className={`p-3.5 rounded-xl border flex flex-col justify-between transition-all select-none ${
-                                                                                isTarget
-                                                                                  ? 'bg-orange-50/40 border-2 border-[#cc4e2d] shadow-sm relative ring-1 ring-[#cc4e2d]/20'
-                                                                                  : isEditing
-                                                                                  ? 'bg-stone-50/60 border-stone-200 hover:border-stone-400 hover:bg-stone-100/60 cursor-pointer hover:shadow-xs group'
-                                                                                  : role === 'out_of_scope'
-                                                                                  ? 'bg-stone-50/20 border-stone-200 text-stone-500'
-                                                                                  : 'bg-stone-50/40 border-stone-200 hover:border-stone-300'
-                                                                              }`}
-                                                                            >
-                                                                              <div>
-                                                                                {/* Action button inside card when in editing mode */}
-                                                                                {isEditing && (
-                                                                                  <div className="mb-2">
-                                                                                    {isTarget ? (
-                                                                                      <div className="w-full py-1 px-1.5 rounded-lg bg-[#cc4e2d] text-white font-black text-[9px] uppercase tracking-wider flex items-center justify-center gap-1 shadow-2xs">
-                                                                                        <Check className="w-3 h-3 stroke-[3]" />
-                                                                                        <span>{lang === 'VI' ? 'Đã Chọn' : 'Selected'}</span>
-                                                                                      </div>
-                                                                                    ) : (
-                                                                                      <button
-                                                                                        type="button"
-                                                                                        onClick={(e) => {
-                                                                                          e.stopPropagation();
-                                                                                          handleSetTargetLevel(skillKey, skillTitle, lvl.level);
-                                                                                        }}
-                                                                                        className="w-full py-1 px-1.5 rounded-lg bg-white group-hover:bg-orange-100 text-stone-600 group-hover:text-[#cc4e2d] border border-stone-200 group-hover:border-orange-300 font-bold text-[9px] uppercase tracking-wider transition-all flex items-center justify-center gap-1 shadow-2xs"
-                                                                                      >
-                                                                                        <Target className="w-3 h-3 text-[#cc4e2d]" />
-                                                                                        <span>{lang === 'VI' ? 'Chọn Mục Tiêu' : 'Set Target'}</span>
-                                                                                      </button>
-                                                                                    )}
-                                                                                  </div>
-                                                                                )}
-
-                                                                                <div className="border-b border-stone-200/60 pb-1.5 mb-2.5">
-                                                                                  <span className={`font-black text-xs ${isTarget ? 'text-[#cc4e2d]' : 'text-stone-800'}`}>
-                                                                                    {lvl.label}
-                                                                                  </span>
-                                                                                </div>
-
-                                                                                {/* Building 21 Discrete Behavioral Indicators Checklist (True/False Binary Indicators) */}
-                                                                                <div className="space-y-2">
-                                                                                  {(lvl.indicators && lvl.indicators.length > 0) ? (
-                                                                                    lvl.indicators.map((indText, indIdx) => (
-                                                                                      <div key={indIdx} className="flex items-start gap-1.5 text-[11px] text-stone-700 leading-snug bg-white/70 p-2 rounded-lg border border-stone-200/60">
-                                                                                        <CheckCircle2 className={`w-3.5 h-3.5 shrink-0 mt-0.5 ${
-                                                                                          isTarget ? 'text-[#cc4e2d]' : 'text-stone-400'
-                                                                                        }`} />
-                                                                                        <span>{indText}</span>
-                                                                                      </div>
-                                                                                    ))
-                                                                                  ) : (
-                                                                                    <p className="text-[11px] text-stone-600 leading-relaxed">
-                                                                                      {lvl.desc}
-                                                                                    </p>
-                                                                                  )}
-                                                                                </div>
-                                                                              </div>
-
-                                                                              {lvl.eg && (
-                                                                                <div className="mt-3 pt-2 border-t border-dashed border-stone-200/80 text-[10px] text-stone-500 leading-snug">
-                                                                                  <span className="font-bold text-stone-700">💡 e.g. </span>
-                                                                                  {lvl.eg}
-                                                                                </div>
-                                                                              )}
-                                                                            </div>
-                                                                          );
-                                                                        })}
-                                                                      </div>
-                                                                    </div>
-                                                                  </div>
-                                                                )}
-                                                              </div>
-                                                            );
-                                                          })}
+                                                return (
+                                                  <div
+                                                    key={skill.id}
+                                                    className={`rounded-2xl border border-stone-200 bg-white overflow-hidden shadow-2xs transition-all ${
+                                                      role === 'out_of_scope' ? 'opacity-75' : ''
+                                                    }`}
+                                                  >
+                                                    {/* Skill Header */}
+                                                    <div
+                                                      onClick={() => toggleSkill(skill.id)}
+                                                      className="p-4 bg-stone-50/70 flex flex-col sm:flex-row sm:items-center justify-between gap-3 cursor-pointer hover:bg-stone-100/60 transition-colors border-b border-stone-200/60"
+                                                    >
+                                                      <div className="flex items-center gap-3">
+                                                        <ChevronRight
+                                                          className={`w-4 h-4 text-stone-400 transition-transform shrink-0 ${
+                                                            isSkillOpen ? 'rotate-90 text-[#cc4e2d]' : ''
+                                                          }`}
+                                                        />
+                                                        <div className={`w-7 h-7 rounded-lg flex items-center justify-center font-bold text-xs shrink-0 ${
+                                                          role === 'primary'
+                                                            ? 'bg-orange-100 text-[#cc4e2d]'
+                                                            : role === 'supporting'
+                                                            ? 'bg-sky-100 text-sky-800'
+                                                            : 'bg-stone-100 text-stone-500'
+                                                        }`}>
+                                                          <Target className="w-4 h-4" />
                                                         </div>
+                                                        <div>
+                                                          <div className="flex flex-wrap items-center gap-2">
+                                                            <span className="font-extrabold text-stone-900 text-sm">
+                                                              {skillTitle}
+                                                            </span>
+
+                                                            {/* Role Badge in Reading Mode - Sleek Lucide Target Indicator */}
+                                                            {!isEditing && (
+                                                              <>
+                                                                {role === 'primary' && (
+                                                                  <span
+                                                                    title={lang === 'VI' ? 'Kỹ năng Trọng Tâm Mũi Nhọn' : 'Primary Focus Skill'}
+                                                                    className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md bg-orange-50 text-[#cc4e2d] border border-orange-200/80 cursor-help"
+                                                                  >
+                                                                    <Target className="w-3.5 h-3.5 text-[#cc4e2d]" />
+                                                                    <span className="text-[10px] font-bold">{lang === 'VI' ? 'Mũi Nhọn' : 'Primary'}</span>
+                                                                  </span>
+                                                                )}
+                                                                {role === 'supporting' && (
+                                                                  <span
+                                                                    title={lang === 'VI' ? 'Kỹ năng Trọng Tâm Hỗ Trợ' : 'Supporting Focus Skill'}
+                                                                    className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md bg-sky-50 text-sky-700 border border-sky-200/70 cursor-help"
+                                                                  >
+                                                                    <Target className="w-3 h-3 opacity-60 text-sky-600" />
+                                                                    <span className="text-[10px] font-medium">{lang === 'VI' ? 'Hỗ Trợ' : 'Supporting'}</span>
+                                                                  </span>
+                                                                )}
+                                                              </>
+                                                            )}
+
+                                                            {/* Info Tooltip with embedded Prompt AI */}
+                                                            <CompetencyTooltip
+                                                              title={skillTitle}
+                                                              description={lang === 'VI' ? teenData.desc_vi || skill.description_vi || skill.description : (teenData.desc_en || skill.description)}
+                                                              whyItMatters={lang === 'VI' ? teenData.guidingQuestion_vi || teenData.why_it_matters_vi || skill.why_it_matters : (teenData.guidingQuestion_en || skill.why_it_matters)}
+                                                              onPromptClick={() => setSelectedPromptSkill({
+                                                                name: skillTitle,
+                                                                code: `S${sIdx + 1}`
+                                                              })}
+                                                              lang={lang}
+                                                              badgeText={lang === 'VI' ? 'Kỹ Năng Thực Hành' : 'Skill Practice'}
+                                                            />
+                                                          </div>
+                                                        </div>
+                                                      </div>
+
+                                                      {/* Controls (Editing Mode: Role Switcher / Reading Mode: Clean) */}
+                                                      {isEditing && (
+                                                        <div className="flex items-center gap-2 self-start sm:self-auto shrink-0">
+                                                          <div
+                                                            onClick={(e) => e.stopPropagation()}
+                                                            className="inline-flex p-0.5 bg-stone-200/80 rounded-xl border border-stone-300/80 text-[10px] font-bold"
+                                                          >
+                                                            <button
+                                                              type="button"
+                                                              onClick={() => handleSetSkillRole(skillKey, skillTitle, 'primary')}
+                                                              className={`px-2 py-1 rounded-lg transition-all ${
+                                                                role === 'primary'
+                                                                  ? 'bg-[#cc4e2d] text-stone-950 font-black shadow-xs'
+                                                                  : 'text-stone-600 hover:text-stone-900'
+                                                              }`}
+                                                            >
+                                                              {lang === 'VI' ? 'Mũi Nhọn' : 'Primary'}
+                                                            </button>
+                                                            <button
+                                                              type="button"
+                                                              onClick={() => handleSetSkillRole(skillKey, skillTitle, 'supporting')}
+                                                              className={`px-2 py-1 rounded-lg transition-all ${
+                                                                role === 'supporting'
+                                                                  ? 'bg-sky-600 text-white font-black shadow-xs'
+                                                                  : 'text-stone-600 hover:text-stone-900'
+                                                              }`}
+                                                            >
+                                                              {lang === 'VI' ? 'Hỗ Trợ' : 'Supporting'}
+                                                            </button>
+                                                            <button
+                                                              type="button"
+                                                              onClick={() => handleSetSkillRole(skillKey, skillTitle, 'out_of_scope')}
+                                                              className={`px-2 py-1 rounded-lg transition-all ${
+                                                                role === 'out_of_scope'
+                                                                  ? 'bg-stone-700 text-white font-black shadow-xs'
+                                                                  : 'text-stone-600 hover:text-stone-900'
+                                                              }`}
+                                                            >
+                                                              {lang === 'VI' ? 'Ngoài Phạm Vi' : 'Out of Scope'}
+                                                            </button>
+                                                          </div>
+                                                        </div>
+                                                      )}
+                                                    </div>
+
+                                                    {/* Skill Body: Building21 4-Level Rubrics & Evidence Box */}
+                                                    {isSkillOpen && (
+                                                      <div className="p-4 sm:p-6 space-y-6 bg-white">
+                                                        {/* Guiding Question & Description (Minimalist Text, No Card) */}
+                                                        <div className="space-y-3 pb-2 border-b border-stone-100">
+                                                          {/* Guiding Question */}
+                                                          <div className="pl-3.5 border-l-2 border-[#cc4e2d] space-y-0.5">
+                                                            <span className="text-[10px] font-extrabold uppercase tracking-wider text-[#cc4e2d] block">
+                                                              {lang === 'VI' ? 'Câu hỏi định hướng' : 'Guiding Question'}
+                                                            </span>
+                                                            <p className="italic text-stone-800 font-medium text-xs sm:text-[13px] leading-relaxed">
+                                                              "{lang === 'VI' ? teenData.guidingQuestion_vi : teenData.guidingQuestion_en}"
+                                                            </p>
+                                                          </div>
+
+                                                          {/* Skill Description */}
+                                                          <p className="text-xs text-stone-600 leading-relaxed pl-3.5">
+                                                            {lang === 'VI' ? teenData.desc_vi : teenData.desc_en}
+                                                          </p>
+                                                        </div>
+
+                                                        {/* 5-Level Rubrics Continuum Matrix */}
+                                                        <div className="space-y-3">
+                                                          <div className="flex items-center justify-between">
+                                                            <span className="text-xs font-bold text-stone-800 uppercase tracking-wider flex items-center gap-1.5">
+                                                              <Sliders className="w-3.5 h-3.5 text-[#cc4e2d]" />
+                                                              {lang === 'VI' ? 'Thang Đánh Giá Năng Lực (5 Levels CBE Continuum)' : '5-Level CBE Continuum Rubrics'}
+                                                            </span>
+                                                            {role !== 'out_of_scope' && (
+                                                              <span className="text-[11px] font-bold text-[#cc4e2d]">
+                                                                {lang === 'VI' ? `Mục tiêu chuẩn: Level ${effectiveTargetLevel}` : `Target: Level ${effectiveTargetLevel}`}
+                                                              </span>
+                                                            )}
+                                                          </div>
+
+                                                          <div className="grid grid-cols-1 md:grid-cols-5 gap-3 text-xs">
+                                                            {teenData.rubricLevels.map((lvl) => {
+                                                              const isTarget = role !== 'out_of_scope' && lvl.level === effectiveTargetLevel;
+
+                                                              return (
+                                                                <div
+                                                                  key={lvl.level}
+                                                                  onClick={() => {
+                                                                    if (isEditing) {
+                                                                      handleSetTargetLevel(skillKey, skillTitle, lvl.level);
+                                                                    }
+                                                                  }}
+                                                                  className={`p-3.5 rounded-xl border flex flex-col justify-between transition-all select-none ${
+                                                                    isTarget
+                                                                      ? 'bg-orange-50/40 border-2 border-[#cc4e2d] shadow-sm relative ring-1 ring-[#cc4e2d]/20'
+                                                                      : isEditing
+                                                                      ? 'bg-stone-50/60 border-stone-200 hover:border-stone-400 hover:bg-stone-100/60 cursor-pointer hover:shadow-xs group'
+                                                                      : role === 'out_of_scope'
+                                                                      ? 'bg-stone-50/20 border-stone-200 text-stone-500'
+                                                                      : 'bg-stone-50/40 border-stone-200 hover:border-stone-300'
+                                                                  }`}
+                                                                >
+                                                                  <div>
+                                                                    {/* Action button inside card when in editing mode */}
+                                                                    {isEditing && (
+                                                                      <div className="mb-2">
+                                                                        {isTarget ? (
+                                                                          <div className="w-full py-1 px-1.5 rounded-lg bg-[#cc4e2d] text-white font-black text-[9px] uppercase tracking-wider flex items-center justify-center gap-1 shadow-2xs">
+                                                                            <Check className="w-3 h-3 stroke-[3]" />
+                                                                            <span>{lang === 'VI' ? 'Đã Chọn' : 'Selected'}</span>
+                                                                          </div>
+                                                                        ) : (
+                                                                          <button
+                                                                            type="button"
+                                                                            onClick={(e) => {
+                                                                              e.stopPropagation();
+                                                                              handleSetTargetLevel(skillKey, skillTitle, lvl.level);
+                                                                            }}
+                                                                            className="w-full py-1 px-1.5 rounded-lg bg-white group-hover:bg-orange-100 text-stone-600 group-hover:text-[#cc4e2d] border border-stone-200 group-hover:border-orange-300 font-bold text-[9px] uppercase tracking-wider transition-all flex items-center justify-center gap-1 shadow-2xs"
+                                                                          >
+                                                                            <span>{lang === 'VI' ? 'Đặt Mục Tiêu' : 'Set Target'}</span>
+                                                                          </button>
+                                                                        )}
+                                                                      </div>
+                                                                    )}
+
+                                                                    <div className="flex items-center justify-between mb-2">
+                                                                      <span className={`font-black text-xs ${isTarget ? 'text-[#cc4e2d]' : 'text-stone-900'}`}>
+                                                                        {lvl.label}
+                                                                      </span>
+                                                                      {isTarget && (
+                                                                        <span className="px-1.5 py-0.5 rounded-md text-[9px] font-black bg-[#cc4e2d] text-white uppercase tracking-wider shadow-2xs">
+                                                                          Target
+                                                                        </span>
+                                                                      )}
+                                                                    </div>
+
+                                                                    <ul className="space-y-1.5 text-[11px] leading-relaxed text-stone-700">
+                                                                      {lvl.indicators.map((ind, iIdx) => (
+                                                                        <li key={iIdx} className="flex items-start gap-1.5">
+                                                                          <span className={`text-xs mt-0.5 shrink-0 ${isTarget ? 'text-[#cc4e2d] font-bold' : 'text-stone-400'}`}>•</span>
+                                                                          <span>{ind}</span>
+                                                                        </li>
+                                                                      ))}
+                                                                    </ul>
+                                                                  </div>
+                                                                </div>
+                                                              );
+                                                            })}
+                                                          </div>
+                                                        </div>
+
+                                                        {/* Evidence Box */}
+                                                        {teenData.evidence && (
+                                                          <div className="p-3.5 rounded-xl bg-stone-50 border border-stone-200 flex items-start gap-2.5">
+                                                            <Award className="w-4 h-4 text-[#cc4e2d] shrink-0 mt-0.5" />
+                                                            <div className="text-xs space-y-0.5">
+                                                              <span className="font-bold text-stone-900 block">
+                                                                {lang === 'VI' ? 'Bằng chứng nghiệm thu sản phẩm (Artifact Evidence)' : 'Artifact Evidence'}
+                                                              </span>
+                                                              <p className="text-stone-600 leading-relaxed text-[11.5px]">
+                                                                {teenData.evidence}
+                                                              </p>
+                                                            </div>
+                                                          </div>
+                                                        )}
+                                                      </div>
+                                                    )}
+                                                  </div>
+                                                );
+                                              })}
+                                            </div>
 
                                                         {/* Bottom Helper Banner when Out of Scope Skills are Hidden */}
                                                         {!showOutOfScope && outOfScopeCount > 0 && rubricViewMode === 'reading' && (
@@ -3063,16 +3117,11 @@ Provide:
                                   )}
                                 </div>
                               );
-                            })}
-                          </div>
+                            });
+                          })()}
                         </div>
-                      );
-                    })()}
-                  </div>
-                )}
-              </div>
-          </div>
-        )}
+                      </div>
+                    )}
 
         {/* ================= VIEW 4: GRADUATION PLAN ================= */}
         {currentRoute === '/graduation-plan' && (
