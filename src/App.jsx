@@ -208,7 +208,7 @@ function CompetencyTooltip({
 
   return (
     <span
-      className="relative group inline-flex items-center select-none"
+      className="relative group inline-flex items-center select-none group-hover:z-50"
       onClick={(e) => e.stopPropagation()}
     >
       <button
@@ -220,7 +220,7 @@ function CompetencyTooltip({
       </button>
 
       {/* Tooltip Card with transparent hover bridge */}
-      <div className="absolute left-0 top-full pt-1.5 z-50 hidden group-hover:block group-focus-within:block w-80 sm:w-96 drop-shadow-2xl text-left">
+      <div className="absolute left-0 top-full pt-1.5 z-50 hidden group-hover:block group-focus-within:block w-80 sm:w-96 max-w-[calc(100vw-2rem)] drop-shadow-2xl text-left pointer-events-auto">
         <div
           style={{ backgroundColor: '#1c1917' }}
           className="text-stone-100 text-xs rounded-2xl p-4 border border-stone-700 shadow-2xl space-y-3"
@@ -1665,12 +1665,14 @@ export default function App() {
                 return (
                   <div
                     key={area.id}
-                    className="border border-stone-200 rounded-2xl bg-white overflow-hidden shadow-sm transition-all"
+                    className="border border-stone-200 rounded-2xl bg-white shadow-sm transition-all"
                   >
                     {/* Area Accordion Header */}
                     <div
                       onClick={() => toggleArea(area.id)}
-                      className="p-5 sm:p-6 bg-stone-50/80 hover:bg-stone-50 cursor-pointer select-none flex items-center justify-between border-b border-stone-200/60"
+                      className={`p-5 sm:p-6 bg-stone-50/80 hover:bg-stone-50 cursor-pointer select-none flex items-center justify-between rounded-t-2xl ${
+                        !isAreaOpen ? 'rounded-b-2xl' : 'border-b border-stone-200/60'
+                      }`}
                     >
                       <div className="flex items-start sm:items-center gap-3">
                         <div className="w-8 h-8 rounded-lg bg-orange-100/60 text-[#cc4e2d] flex items-center justify-center shrink-0 mt-0.5 sm:mt-0">
@@ -1720,13 +1722,13 @@ Response in ${lang === 'VI' ? 'Vietnamese' : 'English'}.`;
                           return (
                             <div
                               key={competency.id}
-                              className="border border-stone-200 rounded-xl overflow-hidden bg-white shadow-sm"
+                              className="border border-stone-200 rounded-xl bg-white shadow-sm"
                             >
                               {/* Competency Header */}
                               <div
                                 onClick={() => toggleCompetency(competency.id)}
-                                className={`p-4 sm:p-5 flex items-center justify-between cursor-pointer select-none transition-colors ${
-                                  isCompOpen ? 'bg-orange-50/20 border-b border-stone-200' : 'hover:bg-stone-50/60'
+                                className={`p-4 sm:p-5 flex items-center justify-between cursor-pointer select-none transition-colors rounded-t-xl ${
+                                  isCompOpen ? 'bg-orange-50/20 border-b border-stone-200' : 'hover:bg-stone-50/60 rounded-b-xl'
                                 }`}
                               >
                                 <div className="flex items-center gap-3">
@@ -1822,12 +1824,14 @@ Provide:
                                             return (
                                               <div
                                                 key={skill.id}
-                                                className="border border-stone-200 rounded-xl bg-white overflow-hidden shadow-sm"
+                                                className="border border-stone-200 rounded-xl bg-white shadow-sm"
                                               >
                                                 {/* Skill Header */}
                                                 <div
                                                   onClick={() => toggleSkill(skill.id)}
-                                                  className="p-4 bg-stone-50/70 flex items-center justify-between cursor-pointer select-none border-b border-stone-200/80"
+                                                  className={`p-4 bg-stone-50/70 flex items-center justify-between cursor-pointer select-none rounded-t-xl ${
+                                                    !isSkillOpen ? 'rounded-b-xl' : 'border-b border-stone-200/80'
+                                                  }`}
                                                 >
                                                   <div className="flex items-center gap-2.5">
                                                     <ChevronRight
@@ -2712,12 +2716,14 @@ Provide:
                   return (
                     <div
                       key={area.id}
-                      className="bg-white rounded-2xl border border-stone-200 shadow-sm overflow-hidden"
+                      className="bg-white rounded-2xl border border-stone-200 shadow-sm transition-all"
                     >
                       {/* Area Header (Image 1 Style) */}
                       <div
                         onClick={() => toggleArea(area.id)}
-                        className="p-5 flex items-center justify-between cursor-pointer hover:bg-orange-50/20 transition-colors"
+                        className={`p-5 flex items-center justify-between cursor-pointer hover:bg-orange-50/20 transition-colors rounded-t-2xl ${
+                          !isAreaOpen ? 'rounded-b-2xl' : ''
+                        }`}
                       >
                         <div className="flex items-center gap-3">
                           <div className={`w-8 h-8 rounded-lg flex items-center justify-center font-bold text-xs ${
@@ -2762,12 +2768,14 @@ Provide:
                             return (
                               <div
                                 key={comp.id}
-                                className="bg-white rounded-2xl border border-stone-200 shadow-sm overflow-hidden"
+                                className="bg-white rounded-2xl border border-stone-200 shadow-sm"
                               >
                                 {/* Competency Header */}
                                 <div
                                   onClick={() => toggleCompetency(comp.id)}
-                                  className="p-4 sm:p-5 flex items-center justify-between cursor-pointer hover:bg-stone-50 transition-colors border-b border-stone-100"
+                                  className={`p-4 sm:p-5 flex items-center justify-between cursor-pointer hover:bg-stone-50 transition-colors rounded-t-2xl ${
+                                    !isCompOpen ? 'rounded-b-2xl' : 'border-b border-stone-100'
+                                  }`}
                                 >
                                   <div className="flex items-center gap-3">
                                     <span className={`w-2.5 h-2.5 rounded-full ${isPrimaryDomain ? 'bg-[#cc4e2d]' : 'bg-stone-500'} shrink-0`}></span>
@@ -2839,14 +2847,16 @@ Provide:
                                                 return (
                                                   <div
                                                     key={skill.id}
-                                                    className={`rounded-2xl border border-stone-200 bg-white overflow-hidden shadow-2xs transition-all ${
+                                                    className={`rounded-2xl border border-stone-200 bg-white shadow-2xs transition-all ${
                                                       role === 'out_of_scope' ? 'opacity-75' : ''
                                                     }`}
                                                   >
                                                     {/* Skill Header */}
                                                     <div
                                                       onClick={() => toggleSkill(skill.id)}
-                                                      className="p-4 bg-stone-50/70 flex flex-col sm:flex-row sm:items-center justify-between gap-3 cursor-pointer hover:bg-stone-100/60 transition-colors border-b border-stone-200/60"
+                                                      className={`p-4 bg-stone-50/70 flex flex-col sm:flex-row sm:items-center justify-between gap-3 cursor-pointer hover:bg-stone-100/60 transition-colors rounded-t-2xl ${
+                                                        !isSkillOpen ? 'rounded-b-2xl' : 'border-b border-stone-200/60'
+                                                      }`}
                                                     >
                                                       <div className="flex items-center gap-3">
                                                         <ChevronRight
