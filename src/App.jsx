@@ -35,6 +35,7 @@ import {
   MessageSquare
 } from 'lucide-react';
 import competencyData from './data/competencyData.json';
+import { getEnrichedSkillData, getSkillExamplesAndMisconceptions } from './data/pedagogicalKnowledge';
 
 // Global Frameworks definitions
 const GLOBAL_FRAMEWORKS = [
@@ -90,101 +91,7 @@ const GLOBAL_FRAMEWORKS = [
   }
 ];
 
-// Helper to generate dynamic examples & misconceptions for skills
-function getSkillExamplesAndMisconceptions(skillName, lang = 'VI', skillNameVi = '') {
-  const n = (skillName || '').toLowerCase();
-  const displaySkill = lang === 'VI' ? (skillNameVi || skillName) : skillName;
-  
-  if (n.includes('vision') || n.includes('tầm nhìn')) {
-    return {
-      examples: lang === 'VI' ? [
-        'Xây dựng tài liệu Tầm nhìn Sản phẩm dài hạn, trả lời rõ ràng ba câu hỏi: Tại sao làm (Why), Phục vụ ai (Who), và Đạt được gì (What).',
-        'Tổ chức buổi chia sẻ định hướng (kick-off) cho đội ngũ lập trình và thiết kế để làm rõ mục tiêu sản phẩm trong 12 tháng tới.',
-        'Thiết kế tagline và thông điệp giá trị cốt lõi giúp các bên liên quan dễ dàng hiểu được đích đến cuối cùng của sản phẩm.'
-      ] : [
-        'Drafting a 1-page Product Vision document outlining the "Why", "Who", and "What" of the application.',
-        'Presenting a clear product direction to alignment teams for the next 12 months.',
-        'Defining a core value proposition statement that makes the long-term destination of the product obvious.'
-      ],
-      misconceptions: lang === 'VI' ? [
-        'Liệt kê chi tiết danh sách tất cả các tính năng cần phát triển (đây là Quản lý Backlog, không phải thiết lập Tầm nhìn).',
-        'Vẽ bản thiết kế chi tiết (wireframe) các màn hình ứng dụng (đây là Thiết kế UI/UX, không phải định hình Tầm nhìn).',
-        'Quyết định mô hình định giá bán sản phẩm (đây là Chiến lược Doanh thu/Kinh doanh, không phải Tầm nhìn sản phẩm).'
-      ] : [
-        'Listing a detailed backlog of technical features (this is Backlog Management, not Vision setting).',
-        'Drawing high-fidelity user interface wireframes (this is UI/UX design, not Vision definition).',
-        'Setting the product subscription pricing models (this is Monetization Strategy, not Product Vision).'
-      ]
-    };
-  }
 
-  if (n.includes('prioritize') || n.includes('ưu tiên')) {
-    return {
-      examples: lang === 'VI' ? [
-        'Áp dụng ma trận RICE (Reach, Impact, Confidence, Effort) để xếp hạng mức độ ưu tiên cho 10 tính năng mới.',
-        'Thảo luận với bộ phận Kinh doanh và Công nghệ để phân loại tính năng thành Must-have, Should-have và Could-have (phương pháp MoSCoW).',
-        'Từ chối một yêu cầu tính năng từ khách hàng lớn vì nó nằm ngoài định hướng của chu kỳ phát hành hiện tại.'
-      ] : [
-        'Applying the RICE scoring model systematically to score and rank 10 upcoming features.',
-        'Negotiating with engineering and business stakeholders to group features into Must-haves and Should-haves (MoSCoW).',
-        'Politely declining a high-profile feature request because it deviates from current sprint goals.'
-      ],
-      misconceptions: lang === 'VI' ? [
-        'Lập trình tất cả các yêu cầu theo thứ tự thời gian người dùng gửi đến (đây là xử lý FIFO, không phải Ưu tiên hóa).',
-        'Lựa chọn tính năng dựa hoàn toàn trên ý kiến cá nhân của Giám đốc (đây là quyết định cảm tính HIPPO, không phải Ưu tiên hóa khoa học).',
-        'Đồng ý làm tất cả mọi tính năng bằng cách kéo dài thời gian phát hành dự án (đây là sự thỏa hiệp tiêu cực).'
-      ] : [
-        'Executing requests in the order they arrived (this is FIFO queuing, not Prioritization).',
-        'Selecting features based entirely on the highest paid person\'s opinion (this is HiPPO, not logical prioritization).',
-        'Agreeing to build every requested feature by pushing back release dates indefinitely.'
-      ]
-    };
-  }
-
-  if (n.includes('roadmap') || n.includes('lộ trình')) {
-    return {
-      examples: lang === 'VI' ? [
-        'Vẽ lộ trình phát triển định hướng theo mục tiêu (Goal-oriented Roadmap) tập trung vào giải quyết nỗi đau của khách hàng qua từng quý.',
-        'Cập nhật tài liệu lộ trình để phản ánh sự thay đổi chiến lược sau khi nhận kết quả khảo sát thị trường mới.',
-        'Trình bày lộ trình sản phẩm dạng timeline vĩ mô cho khách hàng đối tác để xây dựng lòng tin.'
-      ] : [
-        'Creating a goal-oriented product roadmap focusing on quarterly outcomes rather than specific dates.',
-        'Updating the public roadmap to reflect strategy adjustments after new market user research.',
-        'Presenting a high-level timeline showing thematic releases to enterprise clients to build trust.'
-      ],
-      misconceptions: lang === 'VI' ? [
-        'Vẽ sơ đồ Gantt chi tiết từng ngày thực hiện nhiệm vụ của lập trình viên (đây là Kế hoạch Dự án, không phải Lộ trình sản phẩm).',
-        'Cam kết cứng nhắc ngày phát hành chính xác cho các tính năng chưa nghiên cứu kỹ (đây là Bản kế hoạch cam kết, không phải Lộ trình linh hoạt).',
-        'Liệt kê tất cả các lỗi kỹ thuật cần sửa trong tháng tới (đây là Kế hoạch sửa lỗi / Bug-fix plan).'
-      ] : [
-        'Creating a daily Gantt chart tracking developers\' individual tasks (this is a Project Plan, not a Roadmap).',
-        'Making hard-date release promises for unresearched backlog items (this is a Commit Schedule, not a Roadmap).',
-        'Drafting a checklist of system bug fixes for the next sprint (this is a bug-fixing plan).'
-      ]
-    };
-  }
-
-  return {
-    examples: lang === 'VI' ? [
-      `Áp dụng một cách có bài bản kỹ năng "${displaySkill}" vào xử lý các tình huống thực tế trong công việc dự án nhóm.`,
-      `Xây dựng quy trình chuẩn hoặc bộ tài liệu hướng dẫn về "${displaySkill}" để chuyển giao tri thức và đồng bộ hóa hoạt động của đội ngũ.`,
-      `Tiến hành đánh giá định kỳ và cải tiến cách thức áp dụng kỹ năng "${displaySkill}" dựa trên phản hồi của khách hàng hoặc người dùng.`
-    ] : [
-      `Systematically applying "${displaySkill}" to resolve real-world challenges in a team project environment.`,
-      `Creating standard operating guidelines or documentation for "${displaySkill}" to align team operations.`,
-      `Performing periodic reviews and optimizing the application of "${displaySkill}" based on user feedback.`
-    ],
-    misconceptions: lang === 'VI' ? [
-      `Thực hiện "${displaySkill}" một cách máy móc, mù quáng mà không có mục tiêu rõ ràng hay chỉ số đo lường hiệu quả cụ thể.`,
-      `Nhầm lẫn việc sử dụng công cụ hỗ trợ cơ bản (như spreadsheet hay Notion) là đã hoàn toàn làm chủ kỹ năng "${displaySkill}".`,
-      `Làm phức tạp hóa kỹ năng "${displaySkill}" quá mức cho các tác vụ đơn giản thay vì tập trung tối ưu hóa giá trị thực tế.`
-    ] : [
-      `Executing "${displaySkill}" blindly without clear objectives or performance measurement metrics.`,
-      `Confusing the usage of simple tools (like spreadsheets or Notion) with mastering the actual core skill of "${displaySkill}".`,
-      `Over-complicating "${displaySkill}" processes for simple tasks instead of focusing on direct value.`
-    ]
-  };
-}
 
 // Helper mapping of 12 Products Conan1 Supported Skills
 const SUPPORTED_CONAN1_SKILLS = [
@@ -284,686 +191,9 @@ function CompetencyTooltip({
   );
 }
 
-// Dedicated AI Teen Metadata & Building 21 CBE 5-Level Continuum Indicators Matrix
-function getAiTeenSkillData(skillName = '', compName = '', coreCode = '', lang = 'VI', skillCode = '', skillObj = null) {
-  const n = (skillName || '').toLowerCase();
-  const c = (compName || '').toLowerCase();
-  const isGenAI = coreCode === 'GenAI';
-
-  // Determine skill role
-  let skillRole = 'out_of_scope'; // 'primary' | 'supporting' | 'out_of_scope'
-  if (isGenAI) {
-    skillRole = 'primary';
-  } else if (skillCode && SUPPORTED_CONAN1_SKILLS.includes(skillCode)) {
-    skillRole = 'supporting';
-  } else if (
-    n.includes('interview') || n.includes('persona') || n.includes('latent') ||
-    n.includes('architecture') || n.includes('hierarchy') || n.includes('deployment') ||
-    n.includes('root cause') || n.includes('edge case') || n.includes('literacy') ||
-    n.includes('synthesis') || n.includes('reflection') || n.includes('gamification') ||
-    n.includes('state') || n.includes('prioritization') || n.includes('portfolio')
-  ) {
-    skillRole = 'supporting';
-  }
-
-  const targetLevel = skillRole === 'primary' ? 2 : 1;
-
-  // 1. Transformer Architecture Understanding (GenAI Only)
-  if (isGenAI && (n.includes('transformer') || n.includes('architecture') || n.includes('kiến trúc') || n.includes('next-token'))) {
-    return {
-      name_vi: 'Transformer Architecture & Next-Token Mechanics',
-      name_en: 'Transformer Architecture & Next-Token Mechanics',
-      guidingQuestion_vi: 'Làm thế nào để con hiểu bản chất mô hình ngôn ngữ lớn (LLM) dự đoán từ tiếp theo và khai thác sức mạnh đó để ra lệnh chính xác cho AI?',
-      guidingQuestion_en: 'How well can I understand how LLMs predict next tokens and harness that mechanics to accurately direct AI outputs?',
-      desc_vi: 'Hiểu cách AI học từ hàng triệu bài viết để đoán từ tiếp theo, nhận thức rõ AI không phải thần thánh mà là cỗ máy dự đoán ngôn ngữ.',
-      desc_en: 'Understand that LLMs calculate statistical word distributions, using structured prompting to guide text generation.',
-      skillRole,
-      targetLevel: 2,
-      targetCourse: lang === 'VI' ? 'Mục tiêu: Level 2' : 'Target: Level 2',
-      rubricLevels: [
-        {
-          level: 1,
-          label: 'Level 1',
-          indicatorsCount: 2,
-          indicators: lang === 'VI' ? [
-            'Con có thể hiểu và giải thích được AI hoạt động bằng cách dự đoán từng từ tiếp theo (Next-token prediction) dựa trên xác suất thống kê.',
-            'Con có thể nhận diện được AI không có suy nghĩ hay cảm xúc thực sự, và không phụ thuộc tuyệt đối vào câu trả lời đầu tiên của AI.'
-          ] : [
-            'I can explain that AI works by predicting the next token based on statistical probabilities from training data.',
-            'I can recognize that AI lacks genuine emotion/consciousness and avoid taking its first output as absolute truth.'
-          ]
-        },
-        {
-          level: 2,
-          label: 'Level 2',
-          indicatorsCount: 3,
-          indicators: lang === 'VI' ? [
-            'Con có thể cấu trúc câu lệnh theo khung chuẩn (Role - Context - Task - Constraint) để định hướng luồng sinh từ của AI.',
-            'Con có thể lặp lại và tinh chỉnh câu lệnh (Iterative Prompting) tối thiểu 2 lần khi AI sinh kết quả chưa đúng mong đợi.',
-            'Con có thể tự đóng gói được thư viện prompt mẫu chuẩn (SP4 Prompt Cookbook) để tái sử dụng cho các bài tập thực hành.'
-          ] : [
-            'I can format prompts using the standard Role-Context-Task-Constraint framework to guide output generation.',
-            'I can iteratively refine prompts across at least 2 turns when initial responses deviate from requirements.',
-            'I can build and package a personal Prompt Cookbook (SP4) for reuse across practical projects.'
-          ]
-        },
-        {
-          level: 3,
-          label: 'Level 3',
-          indicatorsCount: 2,
-          indicators: lang === 'VI' ? [
-            'Con có thể giải thích trực quan cho Mentor hoặc bạn bè về cơ chế Self-Attention và cách AI liên kết các từ trong ngữ cảnh dài.',
-            'Con có thể điều chỉnh tham số hoặc cấu trúc câu lệnh để kiểm soát độ sáng tạo (Temperature) và phong cách hành văn của AI.'
-          ] : [
-            'I can explain the Self-Attention mechanism and contextual token weighting clearly to peers and mentors.',
-            'I can tune prompt parameters and structural cues to modulate AI creativity and persona.'
-          ]
-        },
-        {
-          level: 4,
-          label: 'Level 4',
-          indicatorsCount: 2,
-          indicators: lang === 'VI' ? [
-            'Con có thể thiết kế các luồng prompt đa tầng phức tạp (Socratic Prompting) biến AI thành gia sư sư phạm gợi mở tư duy.',
-            'Con có thể tự động hóa quy trình phân tích và tối ưu hóa token prompt cho các ứng dụng chatbot AI quy mô lớn.'
-          ] : [
-            'I can architect multi-turn Socratic prompts that turn AI into an interactive pedagogical tutor.',
-            'I can optimize prompt token efficiency and automated evaluation pipelines for scalable AI applications.'
-          ]
-        },
-        {
-          level: 5,
-          label: 'Level 5',
-          indicatorsCount: 2,
-          indicators: lang === 'VI' ? [
-            'Con có thể làm chủ kiến trúc Transformer để xây dựng các giải pháp tự động hóa AI đa tác nhân hoàn chỉnh.',
-            'Con có thể chuyển giao tri thức và hướng dẫn học sinh khác hiểu đúng bản chất công nghệ AI mà không bị ảo tưởng.'
-          ] : [
-            'I can master Transformer concepts to design complex multi-agent automated AI workflows.',
-            'I can transfer mental models and mentor peers in demystifying AI capabilities and limits.'
-          ]
-        }
-      ],
-      evidence: lang === 'VI'
-        ? 'Bộ Prompt Cookbook (SP4) gồm 5+ prompt chuẩn cấu trúc; Nhật ký prompt thể hiện tối thiểu 2 vòng tinh chỉnh lặp lại.'
-        : 'Prompt Cookbook repository (SP4) with 5+ structured templates; Prompt history showing ≥ 2 iteration loops.'
-    };
-  }
-
-  // 2. Model Limitations & Hallucination (GenAI Only)
-  if (isGenAI && (n.includes('limitation') || n.includes('giới hạn') || n.includes('hallucination') || n.includes('ảo giác'))) {
-    return {
-      name_vi: 'Model Limitations & Hallucination Detection',
-      name_en: 'Model Limitations & Hallucination Detection',
-      guidingQuestion_vi: 'Làm thế nào để con luôn giữ tư duy phản biện, phát hiện lỗi ảo giác của AI và kiểm chứng chéo trước khi xuất bản sản phẩm?',
-      guidingQuestion_en: 'How well can I maintain critical thinking, spot AI hallucinations, and cross-verify facts before publishing products?',
-      desc_vi: 'Nhận biết khi nào AI tự bịa thông tin sai sự thật và luôn có thói quen kiểm chứng chéo với nguồn tin cậy trước khi áp dụng.',
-      desc_en: 'Detect when AI fabricates facts, consistently cross-verifying outputs with trustworthy sources.',
-      skillRole,
-      targetLevel: 2,
-      targetCourse: lang === 'VI' ? 'Mục tiêu: Level 2' : 'Target: Level 2',
-      rubricLevels: [
-        {
-          level: 1,
-          label: 'Level 1',
-          indicatorsCount: 2,
-          indicators: lang === 'VI' ? [
-            'Con có thể hiểu được AI có thể bịa chuyện (ảo giác / hallucination) và không bao giờ copy bài mù quáng.',
-            'Con có thể nhận ra khi AI trả lời một thông tin đáng ngờ và đặt câu hỏi nghi vấn để kiểm tra lại.'
-          ] : [
-            'I can acknowledge that AI hallucinates facts and refrain from blind copy-pasting.',
-            'I can identify suspicious AI responses and formulate verification questions.'
-          ]
-        },
-        {
-          level: 2,
-          label: 'Level 2',
-          indicatorsCount: 3,
-          indicators: lang === 'VI' ? [
-            'Con có thể chủ động kiểm chứng chéo thông tin AI sinh ra với Google Search, tài liệu học tập hoặc sách giáo khoa.',
-            'Con có thể viết câu lệnh ràng buộc nghiêm ngặt (ví dụ: "Chỉ trả lời dựa trên tài liệu đính kèm, nếu không có hãy nói không biết").',
-            'Con có thể nạp tài liệu tin cậy vào công cụ AI (như SP6 NotebookLM) để ép AI trích dẫn chính xác nguồn.'
-          ] : [
-            'I can cross-check AI claims against reputable search results, textbooks, or official references.',
-            'I can add strict negative constraints in prompts (e.g., "Only answer based on provided context; if absent, state unknown").',
-            'I can ground AI models with authoritative source documents (SP6 NotebookLM) requiring explicit citations.'
-          ]
-        },
-        {
-          level: 3,
-          label: 'Level 3',
-          indicatorsCount: 2,
-          indicators: lang === 'VI' ? [
-            'Con có thể thiết kế bài kiểm tra thử nghiệm (Stress-test Prompt) để kiểm tra xem hệ thống AI có bị bẫy ảo giác không.',
-            'Con có thể xây dựng quy trình tự động đối chiếu dữ liệu giữa nhiều nguồn LLM khác nhau để xác nhận tính chính xác.'
-          ] : [
-            'I can design edge-case stress tests to identify subtle hallucination triggers in AI systems.',
-            'I can build multi-LLM comparative verification protocols to confirm factual accuracy.'
-          ]
-        },
-        {
-          level: 4,
-          label: 'Level 4',
-          indicatorsCount: 2,
-          indicators: lang === 'VI' ? [
-            'Con có thể tích hợp cơ chế cảnh báo độ tin cậy và trích dẫn nguồn minh bạch (Transparency Disclaimer) vào sản phẩm web SP12.',
-            'Con có thể giảng giải và hướng dẫn bạn bè trong lớp cách phòng ngừa và phát hiện thông tin giả do AI tạo ra.'
-          ] : [
-            'I can integrate transparent source attribution and confidence indicators into deployed web applications (SP12).',
-            'I can mentor others on identifying and preventing AI-generated misinformation.'
-          ]
-        },
-        {
-          level: 5,
-          label: 'Level 5',
-          indicatorsCount: 2,
-          indicators: lang === 'VI' ? [
-            'Con có thể xây dựng hệ thống kiểm tra sự thật tự động (Automated Fact-Checking Pipeline) cho các sản phẩm dữ liệu lớn.',
-            'Con có thể đóng vai trò thẩm định viên độc lập về độ chính xác và tính trung thực của các nội dung do AI tạo ra.'
-          ] : [
-            'I can architect automated fact-checking pipelines across large-scale knowledge applications.',
-            'I can act as an authoritative evaluator for truthfulness and reliability in AI-generated assets.'
-          ]
-        }
-      ],
-      evidence: lang === 'VI'
-        ? 'Bản đối chiếu thông tin thật vs thông tin AI sinh ra trong SP6 (NotebookLM); Ràng buộc chống ảo giác có trong code SP10 & SP12.'
-        : 'Fact-checking audit sheet in SP6 (NotebookLM); Anti-hallucination constraint rules in SP10 & SP12.'
-    };
-  }
-
-  // 3. Context Window Management (GenAI Only)
-  if (isGenAI && (n.includes('context') || n.includes('ngữ cảnh') || n.includes('window') || n.includes('chunking'))) {
-    return {
-      name_vi: 'Context Window & Memory Management',
-      name_en: 'Context Window & Memory Management',
-      guidingQuestion_vi: 'Làm thế nào để con cung cấp bối cảnh ngắn gọn, chính xác để AI ghi nhớ đúng mục tiêu dự án mà không bị tràn bộ nhớ?',
-      guidingQuestion_en: 'How well can I seed concise, structured context so AI retains core project memory without attention drift?',
-      desc_vi: 'Biết cách cung cấp thông tin nền đầy đủ, súc tích để AI hiểu đúng ngữ cảnh và không bị "quên" nội dung quan trọng trước đó.',
-      desc_en: 'Provide structured background context efficiently so AI retains essential project state without degradation.',
-      skillRole,
-      targetLevel: 2,
-      targetCourse: lang === 'VI' ? 'Mục tiêu: Level 2' : 'Target: Level 2',
-      rubricLevels: [
-        {
-          level: 1,
-          label: 'Level 1',
-          indicatorsCount: 2,
-          indicators: lang === 'VI' ? [
-            'Con có thể hiểu được khái niệm "bộ nhớ tạm" của AI và nhận biết khi đoạn chat quá dài AI sẽ bắt đầu quên yêu cầu ban đầu.',
-            'Con có thể chủ động mở một đoạn hội thoại mới (New Chat) khi muốn chuyển sang làm một chủ đề hoặc nhiệm vụ hoàn toàn khác.'
-          ] : [
-            'I can understand AI temporary context limits and notice when long conversations suffer from memory fade.',
-            'I can start a clean New Chat session when pivoting to an unrelated task.'
-          ]
-        },
-        {
-          level: 2,
-          label: 'Level 2',
-          indicatorsCount: 3,
-          indicators: lang === 'VI' ? [
-            'Con có thể tóm tắt các quyết định quan trọng của phiên làm việc trước và nạp lại vào phiên chat mới (Context Seeding).',
-            'Con có thể tổ chức dữ liệu đầu vào thành các đoạn có cấu trúc phân tầng (tiêu đề, khối dữ liệu) để AI dễ nắm bắt.',
-            'Con có thể lược bỏ các chi tiết thừa, mã rác trước khi đưa tài liệu vào khung chat của AI.'
-          ] : [
-            'I can summarize essential decisions from prior sessions and inject them as seed context in new chats.',
-            'I can structure raw inputs into hierarchical blocks (headers, data sections) for clear parsing.',
-            'I can clean boilerplate and noise from documents before feeding them into the AI context window.'
-          ]
-        },
-        {
-          level: 3,
-          label: 'Level 3',
-          indicatorsCount: 2,
-          indicators: lang === 'VI' ? [
-            'Con có thể thiết kế các chiến lược phân đoạn tài liệu dài (Chunking) để vượt qua giới hạn độ dài của cửa sổ ngữ cảnh.',
-            'Con có thể tối ưu vị trí đặt thông tin quan trọng (ở đầu và cuối prompt) để tránh hiện tượng AI "quên nội dung ở giữa".'
-          ] : [
-            'I can design chunking strategies to process long multi-page documents exceeding window limits.',
-            'I can place crucial instructions at prompt boundaries to prevent "Lost in the Middle" attention degradation.'
-          ]
-        },
-        {
-          level: 4,
-          label: 'Level 4',
-          indicatorsCount: 2,
-          indicators: lang === 'VI' ? [
-            'Con có thể thiết lập kiến trúc nhớ dài hạn (External Memory / Vector Store) cho chatbot và trợ lý ảo.',
-            'Con có thể tối ưu hóa lượng token tiêu thụ trong các luồng tương tác tự động đa tác nhân.'
-          ] : [
-            'I can architect long-term external memory indexing for customized chatbots.',
-            'I can minimize multi-agent communication payload overhead across complex workflows.'
-          ]
-        },
-        {
-          level: 5,
-          label: 'Level 5',
-          indicatorsCount: 2,
-          indicators: lang === 'VI' ? [
-            'Con có thể làm chủ kiến trúc RAG (Retrieval-Augmented Generation) để mở rộng vô hạn tri thức cho trợ lý AI.',
-            'Con có thể xây dựng các quy chuẩn quản trị ngữ cảnh cho toàn bộ dự án phần mềm phức tạp.'
-          ] : [
-            'I can implement custom RAG architectures expanding AI context indefinitely with zero memory loss.',
-            'I can establish contextual standards for enterprise-grade generative AI applications.'
-          ]
-        }
-      ],
-      evidence: lang === 'VI'
-        ? 'Nhật ký chat thể hiện việc nạp bối cảnh theo từng bước logic; Cấu trúc tài liệu sạch trong SP6 và SP8.'
-        : 'Chat logs demonstrating step-by-step context seeding; Clean structured inputs in SP6 and SP8.'
-    };
-  }
-
-  // 4. Responsible AI & Data Privacy Ethics (GenAI Only)
-  if (isGenAI && (n.includes('privacy') || n.includes('bảo mật') || n.includes('responsible') || n.includes('trách nhiệm') || n.includes('bias') || n.includes('đạo đức'))) {
-    return {
-      name_vi: 'Sử dụng AI có trách nhiệm & Bảo mật dữ liệu',
-      name_en: 'Responsible AI & Data Privacy Ethics',
-      guidingQuestion_vi: 'Làm thế nào để con bảo vệ dữ liệu nhạy cảm của bản thân và tôn trọng bản quyền số khi làm việc cùng AI?',
-      guidingQuestion_en: 'How well can I safeguard sensitive personal data and practice digital attribution ethics with AI?',
-      desc_vi: 'Bảo vệ an toàn thông tin cá nhân (không đưa mật khẩu, địa chỉ, số điện thoại lên AI) và tôn trọng bản quyền số.',
-      desc_en: 'Protect sensitive personal identifiable information and honor copyright attribution when building products.',
-      skillRole,
-      targetLevel: 2,
-      targetCourse: lang === 'VI' ? 'Mục tiêu: Level 2' : 'Target: Level 2',
-      rubricLevels: [
-        {
-          level: 1,
-          label: 'Level 1',
-          indicatorsCount: 2,
-          indicators: lang === 'VI' ? [
-            'Con có thể nhận biết được các thông tin nhạy cảm (mật khẩu, số CCCD, địa chỉ nhà, số điện thoại) và không chia sẻ cho AI.',
-            'Con có thể tôn trọng bản quyền số, không yêu cầu AI sao chép nguyên văn tác phẩm có bản quyền của người khác.'
-          ] : [
-            'I can recognize sensitive PII (passwords, IDs, home addresses, phone numbers) and avoid feeding them to public AI models.',
-            'I can respect digital copyright and avoid asking AI to clone copyrighted creative works.'
-          ]
-        },
-        {
-          level: 2,
-          label: 'Level 2',
-          indicatorsCount: 3,
-          indicators: lang === 'VI' ? [
-            'Con có thể chủ động ẩn danh hóa (Anonymize) thông tin cá nhân của người thân/bạn bè trước khi đưa vào dữ liệu huấn luyện hoặc chat.',
-            'Con có thể ghi rõ nguồn gốc (Attribution Disclaimer) khi sử dụng hình ảnh hoặc văn bản do AI hỗ trợ tạo ra trên sản phẩm web.',
-            'Con có thể nhận diện được các thiên kiến (Bias) và định kiến xã hội tiềm ẩn trong câu trả lời của AI để yêu cầu chỉnh sửa khách quan.'
-          ] : [
-            'I can anonymize personal data from peers and family before using it in prompt contexts.',
-            'I can include proper attribution notices acknowledging AI assistance on deployed web projects.',
-            'I can identify social biases in AI responses and request balanced, neutral perspectives.'
-          ]
-        },
-        {
-          level: 3,
-          label: 'Level 3',
-          indicatorsCount: 2,
-          indicators: lang === 'VI' ? [
-            'Con có thể đánh giá rủi ro bảo mật dữ liệu khi kết nối các API AI bên thứ ba vào ứng dụng web cá nhân.',
-            'Con có thể soạn thảo chính sách bảo mật (Privacy Policy) minh bạch cho người dùng cuối trên sản phẩm của mình.'
-          ] : [
-            'I can assess data security risks when integrating third-party AI APIs into personal web apps.',
-            'I can draft a clear Privacy Policy informing users how data is handled in my digital products.'
-          ]
-        },
-        {
-          level: 4,
-          label: 'Level 4',
-          indicatorsCount: 2,
-          indicators: lang === 'VI' ? [
-            'Con có thể thiết lập các bộ lọc an toàn nội dung (Content Moderation Filters) ngăn chặn mã độc hại hoặc ngôn từ không phù hợp.',
-            'Con có thể chia sẻ kiến thức sử dụng công nghệ nhân văn và có đạo đức cho cộng đồng học sinh tại trường.'
-          ] : [
-            'I can implement automated safety moderation guards filtering malicious inputs or harmful content.',
-            'I can advocate for ethical and human-centric AI literacy within school and youth communities.'
-          ]
-        },
-        {
-          level: 5,
-          label: 'Level 5',
-          indicatorsCount: 2,
-          indicators: lang === 'VI' ? [
-            'Con có thể dẫn dắt các sáng kiến cộng đồng về đạo đức AI và an toàn thông tin số trong trường học.',
-            'Con có thể thiết kế các tiêu chuẩn kiểm thử đạo đức (Ethical AI Framework) cho các sản phẩm phần mềm dành cho thanh thiếu niên.'
-          ] : [
-            'I can champion youth ethical AI safety initiatives across communities and schools.',
-            'I can establish ethical testing frameworks for youth-focused digital applications.'
-          ]
-        }
-      ],
-      evidence: lang === 'VI'
-        ? 'Trang Chính sách Bảo mật (Privacy Policy) và Disclaimer bản quyền số hiển thị đầy đủ trên SP1, SP6 và SP12.'
-        : 'Privacy Policy page and attribution disclaimers visible on live SP1, SP6, and SP12.'
-    };
-  }
-
-  // 5. Prompt Engineering & Few-shot / CoT (GenAI Only)
-  if (isGenAI && (n.includes('prompt') || n.includes('few-shot') || n.includes('chain-of-thought') || n.includes('clarifying'))) {
-    return {
-      name_vi: 'Structured Prompt Engineering & CoT',
-      name_en: 'Structured Prompt Engineering & CoT',
-      guidingQuestion_vi: 'Làm thế nào để con thiết kế câu lệnh chi tiết, có ví dụ mẫu (Few-shot) và tư duy từng bước (Chain-of-Thought) để AI giải quyết bài toán phức tạp?',
-      guidingQuestion_en: 'How well can I architect detailed prompts with Few-shot examples and Chain-of-Thought reasoning to solve complex challenges?',
-      desc_vi: 'Làm chủ các kỹ thuật thiết kế câu lệnh từ cơ bản đến nâng cao để khai thác tối đa năng suất của các mô hình AI.',
-      desc_en: 'Master structured prompting techniques from standard framing to Few-shot and Chain-of-Thought reasoning.',
-      skillRole,
-      targetLevel: 2,
-      targetCourse: lang === 'VI' ? 'Mục tiêu: Level 2' : 'Target: Level 2',
-      rubricLevels: [
-        {
-          level: 1,
-          label: 'Level 1',
-          indicatorsCount: 2,
-          indicators: lang === 'VI' ? [
-            'Con có thể đặt câu hỏi rõ ràng, đầy đủ ngữ pháp thay vì chỉ gõ 1-2 từ khóa tìm kiếm ngắn.',
-            'Con có thể trả lời các câu hỏi làm rõ của AI khi câu hỏi ban đầu chưa đủ thông tin.'
-          ] : [
-            'I can ask well-formed, descriptive questions rather than typing cryptic keywords.',
-            'I can answer AI clarifying questions when initial context is incomplete.'
-          ]
-        },
-        {
-          level: 2,
-          label: 'Level 2',
-          indicatorsCount: 3,
-          indicators: lang === 'VI' ? [
-            'Con có thể cung cấp 2-3 ví dụ mẫu chuẩn (Few-shot Examples) trong prompt để AI làm theo đúng định dạng đầu ra.',
-            'Con có thể yêu cầu AI "Suy nghĩ từng bước" (Chain-of-Thought) để giải quyết các vấn đề logic hoặc thuật toán.',
-            'Con có thể chỉ định vai trò chuyên gia (Role Persona) phù hợp cho từng bài toán thực tế.'
-          ] : [
-            'I can supply 2-3 Few-shot input-output examples in prompts to enforce target schemas.',
-            'I can prompt AI to "Think step-by-step" (Chain-of-Thought) for logical and algorithmic problems.',
-            'I can assign specific expert personas tailored to the domain requirements.'
-          ]
-        },
-        {
-          level: 3,
-          label: 'Level 3',
-          indicatorsCount: 2,
-          indicators: lang === 'VI' ? [
-            'Con có thể thiết kế các cấu trúc System Prompt phức tạp kiểm soát hành vi dài hạn của trợ lý ảo.',
-            'Con có thể đo lường và so sánh hiệu quả giữa các kiểu prompt khác nhau trên cùng một tác vụ (A/B Testing Prompt).'
-          ] : [
-            'I can design complex system prompt architectures regulating multi-session agent behavior.',
-            'I can conduct prompt A/B testing to benchmark quality variance across different framings.'
-          ]
-        },
-        {
-          level: 4,
-          label: 'Level 4',
-          indicatorsCount: 2,
-          indicators: lang === 'VI' ? [
-            'Con có thể tự động hóa việc tạo và tối ưu hóa câu lệnh (DSPy / Metaprompting) cho các ứng dụng thông minh.',
-            'Con có thể xuất bản bộ công thức prompt chuẩn mực được cộng đồng học sinh đón nhận và áp dụng.'
-          ] : [
-            'I can implement metaprompting and programmatic prompt optimization pipelines.',
-            'I can publish standardized prompt frameworks adopted by school and learner communities.'
-          ]
-        },
-        {
-          level: 5,
-          label: 'Level 5',
-          indicatorsCount: 2,
-          indicators: lang === 'VI' ? [
-            'Con có thể xây dựng các bộ công cụ Prompt Engine tự động thích ứng với nhiều dòng mô hình AI khác nhau.',
-            'Con có thể đào tạo và hướng dẫn học sinh khác trở thành những chuyên gia chỉ huy AI độc lập.'
-          ] : [
-            'I can construct cross-model adaptable Prompt Engines for resilient multi-agent execution.',
-            'I can mentor and certify others in advanced prompt engineering methodologies.'
-          ]
-        }
-      ],
-      evidence: lang === 'VI'
-        ? 'Bộ sưu tập Prompt Cookbook trong SP4 và câu lệnh phân luồng Socratic trong SP10 AI Tutor.'
-        : 'Curated Prompt Cookbook in SP4 and pedagogical reasoning flows in SP10 AI Tutor.'
-    };
-  }
-
-  // 6. AI-Assisted Learning & Synthesis (GenAI Only)
-  if (isGenAI && (n.includes('ai-assisted') || n.includes('summariz') || n.includes('tóm tắt') || n.includes('translation') || n.includes('notebooklm'))) {
-    return {
-      name_vi: 'AI-Assisted Self-Learning & Knowledge Synthesis',
-      name_en: 'AI-Assisted Self-Learning & Knowledge Synthesis',
-      guidingQuestion_vi: 'Làm thế nào để con biến AI thành người gia sư 1-1 hỗ trợ tóm tắt sách, dịch thuật và biến tài liệu khô khan thành kiến thức sinh động?',
-      guidingQuestion_en: 'How well can I turn AI into a 1-on-1 personal tutor to synthesize research, translate languages, and master complex subjects?',
-      desc_vi: 'Sử dụng AI để tự học, tóm tắt tài liệu, dịch thuật chuyên sâu và tạo lộ trình học tập cá nhân hóa.',
-      desc_en: 'Leverage AI tools to accelerate self-directed learning, generate audio podcasts, and synthesize knowledge.',
-      skillRole,
-      targetLevel: 2,
-      targetCourse: lang === 'VI' ? 'Mục tiêu: Level 2' : 'Target: Level 2',
-      rubricLevels: [
-        {
-          level: 1,
-          label: 'Level 1',
-          indicatorsCount: 2,
-          indicators: lang === 'VI' ? [
-            'Con có thể dùng AI để tóm tắt các đoạn văn bản dài thành các ý chính ngắn gọn.',
-            'Con có thể dịch các bài viết tiếng Anh sang tiếng Việt để hỗ trợ việc đọc hiểu tài liệu cơ bản.'
-          ] : [
-            'I can use AI to condense lengthy articles into bulleted key summaries.',
-            'I can translate foreign articles to support basic reading comprehension.'
-          ]
-        },
-        {
-          level: 2,
-          label: 'Level 2',
-          indicatorsCount: 3,
-          indicators: lang === 'VI' ? [
-            'Con có thể sử dụng NotebookLM (SP6) để biến tài liệu học tập thành bản tóm tắt có trích dẫn và tạo bản podcast âm thanh (Audio Overview).',
-            'Con có thể yêu cầu AI tạo bảng so sánh (Comparison Table) giữa các khái niệm phức tạp để hiểu sâu bản chất.',
-            'Con có thể dùng AI để sinh bộ Flashcards hoặc câu hỏi trắc nghiệm kiểm tra kiến thức bản thân (SP7).'
-          ] : [
-            'I can use NotebookLM (SP6) to convert source documents into cited summaries and generate Audio Overviews.',
-            'I can prompt AI to generate comparative tables contrasting complex conceptual frameworks.',
-            'I can generate self-quizzing flashcards and test suites to assess personal mastery (SP7).'
-          ]
-        },
-        {
-          level: 3,
-          label: 'Level 3',
-          indicatorsCount: 2,
-          indicators: lang === 'VI' ? [
-            'Con có thể xây dựng lộ trình học tập cá nhân hóa nhiều tuần cho một môn học mới với sự đồng hành của AI.',
-            'Con có thể tổng hợp kiến thức từ nhiều nguồn tài liệu trái chiều thành bài phân tích đa chiều, khách quan.'
-          ] : [
-            'I can build multi-week personalized learning roadmaps for new subjects using AI guidance.',
-            'I can synthesize contradictory information sources into balanced multi-perspective analyses.'
-          ]
-        },
-        {
-          level: 4,
-          label: 'Level 4',
-          indicatorsCount: 2,
-          indicators: lang === 'VI' ? [
-            'Con có thể xây dựng kho tri thức số thứ hai (Second Brain) kết nối tự động với AI để quản trị kiến thức trọn đời.',
-            'Con có thể chia sẻ phương pháp học tập siêu tốc với AI cho các bạn trong câu lạc bộ hoặc trường học.'
-          ] : [
-            'I can architect a digital Second Brain knowledge graph integrated with AI for lifelong learning.',
-            'I can instruct and inspire peers on accelerated learning workflows powered by AI.'
-          ]
-        },
-        {
-          level: 5,
-          label: 'Level 5',
-          indicatorsCount: 2,
-          indicators: lang === 'VI' ? [
-            'Con có thể thiết kế các hệ thống sư phạm tương tác hỗ trợ hàng ngàn học sinh tự học cùng AI.',
-            'Con có thể lan tỏa văn hóa học tập suốt đời (Lifelong Learning) bằng các bài viết và sản phẩm số truyền cảm hứng.'
-          ] : [
-            'I can design interactive pedagogical systems supporting thousands of learners with AI.',
-            'I can champion lifelong learning culture through inspirational digital artifacts.'
-          ]
-        }
-      ],
-      evidence: lang === 'VI'
-        ? 'Kho tài liệu tri thức NotebookLM (SP6) kèm file audio podcast; Hệ thống Flashcards & Quiz ôn thi (SP7).'
-        : 'Curated NotebookLM knowledge notebook (SP6) with audio podcast; Interactive Flashcard & Quiz hub (SP7).'
-    };
-  }
-
-  // 7. AI Creation & Problem Solving / System Debugging (GenAI Only)
-  if (isGenAI && (n.includes('debug') || n.includes('sửa lỗi') || n.includes('problem solving') || n.includes('creativ') || n.includes('sáng tạo') || n.includes('agent'))) {
-    return {
-      name_vi: 'AI-Powered Problem Solving & Creative Building',
-      name_en: 'AI-Powered Problem Solving & Creative Building',
-      guidingQuestion_vi: 'Làm thế nào để con phối hợp với AI phát hiện nguyên nhân gốc rễ của lỗi (Root Cause) và sáng tạo các giải pháp kỹ thuật vượt trội?',
-      guidingQuestion_en: 'How well can I collaborate with AI to diagnose error root causes and architect innovative technical solutions?',
-      desc_vi: 'Sử dụng AI để phân tích logic, cô lập lỗi kỹ thuật và sáng tạo giao diện sản phẩm số độc đáo.',
-      desc_en: 'Collaborate with AI to analyze system logic, isolate bugs, and construct creative digital assets.',
-      skillRole,
-      targetLevel: 2,
-      targetCourse: lang === 'VI' ? 'Mục tiêu: Level 2' : 'Target: Level 2',
-      rubricLevels: [
-        {
-          level: 1,
-          label: 'Level 1',
-          indicatorsCount: 2,
-          indicators: lang === 'VI' ? [
-            'Con có thể sao chép thông báo lỗi từ console hoặc màn hình vào AI để hỏi nguyên nhân thay vì bỏ cuộc.',
-            'Con có thể dùng AI gợi ý ý tưởng hình ảnh hoặc màu sắc cơ bản cho trang web cá nhân.'
-          ] : [
-            'I can copy error messages directly into AI to inquire about possible causes without quitting.',
-            'I can prompt AI for basic visual ideas and color schemes for personal webpages.'
-          ]
-        },
-        {
-          level: 2,
-          label: 'Level 2',
-          indicatorsCount: 3,
-          indicators: lang === 'VI' ? [
-            'Con có thể cô lập đoạn code hoặc logic bị lỗi và yêu cầu AI giải thích vì sao lỗi xảy ra trước khi áp dụng bản sửa.',
-            'Con có thể phối hợp với AI để nâng cấp giao diện sản phẩm qua tối thiểu 2 phiên bản (V1 ban đầu ➔ V2 hoàn thiện).',
-            'Con có thể sử dụng AI để tạo ra các biến thể nội dung và hình ảnh độc đáo cho 12 sản phẩm thực tế.'
-          ] : [
-            'I can isolate the problematic code block and ask AI to explain root causes before applying fixes.',
-            'I can collaborate with AI to iteratively upgrade product UI across at least 2 versions (V1 raw ➔ V2 polished).',
-            'I can prompt AI to generate unique content variations and assets across the 12 micro products.'
-          ]
-        },
-        {
-          level: 3,
-          label: 'Level 3',
-          indicatorsCount: 2,
-          indicators: lang === 'VI' ? [
-            'Con có thể chủ động đề xuất nhiều giải pháp kỹ thuật thay thế (Alternative Solutions) và nhờ AI phân tích ưu nhược điểm.',
-            'Con có thể xử lý các trường hợp ngoại lệ (Edge Cases) trong logic ứng dụng để đảm bảo sản phẩm không bị sập.'
-          ] : [
-            'I can propose alternative architectural options and use AI to evaluate trade-offs.',
-            'I can anticipate and test edge cases in application logic to prevent crashes and state errors.'
-          ]
-        },
-        {
-          level: 4,
-          label: 'Level 4',
-          indicatorsCount: 2,
-          indicators: lang === 'VI' ? [
-            'Con có thể tự động hóa quy trình kiểm thử và tự phục hồi lỗi (Self-healing systems) trong ứng dụng web.',
-            'Con có thể làm chủ toàn diện vòng đời phát triển sản phẩm từ ý tưởng, logic phức tạp đến triển khai trực tuyến.'
-          ] : [
-            'I can architect automated test harnesses and resilient self-healing mechanisms in web apps.',
-            'I can independently command the full product development lifecycle from inception to live deployment.'
-          ]
-        },
-        {
-          level: 5,
-          label: 'Level 5',
-          indicatorsCount: 2,
-          indicators: lang === 'VI' ? [
-            'Con có thể kiến trúc các hệ thống phần mềm quy mô lớn tự động phát hiện và khắc phục sự cố tức thời.',
-            'Con có thể đóng vai trò cố vấn kỹ thuật giải quyết các sự cố hệ thống phức tạp nhất.'
-          ] : [
-            'I can architect self-diagnosing, distributed applications that self-heal under load.',
-            'I can serve as a lead technical mentor resolving high-complexity system failures.'
-          ]
-        }
-      ],
-      evidence: lang === 'VI'
-        ? 'Lịch sử gỡ lỗi và nhật ký nâng cấp Version (V1 → V2) được ghi nhận đầy đủ trong hồ sơ sản phẩm (SP7, SP8, SP11).'
-        : 'Bug diagnostic logs and version upgrade history (V1 → V2) documented in product repos (SP7, SP8, SP11).'
-    };
-  }
-
-  // Generic fallback for any other Conan1 skill (Pure 5-Level CBE Continuum)
-  const resolvedViName = skillObj?.name_vi || skillName;
-  const resolvedEnName = skillObj?.name || skillName;
-
-  return {
-    name_vi: resolvedViName,
-    name_en: resolvedEnName,
-    guidingQuestion_vi: `Làm thế nào để con áp dụng có bài bản kỹ năng "${resolvedViName}" vào việc hoàn thiện sản phẩm số thực tế?`,
-    guidingQuestion_en: `How well can I systematically apply "${resolvedEnName}" to develop and refine authentic digital products?`,
-    desc_vi: `Rèn luyện kỹ năng thực hành "${resolvedViName}" gắn liền với quá trình xây dựng 12 sản phẩm số và tự chủ công nghệ.`,
-    desc_en: `Cultivate practical "${resolvedEnName}" competencies connected with building the 12 micro digital products.`,
-    skillRole,
-    targetLevel,
-    targetCourse: lang === 'VI' ? `Mục tiêu: Level ${targetLevel}` : `Target: Level ${targetLevel}`,
-    rubricLevels: [
-      {
-        level: 1,
-        label: 'Level 1',
-        indicatorsCount: 2,
-        indicators: lang === 'VI' ? [
-          `Con có thể nắm bắt các khái niệm cơ bản của "${resolvedViName}" và thực hiện theo hướng dẫn mẫu của Mentor.`,
-          'Con có thể nhận ra khi nào cần trợ giúp và biết cách đặt câu hỏi làm rõ.'
-        ] : [
-          `I can understand foundational concepts of "${resolvedEnName}" and follow guided walkthroughs.`,
-          'I can recognize when assistance is needed and ask clarifying questions.'
-        ]
-      },
-      {
-        level: 2,
-        label: 'Level 2',
-        indicatorsCount: 3,
-        indicators: lang === 'VI' ? [
-          `Con có thể tự chủ áp dụng kỹ năng "${resolvedViName}" vào các yêu cầu trong Brief sản phẩm mà không cần nhắc nhở.`,
-          'Con có thể kiểm tra lại kết quả thực hiện và tự phát hiện các sai sót cơ bản.',
-          'Con có thể ghi nhận lại bài học kinh nghiệm sau khi hoàn thành nhiệm vụ.'
-        ] : [
-          `I can independently apply "${resolvedEnName}" to satisfy project Brief requirements without prompting.`,
-          'I can review my own work and catch routine flaws autonomously.',
-          'I can log lessons learned upon completing project milestones.'
-        ]
-      },
-      {
-        level: 3,
-        label: 'Level 3',
-        indicatorsCount: 2,
-        indicators: lang === 'VI' ? [
-          `Con có thể vận dụng linh hoạt kỹ năng "${resolvedViName}" để xử lý các tình huống phức tạp hoặc bất ngờ.`,
-          'Con có thể chia sẻ và giải thích rõ ràng cách làm cho các bạn khác trong nhóm.'
-        ] : [
-          `I can adaptively utilize "${resolvedEnName}" across unexpected or challenging project scenarios.`,
-          'I can clearly explain approaches and mentor peers in collaborative settings.'
-        ]
-      },
-      {
-        level: 4,
-        label: 'Level 4',
-        indicatorsCount: 2,
-        indicators: lang === 'VI' ? [
-          `Con có thể tối ưu hóa và sáng tạo phương pháp mới để nâng cao chất lượng kỹ năng "${resolvedViName}".`,
-          'Con có thể tự tin thuyết trình bảo vệ sản phẩm xuất sắc trước Hội đồng chuyên môn.'
-        ] : [
-          `I can innovate and optimize novel methodologies leveraging "${resolvedEnName}" for maximum impact.`,
-          'I can authoritatively defend product craftsmanship before evaluation panels.'
-        ]
-      },
-      {
-        level: 5,
-        label: 'Level 5',
-        indicatorsCount: 2,
-        indicators: lang === 'VI' ? [
-          `Con có thể làm chủ toàn diện và xây dựng các tài liệu hướng dẫn chuẩn mực cho kỹ năng "${resolvedViName}".`,
-          'Con có thể hỗ trợ và đào tạo thế hệ học sinh tiếp theo đạt đến mức độ thành thạo.'
-        ] : [
-          `I can master and construct standard operating playbooks for "${resolvedEnName}".`,
-          'I can guide and mentor upcoming cohorts toward skill mastery.'
-        ]
-      }
-    ],
-    evidence: lang === 'VI'
-      ? `Sản phẩm số thực tế thể hiện năng lực "${resolvedViName}" đạt chuẩn đầu ra và được Hội đồng đánh giá công nhận.`
-      : `Authentic digital project deliverables demonstrating "${resolvedEnName}" competency verified by review panel.`
-  };
+// Dedicated AI Teen Metadata & Building 21 CBE 5-Level Continuum Indicators Matrix (Pedagogical Engine)
+function getAiTeenSkillData(skillName = '', compName = '', coreCode = '', lang = 'VI', skillCode = '', skillObj = null, domainSlug = '') {
+  return getEnrichedSkillData(skillName, compName, coreCode, lang, skillCode, skillObj, domainSlug);
 }
 
 // Icon helper per domain slug
@@ -1014,6 +244,8 @@ export default function App() {
   const [aiTeenSubTab, setAiTeenSubTab] = useState('courses'); // 'courses' | 'core5'
   const [activeCoreCode, setActiveCoreCode] = useState(null); // 'GenAI' | 'CU' | 'PSDM' | 'DPD' | 'LRN'
   const [selectedCourseIdx, setSelectedCourseIdx] = useState(0); // 0, 1, 2, 3
+  const [openCourseDomains, setOpenCourseDomains] = useState({ 'domain-generative-ai': true });
+  const [isCourseProductsOpen, setIsCourseProductsOpen] = useState(false);
   const [selectedPromptSkill, setSelectedPromptSkill] = useState(null);
   const [faqCategoryFilter, setFaqCategoryFilter] = useState('all'); // 'all' | 'concepts' | 'ai_prompting' | 'progression' | 'mentor_ops'
   const [openFaqId, setOpenFaqId] = useState(null);
@@ -1999,453 +1231,634 @@ Provide:
 
             {/* 5 MINI COURSES & SPIRAL PRODUCT EVOLUTION (WITH INTERACTIVE COURSE SELECTOR) */}
             <div className="space-y-8">
-                {/* 5 Course Selection Tabs */}
-                <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
-                  {[
-                    { id: 0, num: lang === 'VI' ? 'Khóa 1' : 'Course 1', icon: Sparkles },
-                    { id: 1, num: lang === 'VI' ? 'Khóa 2' : 'Course 2', icon: Users },
-                    { id: 2, num: lang === 'VI' ? 'Khóa 3' : 'Course 3', icon: Target },
-                    { id: 3, num: lang === 'VI' ? 'Khóa 4' : 'Course 4', icon: MessageSquare },
-                    { id: 4, num: lang === 'VI' ? 'Khóa 5' : 'Course 5', icon: BookOpen }
-                  ].map((c) => {
-                    const IconComp = c.icon;
-                    const isSelected = selectedCourseIdx === c.id;
-                    return (
-                      <button
-                        key={c.id}
-                        onClick={() => setSelectedCourseIdx(c.id)}
-                        className={`p-4 rounded-2xl border text-center transition-all relative overflow-hidden flex items-center justify-between ${
-                          isSelected
-                            ? 'bg-stone-900 text-white border-stone-900 shadow-lg scale-[1.02]'
-                            : 'bg-white text-stone-700 border-stone-200 hover:border-orange-300 hover:bg-orange-50/20'
-                        }`}
-                      >
-                        <span className={`text-sm sm:text-base font-black ${isSelected ? 'text-white' : 'text-stone-900'}`}>
-                          {c.num}
-                        </span>
-                        <IconComp className={`w-4 h-4 ${isSelected ? 'text-orange-400' : 'text-stone-400'}`} />
-                      </button>
-                    );
-                  })}
-                </div>
+              {/* Course Meta Data & 12 Products Evolution per Course */}
+              {(() => {
+                const aiTeenDomainSlugs = [
+                  'domain-generative-ai',
+                  'domain-customer-understanding',
+                  'domain-digital-product-development',
+                  'domain-learning'
+                ];
 
-                {/* Selected Course Deep Dive Card */}
-                {(() => {
-                  const courseDetails = [
-                    {
-                      course: lang === 'VI' ? 'Khóa 1' : 'Course 1',
-                      spikeName: 'GenAI Spike (Level 1 → L1.2)',
-                      spikeCode: 'GenAI',
-                      focusIndicators: lang === 'VI' ? [
-                        'Hiểu nguyên lý AI dự đoán từ (Next-token prediction) và xác suất thống kê.',
-                        'Nhận biết AI không có cảm xúc thật và không phụ thuộc tuyệt đối vào câu trả lời đầu tiên.',
-                        'Viết câu lệnh mô tả mục đích rõ ràng, đầy đủ ngữ pháp thay vì từ khóa rời rạc.'
-                      ] : [
-                        'Understand LLM next-token statistical prediction mechanics.',
-                        'Recognize AI lacks true emotion and avoid blind reliance on first outputs.',
-                        'Write clear, grammatically complete prompts rather than disconnected keywords.'
-                      ],
-                      briefReq: lang === 'VI'
-                        ? '12/12 Sản phẩm hoàn thiện phiên bản V1 thô nhưng đủ tính năng cơ bản; 100% link web live chạy được trên Vercel/Netlify.'
-                        : '12/12 Products built to raw V1 with full basic functionality; 100% live web links deployed.',
-                      evidenceList: lang === 'VI' ? [
-                        'Lưu trữ nhật ký prompt khởi tạo ban đầu cho toàn bộ 12 sản phẩm.',
-                        'Chứng minh hiểu biết về cách AI sinh từ thông qua phần giải thích ngắn.',
-                        'Cấu hình live web link cho tối thiểu 6 sản phẩm đầu tiên.'
-                      ] : [
-                        'Log foundational prompt traces across all 12 micro products.',
-                        'Demonstrate understanding of next-token generation via brief summaries.',
-                        'Configure live web deployments for at least the first 6 products.'
-                      ],
-                      rubricAssessment: lang === 'VI'
-                        ? '4F Reflection ≥ 70 điểm; Vấn đáp Mentor 1-1 đạt về giải thích cơ chế sinh từ của AI.'
-                        : '4F Reflection ≥ 70 points; Pass 1-1 Mentor oral check on token generation principles.',
-                      targetProducts: [
-                        { code: 'SP1', name: 'Personal Page V1', focus: lang === 'VI' ? 'Tạo trang web cá nhân tĩnh bản đầu & Deploy live' : 'Static personal site V1 & live deployment' },
-                        { code: 'SP2', name: 'Hobby Site V1', focus: lang === 'VI' ? 'Tạo sitemap 3-5 trang chủ đề sở thích' : '3-5 page hobby sitemap layout' },
-                        { code: 'SP4', name: 'Cookbook V1', focus: lang === 'VI' ? 'Đóng gói 3 prompt mẫu cơ bản' : 'Package 3 basic prompt recipes' },
-                        { code: 'SP5', name: 'Cloudflare V1', focus: lang === 'VI' ? 'Trỏ DNS domain cơ bản' : 'Basic DNS domain mapping' }
-                      ]
-                    },
-                    {
-                      course: lang === 'VI' ? 'Khóa 2' : 'Course 2',
-                      spikeName: 'GenAI Spike (Level 1.2 → L1.5)',
-                      spikeCode: 'GenAI',
-                      focusIndicators: lang === 'VI' ? [
-                        'Cấu trúc câu lệnh chuẩn theo khung Role - Context - Task - Constraint (R-T-C).',
-                        'Cung cấp 2-3 ví dụ mẫu chuẩn (Few-shot Examples) để định hình kết quả đầu ra của AI.',
-                        'Chỉ định vai trò chuyên gia (Expert Persona) phù hợp cho từng bài toán.'
-                      ] : [
-                        'Format prompts using Role - Context - Task - Constraint (R-T-C) structure.',
-                        'Provide 2-3 Few-shot examples to strictly enforce output format.',
-                        'Assign domain expert personas tailored to specific task domains.'
-                      ],
-                      briefReq: lang === 'VI'
-                        ? '12/12 Sản phẩm được nâng cấp lên V2 với giao diện chuẩn mực, thông điệp rõ ràng và cấu trúc dữ liệu nhất quán.'
-                        : '12/12 Products upgraded to V2 with refined UI, clear messaging, and consistent data schema.',
-                      evidenceList: lang === 'VI' ? [
-                        '100% Prompt sử dụng khung R-T-C và có định nghĩa Role/Constraint rõ ràng.',
-                        'Có thư viện 5+ Prompt Cookbook chuẩn hóa (SP4 V2) áp dụng trực tiếp vào sản phẩm.',
-                        'Thu thập phản hồi từ bạn bè/gia đình để hoàn thiện nội dung V2.'
-                      ] : [
-                        '100% Prompts leverage the R-T-C framework with explicit constraints.',
-                        'Standardized 5+ Prompt Cookbook (SP4 V2) applied across projects.',
-                        'Gather peer/family feedback to refine V2 contents.'
-                      ],
-                      rubricAssessment: lang === 'VI'
-                        ? '4F Reflection ≥ 75 điểm; Vấn đáp Mentor đạt về giải thích cấu trúc R-T-C trong các prompt thực tế.'
-                        : '4F Reflection ≥ 75 points; Pass 1-1 Mentor oral verification on R-T-C structures.',
-                      targetProducts: [
-                        { code: 'SP3', name: 'Family Tree V2', focus: lang === 'VI' ? 'Phỏng vấn người thân & cấu trúc gia phả nhiều nhánh' : 'Family interviews & multi-branch genealogy' },
-                        { code: 'SP4', name: 'Cookbook V2', focus: lang === 'VI' ? 'Hoàn thiện 5 bộ prompt chuẩn R-T-C' : 'Finalize 5 standardized R-T-C prompts' },
-                        { code: 'SP6', name: 'NotebookLM V2', focus: lang === 'VI' ? 'Tài liệu hóa tri thức có trích dẫn nguồn rõ ràng' : 'Knowledge synthesis with explicit citations' }
-                      ]
-                    },
-                    {
-                      course: lang === 'VI' ? 'Khóa 3' : 'Course 3',
-                      spikeName: 'GenAI Spike (Level 1.5 → L1.8)',
-                      spikeCode: 'GenAI',
-                      focusIndicators: lang === 'VI' ? [
-                        'Nhận diện các hiện tượng AI bịa đặt thông tin (Hallucination) hoặc trả lời thiên kiến.',
-                        'Thực hiện quy trình kiểm chứng chéo (Fact-checking) độc lập với tài liệu gốc.',
-                        'Lặp lại và tinh chỉnh câu lệnh (Iterative Prompting) tối thiểu 2 lần khi AI sinh lỗi.'
-                      ] : [
-                        'Identify AI hallucinations, plausible falsehoods, and biased responses.',
-                        'Conduct independent fact-checking against authentic source materials.',
-                        'Iteratively refine prompts across at least 2 turns upon encountering AI inaccuracies.'
-                      ],
-                      briefReq: lang === 'VI'
-                        ? '12/12 Sản phẩm được nâng cấp lên V3 sạch 100% lỗi thông tin ảo giác; Logic tương tác (Flashcard, Quiz) hoạt động chính xác.'
-                        : '12/12 Products upgraded to V3 with zero hallucinated info; Interactive logic operating flawlessly.',
-                      evidenceList: lang === 'VI' ? [
-                        'Nhật ký Fact-checking chỉ ra ít nhất 3 điểm ảo giác do AI sinh ra và cách học sinh phát hiện.',
-                        'Minh chứng chỉnh sửa prompt tối thiểu 2 phiên bản (V2 ➔ V3) để ép AI trả lời đúng sự thật.',
-                        'Bộ câu hỏi trắc nghiệm kiến thức (SP7 V3) đã qua kiểm chứng 100%.'
-                      ] : [
-                        'Fact-checking log highlighting at least 3 detected hallucinations.',
-                        'Evidence of prompt iterations (V2 ➔ V3) enforcing factual grounding.',
-                        'Validated quiz and knowledge decks in SP7 V3.'
-                      ],
-                      rubricAssessment: lang === 'VI'
-                        ? '4F Reflection ≥ 80 điểm; Vượt qua bài test phát hiện lỗi ảo giác giả định của Mentor.'
-                        : '4F Reflection ≥ 80 points; Pass simulated hallucination detection challenge.',
-                      targetProducts: [
-                        { code: 'SP7', name: 'Learning Hub V3', focus: lang === 'VI' ? 'Bộ flashcard và quiz 100% chuẩn xác không bịa thông tin' : 'Verified flashcard & quiz suites' },
-                        { code: 'SP8', name: 'Exam Prep V3', focus: lang === 'VI' ? 'Đồng hồ Pomodoro & theo dõi tiến độ chính xác' : 'Accurate Pomodoro timer & progress persistence' },
-                        { code: 'SP9', name: 'Portrait V3', focus: lang === 'VI' ? 'Showcase năng lực trung thực có số liệu minh chứng' : 'Evidence-backed growth portrait' }
-                      ]
-                    },
-                    {
-                      course: lang === 'VI' ? 'Khóa 4' : 'Course 4',
-                      spikeName: 'GenAI Spike (Level 1.8 → L2.0 Target)',
-                      spikeCode: 'GenAI',
-                      focusIndicators: lang === 'VI' ? [
-                        'Duy trì ngữ cảnh nhất quán qua chuỗi hội thoại nhiều lượt (Multi-turn Context Management).',
-                        'Thiết kế câu lệnh Socratic buộc AI đặt câu hỏi gợi mở thay vì đưa ra đáp án trực tiếp.',
-                        'Thiết lập System Prompt quy định vai trò, ranh giới và tính cách sư phạm cho AI.'
-                      ] : [
-                        'Maintain consistent context across extended multi-turn dialog chains.',
-                        'Design Socratic prompts that guide learners with questions instead of direct answers.',
-                        'Configure System Prompts regulating pedagogical tone, boundaries, and persona.'
-                      ],
-                      briefReq: lang === 'VI'
-                        ? '12/12 Sản phẩm được nâng cấp lên V4 có tính năng tương tác hội thoại hoặc phản hồi thời gian thực; SP10 AI Tutor hoạt động xuất sắc.'
-                        : '12/12 Products upgraded to V4 featuring interactive multi-turn bots; SP10 AI Tutor fully active.',
-                      evidenceList: lang === 'VI' ? [
-                        'Kịch bản System Prompt của SP10 thể hiện rõ nguyên lý gợi mở tư duy Socratic.',
-                        'Nhật ký hội thoại mẫu tối thiểu 5 lượt chứng minh AI giữ đúng vai trò gia sư.',
-                        'Game giáo dục (SP11 V4) có cốt truyện và tương tác phong phú do AI hỗ trợ.'
-                      ] : [
-                        'System prompt architecture for SP10 proving Socratic pedagogical reasoning.',
-                        'Multi-turn chat logs (≥ 5 turns) demonstrating role adherence.',
-                        'Gamified interactive storylines in SP11 V4.'
-                      ],
-                      rubricAssessment: lang === 'VI'
-                        ? '4F Reflection ≥ 85 điểm; Trực tiếp tương tác và vấn đáp cùng Chatbot SP10 trước Mentor.'
-                        : '4F Reflection ≥ 85 points; Live interactive defense of SP10 Chatbot with Mentor.',
-                      targetProducts: [
-                        { code: 'SP10', name: 'AI Tutor V4', focus: lang === 'VI' ? 'Chatbot gia sư Socratic gợi mở tư duy đa lượt' : 'Multi-turn Socratic pedagogical tutor bot' },
-                        { code: 'SP11', name: 'Game V4', focus: lang === 'VI' ? 'Game giáo dục có âm thanh, điểm số và thử thách AI' : 'Gamified interactive learning challenges' }
-                      ]
-                    },
-                    {
-                      course: lang === 'VI' ? 'Khóa 5' : 'Course 5',
-                      spikeName: 'GenAI Spike (Level 2.0+ Mastery & Capstone)',
-                      spikeCode: 'GenAI',
-                      focusIndicators: lang === 'VI' ? [
-                        'Làm chủ toàn diện quy trình sáng tạo và gỡ lỗi cùng AI trên toàn bộ 12 sản phẩm.',
-                        'Tự tin giải thích nguyên lý AI, cấu trúc prompt và cách kiểm soát kết quả trong bài bảo vệ.',
-                        'Tự đánh giá năng lực cá nhân và hoạch định mục tiêu học tập AI trong tương lai.'
-                      ] : [
-                        'Master complete AI collaboration and self-debugging across all 12 products.',
-                        'Confidently explain AI principles, prompt architecture, and control mechanisms in defense.',
-                        'Conduct metacognitive self-assessment and outline future AI learning milestones.'
-                      ],
-                      briefReq: lang === 'VI'
-                        ? 'Toàn bộ 12/12 Sản phẩm đạt phiên bản V5 đỉnh cao, liên kết thành Master Portfolio Hub (SP12 V5) sẵn sàng xuất bản.'
-                        : 'All 12/12 Products reach V5 perfection, integrated into the Master Portfolio Hub (SP12 V5).',
-                      evidenceList: lang === 'VI' ? [
-                        'Hồ sơ năng lực trực tuyến SP12 V5 tích hợp đầy đủ link live và mã nguồn của 12 sản phẩm.',
-                        'Slide thuyết trình và video demo sản phẩm hoàn chỉnh.',
-                        'Hoàn thành xuất sắc bài bảo vệ Show & Tell (5-7 phút) trước Hội đồng và Phụ huynh.'
-                      ] : [
-                        'Master Portfolio Hub (SP12 V5) linking all 12 live products and source repos.',
-                        'Slide deck and polished product video walkthrough.',
-                        'Deliver 5-7 min Show & Tell capstone defense before Council & Parents.'
-                      ],
-                      rubricAssessment: lang === 'VI'
-                        ? '4F Reflection ≥ 90 điểm; Bảo vệ thành công Capstone Show & Tell đạt chuẩn Level 2 Toàn Diện.'
-                        : '4F Reflection ≥ 90 points; Pass Show & Tell capstone defense achieving Full Level 2 Mastery.',
-                      targetProducts: [
-                        { code: 'SP12', name: 'Master Hub V5', focus: lang === 'VI' ? 'Showcase toàn bộ 12 sản phẩm V5 & bảo vệ Show & Tell' : 'Integrated 12-Product V5 Hub & Capstone Defense' },
-                        { code: 'SP1–11', name: 'All Products V5', focus: lang === 'VI' ? 'Hoàn thiện 100% Brief và gắn domain cá nhân hóa' : '100% Brief completion & custom domain mapping' }
-                      ]
-                    }
-                  ];
+                const courseConfigs = [
+                  {
+                    id: 0,
+                    num: lang === 'VI' ? 'Khóa 1' : 'Course 1',
+                    spike: 'GenAI Spike (L1.0 → L1.2)',
+                    shortSpike: 'L1.2',
+                    versionLabel: 'V1',
+                    icon: Sparkles,
+                    targetGenAiLevel: 1,
+                    genAiCompCodes: ['1.1', '1.2', '1.3'],
+                    cuCompCodes: ['1.1'],
+                    dpdCompCodes: ['3.2'],
+                    lrnCompCodes: ['1.1', '2.2'],
+                    briefFocus: lang === 'VI'
+                      ? 'Khởi tạo 12/12 sản phẩm ở phiên bản V1 thô nhưng đủ tính năng cơ bản; 100% link web live chạy được trên Vercel/Netlify.'
+                      : 'Build all 12 products to raw V1 with full basic functionality; 100% live web links deployed.',
+                    products: [
+                      { code: 'SP1', name: 'Personal Page', delta: lang === 'VI' ? 'Tạo trang web cá nhân tĩnh bản đầu & Deploy live' : 'Static personal landing site & live deployment', activeSkill: 'DPD: Deploy Web' },
+                      { code: 'SP2', name: 'Hobby Showcase', delta: lang === 'VI' ? 'Tạo sitemap 3-5 trang chủ đề sở thích' : '3-5 page hobby sitemap layout', activeSkill: 'DPD: Sitemap & Layout' },
+                      { code: 'SP3', name: 'Family Tree', delta: lang === 'VI' ? 'Khởi tạo cây gia phả 2 thế hệ cơ bản' : 'Basic 2-generation family tree layout', activeSkill: 'CU: User Empathy' },
+                      { code: 'SP4', name: 'Prompt Cookbook', delta: lang === 'VI' ? 'Đóng gói 3 prompt mẫu cơ bản đầu tiên' : 'Package 3 basic foundational prompt templates', activeSkill: 'GenAI: Clear Prompting' },
+                      { code: 'SP5', name: 'Custom Domain', delta: lang === 'VI' ? 'Trỏ DNS domain cơ bản qua Cloudflare' : 'Basic DNS domain mapping on Cloudflare', activeSkill: 'DPD: Domain Config' },
+                      { code: 'SP6', name: 'Knowledge Hub', delta: lang === 'VI' ? 'Tạo tài liệu học tập đầu tiên với NotebookLM' : 'Initial NotebookLM study notebook setup', activeSkill: 'LRN: Source Synthesis' },
+                      { code: 'SP7', name: 'Learning Hub', delta: lang === 'VI' ? 'Bộ 10 Flashcard học tập chủ đề yêu thích' : '10 Flashcards deck for favorite topic', activeSkill: 'DPD: Interactive Logic' },
+                      { code: 'SP8', name: 'Exam Prep', delta: lang === 'VI' ? 'Đồng hồ đếm ngược Pomodoro cơ bản' : 'Basic Pomodoro focus countdown timer', activeSkill: 'DPD: State Management' },
+                      { code: 'SP9', name: 'Growth Portrait', delta: lang === 'VI' ? 'Trang hồ sơ ghi nhận 3 thành tựu đầu tiên' : 'Profile page logging first 3 milestones', activeSkill: 'LRN: Self Reflection' },
+                      { code: 'SP10', name: 'AI Tutor Bot', delta: lang === 'VI' ? 'Prompt khởi tạo chatbot hỏi đáp bài tập' : 'Prompt setup for single-turn study Q&A bot', activeSkill: 'GenAI: Next-token' },
+                      { code: 'SP11', name: 'Learning Game', delta: lang === 'VI' ? 'Game trắc nghiệm 5 câu hỏi có tính điểm' : '5-question scoring quiz game layout', activeSkill: 'DPD: Gamification' },
+                      { code: 'SP12', name: 'Master Portfolio', delta: lang === 'VI' ? 'Trang tổng hợp chứa link live 11 sản phẩm' : 'Hub page linking 11 live web product URLs', activeSkill: 'DPD: Portfolio Hub' }
+                    ]
+                  },
+                  {
+                    id: 1,
+                    num: lang === 'VI' ? 'Khóa 2' : 'Course 2',
+                    spike: 'GenAI Spike (L1.2 → L1.5)',
+                    shortSpike: 'L1.5',
+                    versionLabel: 'V2',
+                    icon: Users,
+                    targetGenAiLevel: 2,
+                    genAiCompCodes: ['2.1', '2.3'],
+                    cuCompCodes: ['1.3'],
+                    dpdCompCodes: ['2.2'],
+                    lrnCompCodes: ['1.3'],
+                    briefFocus: lang === 'VI'
+                      ? 'Nâng cấp 12/12 sản phẩm lên V2 với cấu trúc câu lệnh chuẩn Role-Context-Task-Constraint (R-T-C) và dữ liệu chuẩn mực.'
+                      : 'Upgrade 12/12 products to V2 with standardized R-T-C prompting framework and consistent data schema.',
+                    products: [
+                      { code: 'SP1', name: 'Personal Page', delta: lang === 'VI' ? 'Thiết kế bố cục chuẩn UX & tối ưu thông điệp giá trị cá nhân' : 'UX layout refinement & personal value proposition', activeSkill: 'DPD: UX Design' },
+                      { code: 'SP2', name: 'Hobby Showcase', delta: lang === 'VI' ? 'Phân cấp nội dung chi tiết & gắn hình ảnh chất lượng cao' : 'Clear content hierarchy & high-res assets', activeSkill: 'DPD: Information Hierarchy' },
+                      { code: 'SP3', name: 'Family Tree', delta: lang === 'VI' ? 'Phỏng vấn người thân 1-1 & cấu trúc gia phả nhiều nhánh' : '1-1 family interviews & multi-branch tree', activeSkill: 'CU: User Interview' },
+                      { code: 'SP4', name: 'Prompt Cookbook', delta: lang === 'VI' ? 'Hoàn thiện 5 bộ prompt chuẩn khung R-T-C có ràng buộc' : '5 standardized R-T-C prompt recipes with constraints', activeSkill: 'GenAI: R-T-C Prompting' },
+                      { code: 'SP5', name: 'Custom Domain', delta: lang === 'VI' ? 'Cấu hình SSL bảo mật HTTPS & tối ưu tốc độ tải trang' : 'HTTPS SSL security & page load optimization', activeSkill: 'DPD: Web Security' },
+                      { code: 'SP6', name: 'Knowledge Hub', delta: lang === 'VI' ? 'Tổng hợp tri thức từ 3 nguồn sách/bài báo có trích dẫn' : 'Synthesize knowledge from 3 cited sources', activeSkill: 'LRN: Knowledge Packaging' },
+                      { code: 'SP7', name: 'Learning Hub', delta: lang === 'VI' ? 'Phân loại Flashcard theo chủ đề & thuật toán lặp ngắt quãng' : 'Categorized decks & spaced repetition flow', activeSkill: 'LRN: Deliberate Practice' },
+                      { code: 'SP8', name: 'Exam Prep', delta: lang === 'VI' ? 'Tùy chỉnh thời gian Pomodoro & lưu lịch sử phiên học' : 'Custom interval timers & study session history', activeSkill: 'DPD: Data Persistence' },
+                      { code: 'SP9', name: 'Growth Portrait', delta: lang === 'VI' ? 'Gắn minh chứng số và biểu đồ tự đánh giá năng lực' : 'Digital artifact badges & growth charts', activeSkill: 'LRN: Self Assessment' },
+                      { code: 'SP10', name: 'AI Tutor Bot', delta: lang === 'VI' ? 'Thiết lập Persona chuyên gia và kịch bản hỏi đáp có ngữ cảnh' : 'Expert persona & context-aware answering rules', activeSkill: 'GenAI: Persona Prompting' },
+                      { code: 'SP11', name: 'Learning Game', delta: lang === 'VI' ? 'Thêm cốt truyện dẫn dắt & hiệu ứng phản hồi âm thanh/hình ảnh' : 'Engaging storyline & audio/visual feedback', activeSkill: 'CU: User Motivation' },
+                      { code: 'SP12', name: 'Master Portfolio', delta: lang === 'VI' ? 'Giao diện chuyên nghiệp, gắn mô tả bài toán và công nghệ dùng' : 'Refined UI with project problem statements & tech tags', activeSkill: 'DPD: Portfolio Layout' }
+                    ]
+                  },
+                  {
+                    id: 2,
+                    num: lang === 'VI' ? 'Khóa 3' : 'Course 3',
+                    spike: 'GenAI Spike (L1.5 → L1.8)',
+                    shortSpike: 'L1.8',
+                    versionLabel: 'V3',
+                    icon: Target,
+                    targetGenAiLevel: 2,
+                    genAiCompCodes: ['1.1', '3.2'],
+                    cuCompCodes: ['4.1'],
+                    dpdCompCodes: ['3.3'],
+                    lrnCompCodes: ['1.2'],
+                    briefFocus: lang === 'VI'
+                      ? 'Nâng cấp 12/12 sản phẩm lên V3 sạch 100% lỗi ảo giác thông tin (Hallucination); Logic tương tác hoạt động chính xác.'
+                      : 'Upgrade 12/12 products to V3 with zero hallucinated info; verified interactive logic.',
+                    products: [
+                      { code: 'SP1', name: 'Personal Page', delta: lang === 'VI' ? 'Kiểm chứng chéo thông tin & gắn liên kết dự án thực tế' : 'Fact-check all claims & link authentic projects', activeSkill: 'GenAI: Fact-checking' },
+                      { code: 'SP2', name: 'Hobby Showcase', delta: lang === 'VI' ? 'Tích hợp bộ lọc tìm kiếm & xác thực dữ liệu nguồn' : 'Search filters & verified source citations', activeSkill: 'DPD: Data Filtering' },
+                      { code: 'SP3', name: 'Family Tree', delta: lang === 'VI' ? 'Xác thực độ chính xác ngày tháng và câu chuyện lịch sử gia đình' : 'Validate dates and historical family stories', activeSkill: 'CU: Trust Building' },
+                      { code: 'SP4', name: 'Prompt Cookbook', delta: lang === 'VI' ? 'Bộ prompt bắt lỗi ảo giác & prompt kiểm chứng chéo' : 'Stress-test prompt suite & anti-hallucination rules', activeSkill: 'GenAI: Hallucination Detection' },
+                      { code: 'SP5', name: 'Custom Domain', delta: lang === 'VI' ? 'Cấu hình chuyển hướng subdomain & kiểm thử an toàn mạng' : 'Subdomain routing & network security testing', activeSkill: 'DPD: Deployment Testing' },
+                      { code: 'SP6', name: 'Knowledge Hub', delta: lang === 'VI' ? 'Bộ tài liệu tri thức 100% trích dẫn nguồn xác thực' : 'Authoritative knowledge base with full citations', activeSkill: 'LRN: Fact Validation' },
+                      { code: 'SP7', name: 'Learning Hub', delta: lang === 'VI' ? 'Bộ câu hỏi kiểm tra kiến thức đã qua xác thực 100%' : '100% fact-validated quiz and flashcard suites', activeSkill: 'GenAI: Fact-checking' },
+                      { code: 'SP8', name: 'Exam Prep', delta: lang === 'VI' ? 'Cơ chế phát hiện gian lận thời gian & thống kê tập trung' : 'Anti-cheat focus tracking & deep-work metrics', activeSkill: 'DPD: Edge Case Handling' },
+                      { code: 'SP9', name: 'Growth Portrait', delta: lang === 'VI' ? 'Hồ sơ năng lực có số liệu đo lường thực tế, không nói suông' : 'Evidence-backed growth portrait with real metrics', activeSkill: 'LRN: Evidence Synthesis' },
+                      { code: 'SP10', name: 'AI Tutor Bot', delta: lang === 'VI' ? 'Ép AI chỉ trả lời từ tài liệu nạp vào, không bịa đáp án' : 'Strict grounding constraint enforcing zero guesswork', activeSkill: 'GenAI: Negative Constraints' },
+                      { code: 'SP11', name: 'Learning Game', delta: lang === 'VI' ? 'Kiểm thử toàn diện lỗi logic tính điểm và câu hỏi sai lệch' : 'Rigorous scoring logic & question accuracy testing', activeSkill: 'DPD: QA Testing' },
+                      { code: 'SP12', name: 'Master Portfolio', delta: lang === 'VI' ? 'Gắn thông cáo minh bạch (Transparency Disclaimer) về AI' : 'AI transparency disclosure & ethical declarations', activeSkill: 'GenAI: AI Ethics' }
+                    ]
+                  },
+                  {
+                    id: 3,
+                    num: lang === 'VI' ? 'Khóa 4' : 'Course 4',
+                    spike: 'GenAI Spike (L1.8 → L2.0 Target)',
+                    shortSpike: 'L2.0',
+                    versionLabel: 'V4',
+                    icon: MessageSquare,
+                    targetGenAiLevel: 2,
+                    genAiCompCodes: ['2.1', '3.3'],
+                    cuCompCodes: ['2.1'],
+                    dpdCompCodes: ['2.3'],
+                    lrnCompCodes: ['3.2'],
+                    briefFocus: lang === 'VI'
+                      ? 'Nâng cấp 12/12 sản phẩm lên V4 có tính năng tương tác hội thoại hoặc phản hồi thời gian thực; SP10 AI Tutor hoạt động xuất sắc.'
+                      : 'Upgrade 12/12 products to V4 with real-time multi-turn conversation; SP10 AI Tutor fully active.',
+                    products: [
+                      { code: 'SP1', name: 'Personal Page', delta: lang === 'VI' ? 'Tích hợp Mini AI Assistant trả lời câu hỏi của khách ghé thăm' : 'Integrated Mini AI Assistant for visitor inquiries', activeSkill: 'GenAI: Conversational Bot' },
+                      { code: 'SP2', name: 'Hobby Showcase', delta: lang === 'VI' ? 'Gợi ý nội dung tương tác động theo sở thích người xem' : 'Dynamic hobby recommendations based on user tags', activeSkill: 'CU: Persona Matching' },
+                      { code: 'SP3', name: 'Family Tree', delta: lang === 'VI' ? 'Trợ lý AI kể chuyện gia đình tương tác theo từng nhân vật' : 'Interactive story generator for family ancestors', activeSkill: 'GenAI: Multi-turn Context' },
+                      { code: 'SP4', name: 'Prompt Cookbook', delta: lang === 'VI' ? 'Thư viện Prompt Socratic đa tầng gợi mở tư duy cho học sinh' : 'Multi-turn Socratic pedagogical prompt library', activeSkill: 'GenAI: Socratic Prompting' },
+                      { code: 'SP5', name: 'Custom Domain', delta: lang === 'VI' ? 'Tự động hóa triển khai CI/CD qua GitHub Actions' : 'Automated CI/CD deployment via GitHub Actions', activeSkill: 'DPD: DevOps Automation' },
+                      { code: 'SP6', name: 'Knowledge Hub', delta: lang === 'VI' ? 'Podcast âm thanh tóm tắt tri thức tự động từ AI' : 'Automated audio overview & podcast briefing', activeSkill: 'GenAI: Multimodal AI' },
+                      { code: 'SP7', name: 'Learning Hub', delta: lang === 'VI' ? 'Gia sư AI gợi ý câu hỏi thích ứng theo trình độ người học' : 'Adaptive AI quiz difficulty scaling', activeSkill: 'LRN: Adaptive Learning' },
+                      { code: 'SP8', name: 'Exam Prep', delta: lang === 'VI' ? 'AI phân tích biểu đồ tập trung & đưa ra lời khuyên cá nhân hóa' : 'AI study habits analysis & personalized coaching', activeSkill: 'CU: Pain-point Solving' },
+                      { code: 'SP9', name: 'Growth Portrait', delta: lang === 'VI' ? 'Báo cáo năng lực đa chiều tự động tổng hợp qua 4 khóa' : 'Automated multi-dimensional growth progress report', activeSkill: 'LRN: Metacognition' },
+                      { code: 'SP10', name: 'AI Tutor Bot', delta: lang === 'VI' ? 'Chatbot gia sư Socratic gợi mở tư duy đa lượt, không giải hộ' : 'Multi-turn Socratic pedagogical tutor bot', activeSkill: 'GenAI: System Prompt & Socratic' },
+                      { code: 'SP11', name: 'Learning Game', delta: lang === 'VI' ? 'NPC điều khiển bằng AI tương tác và đưa ra thử thách linh hoạt' : 'AI-driven NPC dialogues & dynamic branching quests', activeSkill: 'DPD: Game Architecture' },
+                      { code: 'SP12', name: 'Master Portfolio', delta: lang === 'VI' ? 'Bảng điều khiển tương tác showcase toàn bộ 11 sản phẩm V4' : 'Interactive master dashboard showcasing all 11 V4 apps', activeSkill: 'DPD: Integration Hub' }
+                    ]
+                  },
+                  {
+                    id: 4,
+                    num: lang === 'VI' ? 'Khóa 5' : 'Course 5',
+                    spike: 'GenAI Spike (Level 2.0+ Mastery & Capstone)',
+                    shortSpike: 'L2.0+',
+                    versionLabel: 'V5',
+                    icon: BookOpen,
+                    targetGenAiLevel: 2,
+                    genAiCompCodes: ['3.2', '3.3', '1.2'],
+                    cuCompCodes: ['3.3'],
+                    dpdCompCodes: ['4.1'],
+                    lrnCompCodes: ['2.3'],
+                    briefFocus: lang === 'VI'
+                      ? 'Toàn bộ 12/12 sản phẩm đạt phiên bản V5 đỉnh cao, liên kết thành Master Portfolio Hub (SP12 V5) sẵn sàng bảo vệ Show & Tell.'
+                      : 'All 12/12 products reach V5 perfection, integrated into Master Portfolio Hub (SP12 V5) for Show & Tell defense.',
+                    products: [
+                      { code: 'SP1', name: 'Personal Page', delta: lang === 'VI' ? 'Hoàn thiện 100% nhận diện cá nhân số & gắn domain thương hiệu' : '100% polished personal branding & custom domain', activeSkill: 'DPD: Production Launch' },
+                      { code: 'SP2', name: 'Hobby Showcase', delta: lang === 'VI' ? 'Trang web sở thích hoàn chỉnh có tương tác cộng đồng' : 'Polished community hobby platform with social sharing', activeSkill: 'DPD: Polish & Deploy' },
+                      { code: 'SP3', name: 'Family Tree', delta: lang === 'VI' ? 'Bảo tồn di sản gia đình hoàn chỉnh sẵn sàng tặng người thân' : 'Archived family digital heritage gift site', activeSkill: 'CU: Empathy & Value' },
+                      { code: 'SP4', name: 'Prompt Cookbook', delta: lang === 'VI' ? 'Sách cẩm nang Prompt cá nhân xuất bản online làm tài liệu chia sẻ' : 'Published online Prompt Cookbook sharing with peers', activeSkill: 'LRN: Knowledge Transfer' },
+                      { code: 'SP5', name: 'Custom Domain', delta: lang === 'VI' ? 'Hệ thống tên miền và DNS vận hành ổn định 99.9%' : 'Robust 99.9% uptime custom DNS architecture', activeSkill: 'DPD: Infrastructure' },
+                      { code: 'SP6', name: 'Knowledge Hub', delta: lang === 'VI' ? 'Thư viện tri thức chuyên sâu sẵn sàng phục vụ học tập lâu dài' : 'Comprehensive lifelong learning knowledge repository', activeSkill: 'LRN: Lifelong Learning' },
+                      { code: 'SP7', name: 'Learning Hub', delta: lang === 'VI' ? 'Ứng dụng ôn tập số 1 cho kỳ thi thực tế của học sinh' : 'Production-ready exam study app used in daily life', activeSkill: 'DPD: Product Impact' },
+                      { code: 'SP8', name: 'Exam Prep', delta: lang === 'VI' ? 'Ứng dụng quản trị thời gian độc lập tối ưu hiệu suất' : 'Autonomous productivity & time management tool', activeSkill: 'LRN: Self Regulation' },
+                      { code: 'SP9', name: 'Growth Portrait', delta: lang === 'VI' ? 'Hồ sơ năng lực số toàn diện chứng nhận chuẩn Level 2' : 'Comprehensive Level 2 digital growth credential', activeSkill: 'LRN: Growth Narrative' },
+                      { code: 'SP10', name: 'AI Tutor Bot', delta: lang === 'VI' ? 'Gia sư AI hoàn thiện sẵn sàng đồng hành học tập cả năm' : 'Production Socratic AI tutor ready for daily use', activeSkill: 'GenAI: Autonomous Builder' },
+                      { code: 'SP11', name: 'Learning Game', delta: lang === 'VI' ? 'Game giáo dục số hoàn chỉnh có thể chia sẻ cho bạn bè chơi' : 'Published educational game shared with classmates', activeSkill: 'DPD: User Experience' },
+                      { code: 'SP12', name: 'Master Portfolio', delta: lang === 'VI' ? 'Master Portfolio Hub tích hợp 12 sản phẩm V5 & bảo vệ Show & Tell' : 'Integrated 12-Product V5 Hub & Show & Tell Pitching', activeSkill: 'DPD: Capstone Showcase' }
+                    ]
+                  }
+                ];
 
-                  const cData = courseDetails[selectedCourseIdx];
-                  return (
-                    <div className="bg-white rounded-3xl border border-stone-200 p-6 sm:p-8 shadow-sm space-y-8">
-                      {/* Header */}
-                      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-6 border-b border-stone-100">
-                        <div>
-                          <div className="flex items-center gap-2">
-                            <span className="text-xs font-mono font-black uppercase text-[#cc4e2d] tracking-wider bg-orange-50 px-3 py-1 rounded-full border border-orange-200">
-                              {lang === 'VI' ? 'Chuẩn Tốt Nghiệp' : 'Graduation Criteria'}
-                            </span>
-                            <span className="text-xs font-mono font-bold text-[#cc4e2d] bg-orange-50 px-2.5 py-1 rounded-full border border-orange-200">
-                              {cData.spikeName}
-                            </span>
-                          </div>
-                          <h2 className="text-xl sm:text-2xl font-black text-stone-900 mt-2">{cData.course}</h2>
+                const currentConfig = courseConfigs[selectedCourseIdx] || courseConfigs[0];
+
+                // Dynamically collect and filter domain competencies for the active course
+                const activeDomainsData = aiTeenDomainSlugs.map((slug) => {
+                  const domainObj = competencyData.find((d) => d.slug === slug);
+                  if (!domainObj) return null;
+
+                  const isGenAi = slug === 'domain-generative-ai';
+                  const defaultDomainRole = isGenAi ? 'primary' : 'supporting';
+                  const defaultCoreCode = isGenAi ? 'GenAI' : slug === 'domain-customer-understanding' ? 'CU' : slug === 'domain-digital-product-development' ? 'DPD' : 'LRN';
+                  const compCodesFilter = isGenAi ? currentConfig.genAiCompCodes
+                    : slug === 'domain-customer-understanding' ? currentConfig.cuCompCodes
+                    : slug === 'domain-digital-product-development' ? currentConfig.dpdCompCodes
+                    : currentConfig.lrnCompCodes;
+
+                  // Filter areas and competencies containing active skills
+                  const filteredAreas = (domainObj.competency_areas || []).map((area) => {
+                    const filteredComps = (area.competencies || []).map((comp) => {
+                      const compTitle = comp.name_vi || comp.name || '';
+                      const compMatches = compCodesFilter?.some((code) => compTitle.includes(' ' + code + ':') || compTitle.includes('Competency ' + code));
+
+                      // Correctly access topLevelSkills from competency_skills
+                      const parentSkills = (comp.competency_skills || []).filter((s) => !s.parent_id);
+                      const topLevelSkills = parentSkills.length > 0 ? parentSkills : (comp.competency_skills || []);
+
+                      const filteredSkills = topLevelSkills.map((skill) => {
+                        const skillKey = skill.id || skill.code || skill.name;
+                        const teenData = getAiTeenSkillData(skill.name, comp.name, defaultCoreCode, lang, skill.id, skill, slug);
+                        
+                        // Effective role considering user overrides in customSkillRoles
+                        const effectiveRole = customSkillRoles[skillKey] || teenData.skillRole || defaultDomainRole;
+
+                        // Filter out out-of-scope skills
+                        if (effectiveRole === 'out_of_scope') return null;
+
+                        // Check if skill belongs to focused competency or explicitly enabled by user
+                        let isSkillInThisCourse = compMatches;
+                        if (customSkillRoles[skillKey] === 'primary' || customSkillRoles[skillKey] === 'supporting') {
+                          isSkillInThisCourse = true;
+                        }
+
+                        if (!isSkillInThisCourse) return null;
+
+                        // Determine target level for this course
+                        const targetLevel = effectiveRole === 'primary' ? (selectedCourseIdx === 0 ? 1 : 2) : 1;
+
+                        // Extract target indicators for this course
+                        let targetIndicators = [];
+                        const targetLevelObj = teenData.rubricLevels?.find((l) => l.level === targetLevel);
+                        if (targetLevelObj && targetLevelObj.indicators && targetLevelObj.indicators.length > 0) {
+                          targetIndicators = targetLevelObj.indicators;
+                        } else {
+                          targetIndicators = lang === 'VI' ? [
+                            `Con có thể áp dụng thành thạo kỹ năng ${teenData.name_vi || skill.name_vi || skill.name} ở cấp độ chuẩn.`,
+                            `Con có thể kiểm chứng và phản tư kết quả thực hành cùng Mentor.`
+                          ] : [
+                            `I can apply ${teenData.name_en || skill.name} with consistent quality.`,
+                            `I can cross-verify outputs and reflect on results with Mentors.`
+                          ];
+                        }
+
+                        return {
+                          ...skill,
+                          teenData,
+                          effectiveRole,
+                          targetLevel,
+                          targetIndicators
+                        };
+                      }).filter(Boolean);
+
+                      return filteredSkills.length > 0 ? { ...comp, filteredSkills } : null;
+                    }).filter(Boolean);
+
+                    return filteredComps.length > 0 ? { ...area, filteredComps } : null;
+                  }).filter(Boolean);
+
+                  const totalActiveSkills = filteredAreas.reduce((acc, a) => acc + a.filteredComps.reduce((cAcc, c) => cAcc + c.filteredSkills.length, 0), 0);
+                  const totalIndicators = filteredAreas.reduce((acc, a) => acc + a.filteredComps.reduce((cAcc, c) => cAcc + c.filteredSkills.reduce((sAcc, s) => sAcc + s.targetIndicators.length, 0), 0), 0);
+
+                  return {
+                    ...domainObj,
+                    defaultDomainRole,
+                    defaultCoreCode,
+                    filteredAreas,
+                    totalActiveSkills,
+                    totalIndicators
+                  };
+                }).filter((d) => d && d.totalActiveSkills > 0);
+
+                // Calculate total course indicators and deliberate practice time
+                let totalPrimaryIndicators = 0;
+                let totalSupportingIndicators = 0;
+
+                activeDomainsData.forEach((d) => {
+                  d.filteredAreas.forEach((a) => {
+                    a.filteredComps.forEach((c) => {
+                      c.filteredSkills.forEach((s) => {
+                        if (s.effectiveRole === 'primary') {
+                          totalPrimaryIndicators += s.targetIndicators.length;
+                        } else {
+                          totalSupportingIndicators += s.targetIndicators.length;
+                        }
+                      });
+                    });
+                  });
+                });
+
+                const totalCourseIndicators = totalPrimaryIndicators + totalSupportingIndicators;
+                const minPracticeHours = (totalCourseIndicators * 2.0).toFixed(0);
+                const maxPracticeHours = (totalCourseIndicators * 2.5).toFixed(0);
+                const avgPracticeHours = (totalCourseIndicators * 2.25).toFixed(1);
+                const standardBudgetHours = 40;
+                const budgetPercent = Math.round((avgPracticeHours / standardBudgetHours) * 100);
+
+                let budgetHealthColor = 'text-emerald-700 bg-emerald-50 border-emerald-200';
+                let budgetHealthLabel = lang === 'VI' ? 'Cân Bằng Tối Ưu' : 'Optimal Balance';
+                if (budgetPercent > 125) {
+                  budgetHealthColor = 'text-amber-700 bg-amber-50 border-amber-200';
+                  budgetHealthLabel = lang === 'VI' ? 'Tải Cao' : 'High Load';
+                } else if (budgetPercent < 75) {
+                  budgetHealthColor = 'text-sky-700 bg-sky-50 border-sky-200';
+                  budgetHealthLabel = lang === 'VI' ? 'Nhẹ Nhàng' : 'Light Load';
+                }
+
+                return (
+                  <div className="space-y-8">
+                    {/* 5 Course Selection Stepper Tabs — Ultra Clean */}
+                    <div className="flex flex-wrap items-center gap-2">
+                      {courseConfigs.map((c) => {
+                        const isSelected = selectedCourseIdx === c.id;
+                        return (
+                          <button
+                            key={c.id}
+                            onClick={() => setSelectedCourseIdx(c.id)}
+                            className={`px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer ${
+                              isSelected
+                                ? 'bg-stone-900 text-white shadow-sm'
+                                : 'bg-white text-stone-600 border border-stone-200 hover:border-stone-400 hover:text-stone-900'
+                            }`}
+                          >
+                            {c.num}
+                          </button>
+                        );
+                      })}
+                    </div>
+
+                    {/* COURSE OVERVIEW BANNER — Minimalist & High Signal */}
+                    <div className="bg-white rounded-2xl border border-stone-200 p-4 sm:p-5 shadow-xs space-y-3">
+                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                        <div className="flex items-center gap-2.5 flex-wrap">
+                          <h2 className="text-xl font-black text-stone-900">
+                            {currentConfig.num}
+                          </h2>
+                          <span className="px-2 py-0.5 rounded text-xs font-mono font-bold bg-orange-100 text-[#cc4e2d]">
+                            {currentConfig.shortSpike}
+                          </span>
+                          <span className={`px-2 py-0.5 rounded text-xs font-mono font-semibold border ${budgetHealthColor}`}>
+                            ~{avgPracticeHours}h
+                          </span>
                         </div>
+
                         <button
-                          onClick={() => {
-                            navigate('/ai-teen');
-                            setActiveCoreCode(cData.spikeCode || 'GenAI');
-                          }}
-                          className="px-4 py-2.5 bg-stone-900 hover:bg-stone-800 text-white rounded-xl text-xs font-bold flex items-center gap-2 self-start md:self-auto shrink-0 shadow-sm"
+                          onClick={() => navigate('/ai-teen')}
+                          className="px-3 py-1.5 bg-stone-900 hover:bg-stone-800 text-white rounded-lg text-xs font-semibold flex items-center gap-1.5 self-start sm:self-auto shrink-0 transition-colors cursor-pointer"
                         >
-                          <Layers className="w-4 h-4 text-orange-400" />
-                          <span>{lang === 'VI' ? 'Xem Rubric GenAI (Level 2)' : 'View GenAI Rubric (Level 2)'}</span>
-                          <ArrowRight className="w-3.5 h-3.5" />
+                          <Layers className="w-3.5 h-3.5 text-orange-400" />
+                          <span>{lang === 'VI' ? 'AI Teen Taxonomy' : 'Taxonomy'}</span>
+                          <ArrowRight className="w-3 h-3" />
                         </button>
                       </div>
 
-                      {/* Focus Indicators in this Course */}
-                      <div className="p-4 rounded-2xl bg-orange-50/50 border border-orange-200 space-y-2">
-                        <div className="font-extrabold text-orange-950 text-xs sm:text-sm flex items-center gap-2">
-                          <Sparkles className="w-4 h-4 text-[#cc4e2d]" />
-                          {lang === 'VI' ? '🎯 CHỈ BÁO HÀNH VI TRỌNG TÂM TRONG KHÓA (GENAI LEVEL 2 TARGET):' : '🎯 TARGET BEHAVIORAL INDICATORS IN THIS COURSE:'}
+                      {/* 3 Metric Stats */}
+                      <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 pt-2 border-t border-stone-100">
+                        <div className="bg-stone-50 rounded-lg px-3 py-2 border border-stone-100 flex items-center justify-between">
+                          <span className="text-[11px] text-stone-500 font-medium">{lang === 'VI' ? 'Thực hành:' : 'Practice:'}</span>
+                          <span className="text-xs font-bold text-stone-900">~{minPracticeHours}h – {maxPracticeHours}h <span className="text-[10px] text-stone-400 font-normal">/ 40h</span></span>
                         </div>
-                        <ul className="list-disc pl-5 text-xs text-stone-800 space-y-1.5 leading-relaxed font-medium">
-                          {cData.focusIndicators.map((ind, i) => (
-                            <li key={i}>{ind}</li>
-                          ))}
-                        </ul>
-                      </div>
-
-                      {/* Criteria Grid */}
-                      <div className="grid md:grid-cols-3 gap-6">
-                        {/* Box 1 */}
-                        <div className="p-5 rounded-2xl bg-stone-50 border border-stone-200 space-y-2">
-                          <div className="font-extrabold text-stone-900 text-sm flex items-center gap-2">
-                            <span className="w-2 h-2 rounded-full bg-stone-800"></span>
-                            {lang === 'VI' ? 'Chuẩn Tiến Hóa 12 Sản Phẩm' : '12 Products Evolution'}
-                          </div>
-                          <p className="text-xs text-stone-600 leading-relaxed font-medium">{cData.briefReq}</p>
+                        <div className="bg-stone-50 rounded-lg px-3 py-2 border border-stone-100 flex items-center justify-between">
+                          <span className="text-[11px] text-stone-500 font-medium">{lang === 'VI' ? 'Chỉ báo:' : 'Indicators:'}</span>
+                          <span className="text-xs font-bold text-[#cc4e2d]">{totalCourseIndicators} <span className="text-[10px] text-stone-500 font-normal">({totalPrimaryIndicators} Primary + {totalSupportingIndicators} Supporting)</span></span>
                         </div>
-
-                        {/* Box 2 */}
-                        <div className="p-5 rounded-2xl bg-orange-50/60 border border-orange-200 space-y-2">
-                          <div className="font-extrabold text-orange-950 text-sm flex items-center gap-2">
-                            <Flame className="w-4 h-4 text-[#cc4e2d]" />
-                            {lang === 'VI' ? 'Bằng Chứng Bắt Buộc' : 'Required Evidence'}
-                          </div>
-                          <ul className="list-disc pl-4 text-xs text-orange-950 space-y-1.5 leading-relaxed">
-                            {cData.evidenceList.map((ev, i) => (
-                              <li key={i}>{ev}</li>
-                            ))}
-                          </ul>
-                        </div>
-
-                        {/* Box 3 */}
-                        <div className="p-5 rounded-2xl bg-emerald-50/60 border border-emerald-200 space-y-2">
-                          <div className="font-extrabold text-emerald-950 text-sm flex items-center gap-2">
-                            <CheckCircle2 className="w-4 h-4 text-emerald-600" />
-                            {lang === 'VI' ? 'Đánh Giá & Vấn Đáp' : 'Assessment Rubrics'}
-                          </div>
-                          <p className="text-xs text-emerald-900 leading-relaxed font-medium">
-                            {cData.rubricAssessment}
-                          </p>
+                        <div className="bg-stone-50 rounded-lg px-3 py-2 border border-stone-100 flex items-center justify-between">
+                          <span className="text-[11px] text-stone-500 font-medium">{lang === 'VI' ? 'Đồng bộ:' : 'Sync:'}</span>
+                          <span className="text-[11px] font-semibold text-emerald-700 flex items-center gap-1">
+                            <CheckCircle2 className="w-3 h-3 text-emerald-600" />
+                            {lang === 'VI' ? 'Tự động' : 'Reactive'}
+                          </span>
                         </div>
                       </div>
+                    </div>
 
-                      {/* Products Mapped to this Course */}
-                      <div className="space-y-4 pt-4 border-t border-stone-100">
-                        <h3 className="font-bold text-stone-900 text-sm uppercase tracking-wider flex items-center gap-2">
-                          <span>{lang === 'VI' ? 'Sản Phẩm Trọng Tâm Trong Khóa (Tiến Trình Xoắn Ốc)' : 'Key Products in this Course (Spiral Evolution)'}</span>
+                    {/* HIERARCHICAL DOMAIN COMPETENCY TREE SECTION — Collapsible Accordions */}
+                    <div className="space-y-3">
+                      <div className="flex items-center justify-between">
+                        <h3 className="text-sm sm:text-base font-bold text-stone-900 flex items-center gap-1.5">
+                          <Brain className="w-4 h-4 text-[#cc4e2d]" />
+                          <span>{lang === 'VI' ? 'Chỉ Báo Mục Tiêu' : 'Target Indicators'}</span>
                         </h3>
-                        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                          {cData.targetProducts.map((p) => (
-                            <div
-                              key={p.code}
-                              className="p-4 rounded-xl border border-stone-200 bg-stone-50/40 hover:bg-orange-50/30 hover:border-orange-200 transition-colors"
-                            >
-                              <div className="flex items-center gap-2 mb-1.5">
-                                <span className="px-2 py-0.5 bg-stone-900 text-white font-mono font-bold text-[10px] rounded">
-                                  {p.code}
-                                </span>
-                                <span className="font-extrabold text-xs text-stone-900">{p.name}</span>
-                              </div>
-                              <p className="text-[11px] text-stone-500 leading-snug">{p.focus}</p>
-                            </div>
-                          ))}
+                        <div className="flex items-center gap-2">
+                          <span className="text-[11px] text-stone-400 font-mono hidden sm:inline">
+                            {activeDomainsData.length} Domains • {totalCourseIndicators} Indicators
+                          </span>
+                          <button
+                            onClick={() => {
+                              const allOpen = activeDomainsData.every((d) => openCourseDomains[d.id]);
+                              const next = {};
+                              activeDomainsData.forEach((d) => {
+                                next[d.id] = !allOpen;
+                              });
+                              setOpenCourseDomains(next);
+                            }}
+                            className="text-xs font-semibold text-stone-600 hover:text-stone-900 bg-stone-100 hover:bg-stone-200 px-2.5 py-1 rounded-md transition-colors cursor-pointer"
+                          >
+                            {activeDomainsData.every((d) => openCourseDomains[d.id])
+                              ? (lang === 'VI' ? 'Thu gọn tất cả' : 'Collapse All')
+                              : (lang === 'VI' ? 'Mở rộng tất cả' : 'Expand All')}
+                          </button>
                         </div>
                       </div>
-                    </div>
-                  );
-                })()}
-                {/* 12 Products Full Table */}
-                <div className="space-y-4 pt-6">
-                  <div className="flex items-center justify-between border-b border-stone-200 pb-3">
-                    <div className="flex items-center gap-2">
-                      <span className="w-2.5 h-6 bg-[#cc4e2d] rounded-full"></span>
-                      <h2 className="text-xl font-black text-stone-900">
-                        {lang === 'VI' ? 'Bảng Ánh Xạ 12 Sản Phẩm & Câu Hỏi Socratic' : 'Product Socratic Matrix'}
-                      </h2>
-                    </div>
-                    <span className="text-xs font-bold text-stone-500">12 Performance Tasks</span>
-                  </div>
 
-                  <div className="overflow-x-auto rounded-2xl border border-stone-200 bg-white shadow-sm">
-                    <table className="w-full text-left text-xs border-collapse">
-                      <thead>
-                        <tr className="bg-stone-100/80 border-b border-stone-200 text-stone-700 font-bold uppercase tracking-wider text-[11px]">
-                          <th className="p-4 w-36">{lang === 'VI' ? 'Mã Sản Phẩm' : 'Product Code'}</th>
-                          <th className="p-4 w-48">{lang === 'VI' ? 'Yêu Cầu Kỹ Thuật' : 'Technical Scope'}</th>
-                          <th className="p-4 w-60">{lang === 'VI' ? 'Chỉ Báo Conan1' : 'Conan1 Indicators'}</th>
-                          <th className="p-4">{lang === 'VI' ? 'Câu Hỏi Gợi Mở Mentor (Socratic)' : 'Socratic Coaching Prompts'}</th>
-                        </tr>
-                      </thead>
-                      <tbody className="divide-y divide-stone-100">
-                        {[
-                          {
-                            code: 'SP1',
-                            name: 'Personal Page',
-                            tech: lang === 'VI' ? 'Web cá nhân giới thiệu bản thân, ước mơ, form liên hệ.' : 'Personal portfolio web with bio, aspirations, and contact form.',
-                            indicators: ['CU.1.3: Persona Dev', 'GenAI.2.1: Prompting', 'DPD.4.1: Product Launch'],
-                            socratic: lang === 'VI' ? '"Ai sẽ vào xem trang cá nhân này của con? Con muốn người ta nhớ đến con qua 3 từ khóa nào nhất?"' : '"Who is the primary audience for your personal page? Which 3 keywords do you want them to remember about you?"'
-                          },
-                          {
-                            code: 'SP2',
-                            name: 'My Hobby Website',
-                            tech: lang === 'VI' ? 'Web đam mê đa trang (5+ trang con), menu điều hướng.' : 'Multi-page passion web (5+ pages) with dynamic navigation.',
-                            indicators: ['DPD.2.3: Architecture', 'CU.2.1: Latent Needs', 'LRN.1.2: Info Literacy'],
-                            socratic: lang === 'VI' ? '"Vì sao con lại chia thành 5 trang này mà không gom vào 1 trang? Người xem bấm vào đâu sẽ thích nhất?"' : '"Why did you separate this into 5 pages instead of one? Where will the visitor feel most engaged?"'
-                          },
-                          {
-                            code: 'SP3',
-                            name: 'My Family Website',
-                            tech: lang === 'VI' ? 'Cây gia phả tương tác, hover xem thông tin gia đình.' : 'Interactive family tree with hover profiles and history.',
-                            indicators: ['CU.1.1: Interviewing', 'CU.1.2: Contextual Inquiry', 'DPD.2.2: UX Hierarchy'],
-                            socratic: lang === 'VI' ? '"Thông tin này con tự nhớ hay đã hỏi ông bà/bố mẹ? Khi bố mẹ hover vào ảnh của mình, bố mẹ nói gì?"' : '"Did you gather this information via interviews with parents/grandparents? What was their reaction?"'
-                          },
-                          {
-                            code: 'SP4',
-                            name: 'AI Prompting Cookbook',
-                            tech: lang === 'VI' ? 'Thư viện 5+ bộ prompt mẫu (Role, Context, Task, Constraint).' : 'Curated library of 5+ prompt templates (Role, Context, Task, Constraint).',
-                            indicators: ['GenAI.1.1: AI Literacy', 'GenAI.2.1: Adv Prompting', 'LRN.2.3: Knowledge Integration'],
-                            socratic: lang === 'VI' ? '"Nếu bỏ bớt phần Constraint đi thì AI sẽ trả lời sai thế nào? Prompt này con có thể chia sẻ cho bạn nào dùng?"' : '"If you remove the Constraint, how will AI output degrade? Who can benefit from using this cookbook?"'
-                          },
-                          {
-                            code: 'SP5',
-                            name: 'Custom Domain & DNS',
-                            tech: lang === 'VI' ? 'Trỏ tên miền riêng từ Cloudflare DNS chạy trực tuyến.' : 'Deploy custom domain with Cloudflare DNS records live.',
-                            indicators: ['DPD.4.1: Deployment', 'PSDM.1.2: Root Cause', 'PE.3.3: Craftsmanship'],
-                            socratic: lang === 'VI' ? '"DNS hoạt động như thế nào con giải thích thử? Khi web chưa nhận tên miền, con kiểm tra bước nào đầu tiên?"' : '"How does DNS resolution work? When the domain fails to propagate, what is your first debugging step?"'
-                          },
-                          {
-                            code: 'SP6',
-                            name: 'NotebookLM AI Knowledge',
-                            tech: lang === 'VI' ? 'Bộ tài liệu AI sinh audio podcast & slide trình bày.' : 'AI curated knowledge kit generating audio podcast and summary decks.',
-                            indicators: ['GenAI.2.2: AI Learning', 'LRN.1.3: Synthesis', 'CU.3.3: Value Proposition'],
-                            socratic: lang === 'VI' ? '"Nguồn tài liệu con nạp vào là gì? Bản tóm tắt của AI có chỗ nào thiếu hoặc chưa chính xác không?"' : '"What source materials did you feed into NotebookLM? Were there any inaccuracies in AI summary?"'
-                          },
-                          {
-                            code: 'SP7',
-                            name: 'My Learning Hub',
-                            tech: lang === 'VI' ? 'Flashcards 3D xoay lật + Bài thi trắc nghiệm AI.' : '3D flip flashcards + AI-extracted quiz engine.',
-                            indicators: ['DPD.2.3: Interactive UI', 'PSDM.1.2: Logic Debugging', 'LRN.2.1: Practice'],
-                            socratic: lang === 'VI' ? '"Bộ Flashcards này phục vụ môn học nào của con? Khi bấm lật thẻ không xoay, con đã cùng AI sửa thế nào?"' : '"Which subject does this Flashcard hub support? How did you debug the 3D flip animation with AI?"'
-                          },
-                          {
-                            code: 'SP8',
-                            name: 'My Exam Prep Portal',
-                            tech: lang === 'VI' ? 'Checklist đo lường tiến độ tự học + Đồng hồ Pomodoro.' : 'Self-study progress checklist + 25-minute Pomodoro timer.',
-                            indicators: ['PE.1.1: Time Management', 'DPD.2.1: State Management', 'PSDM.3.2: Prioritization'],
-                            socratic: lang === 'VI' ? '"Đồng hồ Pomodoro giúp ích gì cho con khi ôn thi? Con đã thử dùng nó để học 1 buổi 25 phút thật chưa?"' : '"How does the Pomodoro timer assist your exam prep? Have you completed a real 25-min session?"'
-                          },
-                          {
-                            code: 'SP9',
-                            name: 'My Student Portrait',
-                            tech: lang === 'VI' ? 'Triển lãm năng lực cá nhân có hiệu ứng cuộn trang mượt.' : 'Dynamic student portrait showcase with smooth scroll animations.',
-                            indicators: ['PE.1.3: Organization', 'DPD.2.2: Advanced Animation', 'LRN.2.3: Showcasing'],
-                            socratic: lang === 'VI' ? '"Trang Showcase này khác gì so với Trang cá nhân ở SP1? Con thấy năng lực của mình đã tiến bộ thế nào?"' : '"How does this Showcase differ from SP1 Personal Page? In what areas have your competencies evolved?"'
-                          },
-                          {
-                            code: 'SP10',
-                            name: 'My AI Tutor Chatbot',
-                            tech: lang === 'VI' ? 'Chatbot AI ứng dụng kỹ thuật đặt câu hỏi Socratic.' : 'AI tutor chatbot implementing Socratic inquiry prompting.',
-                            indicators: ['GenAI.3.1: Pedagogical Prompting', 'CU.2.3: Emotion Modeling', 'DPD.3.1: Conversational UI'],
-                            socratic: lang === 'VI' ? '"Vì sao chatbot này không trả lời thẳng đáp án mà lại hỏi ngược lại người dùng? Con thiết kế luật chơi cho nó thế nào?"' : '"Why does this tutor ask guiding questions instead of giving answers? How did you design its pedagogical rules?"'
-                          },
-                          {
-                            code: 'SP11',
-                            name: 'Educational Game',
-                            tech: lang === 'VI' ? 'Trò chơi học tập tương tác, tính điểm, SFX, Leaderboard.' : 'Interactive learning game with score mechanics, SFX, and leaderboard.',
-                            indicators: ['DPD.3.2: Gamification', 'PSDM.2.3: Edge Cases', 'CU.2.1: User Engagement'],
-                            socratic: lang === 'VI' ? '"Người chơi có thể gian lận điểm trong game này được không? Con đã tối ưu âm thanh thế nào để bạn thấy vui?"' : '"Can players exploit the game score? How did you tune audio effects for engagement?"'
-                          },
-                          {
-                            code: 'SP12',
-                            name: 'AI Product & Showcase',
-                            tech: lang === 'VI' ? 'Hub tổng hợp trưng bày toàn bộ sản phẩm và kết nối API.' : 'Master portfolio hub showcasing all 12 artifacts with live API connections.',
-                            indicators: ['DPD.4.3: Product Ecosystem', 'LRN.3.3: Lifelong Portfolio', 'LRN.2.3: Master Show & Tell'],
-                            socratic: lang === 'VI' ? '"Nếu chọn 1 sản phẩm con tự hào nhất trong 12 sản phẩm này, con chọn cái nào và tại sao?"' : '"If you pick one artifact you are most proud of out of 12, which one is it and why?"'
-                          }
-                        ].map((sp) => (
-                          <tr key={sp.code} className="hover:bg-orange-50/20 transition-colors">
-                            <td className="p-4 font-bold text-stone-900 align-top">
-                              <span className="inline-block px-2 py-0.5 rounded bg-stone-900 text-white text-[10px] font-mono mr-1.5">
-                                {sp.code}
-                              </span>
-                              <span>{sp.name}</span>
-                            </td>
-                            <td className="p-4 text-stone-600 align-top leading-relaxed">{sp.tech}</td>
-                            <td className="p-4 align-top space-y-1">
-                              {sp.indicators.map((ind, i) => (
-                                <span
-                                  key={i}
-                                  className="inline-block mr-1 mb-1 px-2 py-0.5 bg-sky-50 text-sky-800 rounded font-mono text-[11px] border border-sky-200"
-                                >
-                                  {ind}
-                                </span>
-                              ))}
-                            </td>
-                            <td className="p-4 text-stone-700 italic align-top bg-stone-50/50 leading-relaxed font-medium">
-                              {sp.socratic}
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
+                      {/* Domain Accordions */}
+                      <div className="space-y-3">
+                        {activeDomainsData.map((domain) => {
+                          const IconComp = getDomainIcon(domain.slug);
+                          const isPrimaryDomain = domain.slug === 'domain-generative-ai';
+                          const isOpen = openCourseDomains[domain.id];
+
+                          return (
+                            <div
+                              key={domain.id}
+                              className="bg-white rounded-xl border border-stone-200 overflow-hidden shadow-xs transition-all"
+                            >
+                              {/* Domain Card Header - Clickable Accordion Header */}
+                              <div
+                                onClick={() => {
+                                  setOpenCourseDomains((prev) => ({
+                                    ...prev,
+                                    [domain.id]: !prev[domain.id]
+                                  }));
+                                }}
+                                className="p-3.5 bg-stone-50/70 hover:bg-stone-100/70 border-b border-stone-100 flex items-center justify-between gap-3 cursor-pointer select-none transition-colors"
+                              >
+                                <div className="flex items-center gap-3">
+                                  <div
+                                    style={{
+                                      backgroundColor: `${domain.color || '#cc4e2d'}15`,
+                                      color: domain.color || '#cc4e2d'
+                                    }}
+                                    className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0 border border-stone-200"
+                                  >
+                                    <IconComp className="w-4 h-4" />
+                                  </div>
+                                  <div>
+                                    <div className="flex items-center gap-2">
+                                      <h4 className="text-sm font-bold text-stone-900">
+                                        {lang === 'VI' ? domain.name_vi || domain.name : domain.name}
+                                      </h4>
+                                      <span className={`text-[10px] font-mono font-bold px-1.5 py-0.5 rounded ${
+                                        isPrimaryDomain ? 'bg-orange-100 text-[#cc4e2d]' : 'bg-sky-100 text-sky-800'
+                                      }`}>
+                                        {isPrimaryDomain ? 'Primary (L2)' : 'Supporting (L1)'}
+                                      </span>
+                                    </div>
+                                    <div className="text-[11px] text-stone-400">
+                                      {domain.totalActiveSkills} {lang === 'VI' ? 'kỹ năng' : 'skills'} • {domain.totalIndicators} {lang === 'VI' ? 'chỉ báo' : 'indicators'}
+                                    </div>
+                                  </div>
+                                </div>
+
+                                <div className="flex items-center gap-2">
+                                  <button
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      navigate(`/ai-teen/${domain.slug}`);
+                                    }}
+                                    className="text-xs font-semibold text-[#cc4e2d] hover:text-orange-700 flex items-center gap-1 hover:underline cursor-pointer p-1"
+                                    title={lang === 'VI' ? 'Xem Domain' : 'View Domain'}
+                                  >
+                                    <ExternalLink className="w-3.5 h-3.5" />
+                                  </button>
+                                  <div className="p-1 text-stone-400">
+                                    <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${isOpen ? 'transform rotate-180' : ''}`} />
+                                  </div>
+                                </div>
+                              </div>
+
+                              {/* Domain Body: Areas -> Competencies -> Skills */}
+                              {isOpen && (
+                                <div className="p-4 space-y-3.5 bg-white">
+                                  {domain.filteredAreas.map((area, aIdx) => (
+                                    <div key={area.id || aIdx} className="space-y-2.5">
+                                      {/* Competency Area Label */}
+                                      <div className="flex items-center gap-1.5 text-[11px] font-mono font-bold text-stone-400 uppercase tracking-wider">
+                                        <FolderKanban className="w-3 h-3 text-stone-400" />
+                                        <span>{lang === 'VI' ? area.name_vi || area.name : area.name}</span>
+                                      </div>
+
+                                      {/* Competencies */}
+                                      <div className="space-y-2.5">
+                                        {area.filteredComps.map((comp, cIdx) => (
+                                          <div key={comp.id || cIdx} className="space-y-2">
+                                            <div className="text-xs font-bold text-stone-700 flex items-center gap-1.5">
+                                              <span className="w-1.5 h-1.5 rounded-full bg-[#cc4e2d]"></span>
+                                              <span>{lang === 'VI' ? comp.name_vi || comp.name : comp.name}</span>
+                                            </div>
+
+                                            {/* Skills List */}
+                                            <div className="space-y-2">
+                                              {comp.filteredSkills.map((skill, sIdx) => {
+                                                const teenData = skill.teenData;
+                                                const isPrimary = skill.effectiveRole === 'primary';
+                                                const skillTitle = lang === 'VI' ? (teenData.name_vi || skill.name_vi || skill.name) : (teenData.name_en || skill.name);
+                                                const guidingQ = lang === 'VI' ? (teenData.guidingQuestion_vi || teenData.guidingQuestion) : (teenData.guidingQuestion_en || teenData.guidingQuestion);
+
+                                                return (
+                                                  <div
+                                                    key={skill.id || sIdx}
+                                                    className="p-3.5 rounded-lg border border-stone-200 bg-white hover:border-stone-300 transition-colors space-y-2"
+                                                  >
+                                                    {/* Skill Header */}
+                                                    <div className="flex items-center justify-between gap-2">
+                                                      <div className="flex items-center gap-2">
+                                                        <span className="font-bold text-xs sm:text-sm text-stone-900">
+                                                          {skillTitle}
+                                                        </span>
+                                                        <span className={`text-[10px] font-semibold px-1.5 py-0.5 rounded ${
+                                                          isPrimary
+                                                            ? 'bg-orange-100 text-[#cc4e2d]'
+                                                            : 'bg-stone-100 text-stone-700'
+                                                        }`}>
+                                                          {isPrimary ? 'Primary' : 'Supporting'}
+                                                        </span>
+                                                      </div>
+
+                                                      <button
+                                                        onClick={() => {
+                                                          navigate(`/ai-teen/${domain.slug}`);
+                                                          setOpenAreas((prev) => ({ ...prev, [area.id]: true }));
+                                                          setOpenCompetencies((prev) => ({ ...prev, [comp.id]: true }));
+                                                          setOpenSkills((prev) => ({ ...prev, [skill.id || skill.code]: true }));
+                                                        }}
+                                                        className="text-xs font-semibold text-stone-400 hover:text-[#cc4e2d] flex items-center gap-1 cursor-pointer transition-colors"
+                                                      >
+                                                        <span>5 Levels</span>
+                                                        <ArrowRight className="w-3 h-3" />
+                                                      </button>
+                                                    </div>
+
+                                                    {/* Guiding Question */}
+                                                    {guidingQ && (
+                                                      <p className="text-xs italic text-stone-600 bg-stone-50 px-2.5 py-1.5 rounded border border-stone-100">
+                                                        <span className="font-semibold not-italic text-stone-700 mr-1.5">🎯 Guiding Question:</span>
+                                                        "{guidingQ}"
+                                                      </p>
+                                                    )}
+
+                                                    {/* Target Indicators */}
+                                                    <div className="space-y-1 pt-0.5">
+                                                      <div className="text-[11px] font-mono font-bold text-stone-400 uppercase tracking-wider">
+                                                        Level {skill.targetLevel} Indicators ({skill.targetIndicators.length})
+                                                      </div>
+                                                      <ul className="space-y-1 text-xs text-stone-700">
+                                                        {skill.targetIndicators.map((ind, iIdx) => (
+                                                          <li key={iIdx} className="flex items-start gap-2">
+                                                            <span className={`w-1.5 h-1.5 rounded-full mt-1.5 shrink-0 ${
+                                                              isPrimary ? 'bg-[#cc4e2d]' : 'bg-stone-400'
+                                                            }`}></span>
+                                                            <span>{ind}</span>
+                                                          </li>
+                                                        ))}
+                                                      </ul>
+                                                    </div>
+                                                  </div>
+                                                );
+                                              })}
+                                            </div>
+                                          </div>
+                                        ))}
+                                      </div>
+                                    </div>
+                                  ))}
+                                </div>
+                              )}
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+
+                    {/* 12 PRODUCTS EVOLUTION MATRIX SECTION — Collapsible */}
+                    <div className="bg-white rounded-xl border border-stone-200 overflow-hidden shadow-xs">
+                      {/* Collapsible Header */}
+                      <div
+                        onClick={() => setIsCourseProductsOpen(!isCourseProductsOpen)}
+                        className="p-3.5 bg-stone-50/70 hover:bg-stone-100/70 flex items-center justify-between gap-3 cursor-pointer select-none transition-colors border-b border-stone-100"
+                      >
+                        <div className="flex items-center gap-2.5 flex-wrap">
+                          <span className="text-[11px] font-mono font-bold uppercase text-[#cc4e2d] tracking-wider">
+                            Product Evolution
+                          </span>
+                          <h3 className="text-sm sm:text-base font-bold text-stone-900">
+                            {lang === 'VI'
+                              ? `12 Sản Phẩm (${currentConfig.num} — ${currentConfig.versionLabel})`
+                              : `12 Products (${currentConfig.num} — ${currentConfig.versionLabel})`}
+                          </h3>
+                          <span className="text-xs font-mono font-semibold text-stone-500 bg-stone-100 px-2 py-0.5 rounded">
+                            12/12 {currentConfig.versionLabel}
+                          </span>
+                        </div>
+
+                        <div className="flex items-center gap-2 text-stone-400">
+                          <span className="text-xs font-medium text-stone-500">
+                            {isCourseProductsOpen ? (lang === 'VI' ? 'Thu gọn' : 'Collapse') : (lang === 'VI' ? 'Mở rộng' : 'Expand')}
+                          </span>
+                          <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${isCourseProductsOpen ? 'transform rotate-180' : ''}`} />
+                        </div>
+                      </div>
+
+                      {/* Collapsible Content */}
+                      {isCourseProductsOpen && (
+                        <div className="p-4 space-y-3.5">
+                          <p className="text-xs text-stone-600 leading-relaxed bg-stone-50 p-2.5 rounded-lg border border-stone-100">
+                            <strong className="text-stone-800 mr-1">{lang === 'VI' ? 'Mục Tiêu:' : 'Target:'}</strong>
+                            {currentConfig.briefFocus}
+                          </p>
+
+                          {/* 12 Products Grid */}
+                          <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2.5">
+                            {currentConfig.products.map((p) => (
+                              <div
+                                key={p.code}
+                                className="p-3 rounded-lg border border-stone-200 bg-white hover:border-stone-300 transition-all flex flex-col justify-between space-y-2"
+                              >
+                                <div className="space-y-1">
+                                  <div className="flex items-center justify-between">
+                                    <span className="px-1.5 py-0.5 bg-stone-900 text-white font-mono font-bold text-[10px] rounded">
+                                      {p.code}
+                                    </span>
+                                    <span className="px-1.5 py-0.5 bg-orange-100 text-[#cc4e2d] font-mono font-bold text-[10px] rounded">
+                                      {currentConfig.versionLabel}
+                                    </span>
+                                  </div>
+                                  <h5 className="font-bold text-xs text-stone-900 leading-snug">
+                                    {p.name}
+                                  </h5>
+                                  <p className="text-[11px] text-stone-600 leading-relaxed">
+                                    {p.delta}
+                                  </p>
+                                </div>
+
+                                <div className="pt-1.5 border-t border-stone-100 flex items-center justify-between text-[10px] text-stone-400 font-mono">
+                                  <span>{p.activeSkill}</span>
+                                  <Check className="w-3 h-3 text-emerald-500" />
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+                    </div>
                   </div>
-                </div>
-              </div>
+                );
+              })()}
+            </div>
           </div>
         )}
-
         {/* ================= VIEW 3A: AI TEEN COMPETENCY FRAMEWORK (4 CORE DOMAINS OVERVIEW) ================= */}
         {currentRoute === '/ai-teen' && (
           <div className="space-y-10">
@@ -2814,7 +2227,7 @@ Provide:
                                         // Pre-calculate counts
                                         const skillRoleList = topLevelSkills.map((skill) => {
                                           const skillKey = skill.id || skill.name;
-                                          const teenData = getAiTeenSkillData(skill.name, comp.name, activeCoreCode, lang, skill.id, skill);
+                                          const teenData = getAiTeenSkillData(skill.name, comp.name, activeCoreCode, lang, skill.id, skill, activeAiTeenDomain?.slug);
                                           const role = customSkillRoles[skillKey] || teenData.skillRole || 'out_of_scope';
                                           return { skill, skillKey, teenData, role };
                                         });

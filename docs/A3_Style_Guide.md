@@ -9,7 +9,48 @@ domain: "Design System / Style Guide & Content Standards"
 
 # Style Guide
 
-Bộ quy chuẩn toàn diện về thiết kế giao diện (**Liquid Flow**) và tiêu chuẩn ngôn ngữ, cấu trúc tài liệu toàn hệ thống Simba Competencies.
+Bộ quy chuẩn toàn diện về triết lý thiết kế giao diện (**Liquid Flow — Clean & Minimalism**) và tiêu chuẩn ngôn ngữ, cấu trúc nội dung toàn hệ thống Simba Competencies.
+
+---
+
+## Design Philosophy: Clean & Minimalism
+
+Triết lý cốt lõi của Simba Competency System là **"Form Follows Function & Zero Fluff"** — Mọi chi tiết xuất hiện trên màn hình hoặc trong tài liệu đều phải phục vụ một mục đích nhận thức hoặc tác nghiệp cụ thể cho Mentor. Tối đa hóa **Tỷ lệ Tín hiệu trên Nhiễu (High Signal-to-Noise Ratio)** để Mentor nắm bắt thông tin trong vòng 3 giây.
+
+```
+       [ HIGH SIGNAL ]  ──>  Thông tin cốt lõi, Mã năng lực, Tiêu chí nhị phân
+             ▲
+             │          (Loại bỏ hoàn toàn từ ngữ thừa, hình trang trí rườm rà)
+             ▼
+       [ LOW NOISE ]    ──>  Khoảng trắng chủ động, Bảng màu có kiểm soát
+```
+
+### 4 Trụ Cột Tối Giản (Minimalism Pillars)
+
+1. **Bố Cục & Không Gian (Layout & Active Whitespace):**
+   - **Khoảng trắng thở (Breathing Space):** Sử dụng khoảng cách (`gap`, `padding`) để phân nhóm thông tin tự nhiên thay vì lạm dụng viền đậm (borders) hay đóng khung thẻ lồng thẻ (nested cards).
+   - **Phẳng & Tinh tế (Subtle Flat):** Hạn chế tối đa đổ bóng dày hay hiệu ứng 3D phô trương. Ưu tiên viền siêu mảnh (`border-stone-200`) và bóng mờ nhẹ (`shadow-sm`) để giữ giao diện nhẹ nhàng, tập trung.
+   - **Phân tầng thị giác rõ ràng (Visual Hierarchy):** Định hướng mắt đọc qua kích thước chữ và độ đậm (Montserrat Extrabold cho Title, Inter cho Body) thay vì dùng quá nhiều màu sắc.
+
+2. **Màu Sắc Có Chức Năng (Functional Color Coding):**
+   - **Nền sạch & Dịu mắt:** Màu nền chủ đạo là Trắng thuần (`#FFFFFF`) và Xám sáng (`#F4F5F7`), giúp Mentor giảm mỏi mắt khi tra cứu và làm việc liên tục.
+   - **Màu sắc mang ý nghĩa tác nghiệp:** Không sử dụng màu chỉ để "trang trí". Mỗi màu gắn liền với một mục đích chức năng:
+     - **Cobalt Blue (`#0052CC`):** Nút CTA chính, liên kết điều hướng, năng lực Hỗ trợ (Supporting).
+     - **Burnt Orange (`#A33500`):** Năng lực Mũi nhọn (Primary Focus), cảnh báo quan trọng.
+     - **Cyan (`#7DF9FF`):** Điểm nhấn sáng tạo, badge bổ trợ.
+     - **Neutral Grey (`#757780`):** Ngoài phạm vi (Out of Scope), văn bản phụ.
+
+3. **Hình Ảnh & Biểu Tượng Có Mục Đích (Purposeful Imagery & Icons):**
+   - **Không dùng hình minh họa trang trí (No Decorative Stock/Cartoons):** Tuyệt đối không chèn ảnh stock vô thưởng vô phạt hoặc hình hoạt họa làm phân tán sự tập trung của Mentor.
+   - **Chỉ sử dụng hình ảnh mang giá trị bằng chứng:** Hình ảnh chỉ xuất hiện khi là **Sản phẩm thực tế của học sinh (Product Evidence)**, **Sơ đồ kiến trúc (Architecture Diagram)** hoặc **Mindmap sư phạm**.
+   - **Icon tối giản, đơn sắc:** Icon theo phong cách stroke mảnh (1.5px – 2px), kích thước chuẩn (16px – 20px), màu trung tính, chỉ dùng để hỗ trợ nhận diện thao tác (như search, filter, download, external-link).
+
+4. **Ngôn Ngữ & Biên Tập Tinh Gọn (Radical Content Minimalism):**
+   - **Cắt bỏ triệt để từ ngữ thừa (Zero Fluff):** Loại bỏ hoàn toàn các từ đệm, từ nối rườm rà, trạng từ khoa trương hoặc các đoạn văn dẫn dắt không mang thông tin hành động.
+   - **Đi thẳng vào bản chất (Direct & Action-Oriented):** Viết ngắn gọn, súc tích; mỗi câu trả lời trực tiếp cho Mentor: *Đây là gì? Dạy thế nào? Tiêu chí nghiệm thu (DoD) là gì?*
+   - **Ưu tiên cấu trúc quét nhanh (Scannable Structure):** Chuyển đổi các đoạn văn dài thành **Bảng đối chiếu (Comparison Tables)**, **Danh sách gạch đầu dòng (Bullet Points)**, và **Mã năng lực dạng chip (`JetBrains Mono`)**.
+   - **Tiêu đề Lean (≤ 3 words):** Tiêu đề Section ngắn gọn, chuẩn Pure English (ví dụ: `System Overview`, `Course Progression`, `Graduation Criteria`).
+   - **Không mở ngoặc giải thích song ngữ (Zero Parenthesis Translation):** Dùng chuẩn thuật ngữ quốc tế hoặc diễn giải tự nhiên, cấm viết kiểu `Mục đích (Objective)` hay `Đầu ra (Output)`.
 
 ---
 
@@ -64,6 +105,7 @@ Bảng màu chuẩn hóa dựa trên hệ thống thiết kế Liquid Flow:
 ### 1. Core Principles
 1. **Lean Section Titles (≤ 3 words):** Toàn bộ Section Header (H1–H4) và nhãn Metadata bắt buộc viết bằng **Pure English**, tối đa 3 từ, Title Case (ví dụ: `System Overview`, `Target Audience`, `Graduation Criteria`).
 2. **Zero Parenthesis Translation:** Tuyệt đối không dùng hình thức mở ngoặc giải thích song ngữ (Cấm: `Mục đích (Objective)`, `Chuẩn đầu ra (DoD)`).
+3. **Radical Brevity:** Cắt bỏ mọi từ đệm không cần thiết; dùng thể chủ động, câu khẳng định trực diện.
 
 ### 2. Language Matrix
 | Hạng Mục | Ngôn Ngữ Quy Định | Ví Dụ Chuẩn |
@@ -71,7 +113,7 @@ Bảng màu chuẩn hóa dựa trên hệ thống thiết kế Liquid Flow:
 | **Tiêu đề Section (H1–H4)** | **Pure English** (≤ 3 words) | `## Executive Summary`, `### Evidence Mapping` |
 | **Meta-data Labels** | **Pure English** | `Objective:`, `Target Audience:`, `Owner:`, `Output:` |
 | **Thuật ngữ Chuyên môn** | **Pure English** (giữ nguyên gốc) | `CBE`, `JTBD`, `Building 21 Continuum`, `4F Reflection` |
-| **Hướng dẫn Tác nghiệp** | **Tiếng Việt tự nhiên** | Diễn giải chi tiết kịch bản Socratic, tiêu chí chỉ báo |
+| **Hướng dẫn Tác nghiệp** | **Tiếng Việt tự nhiên & tinh gọn** | Diễn giải chi tiết kịch bản Socratic, tiêu chí chỉ báo |
 | **Binary Indicator Tone** | **Tiếng Việt ("Con có thể...")** | Diễn đạt hành vi quan sát được, kiểm chứng Đạt / Chưa đạt |
 
 ---
@@ -79,7 +121,10 @@ Bảng màu chuẩn hóa dựa trên hệ thống thiết kế Liquid Flow:
 ## QA Checklist
 
 Trước khi phê duyệt tài liệu hoặc giao diện:
+- [ ] Tuân thủ triết lý **Clean & Minimalism** (không hình ảnh thừa, không viền rườm rà, tối đa khoảng trắng)?
+- [ ] Bảng màu có kiểm soát (nền trắng/xám sạch, màu nhấn phục vụ công năng nhận diện)?
 - [ ] Toàn bộ Section Titles H1–H4 viết bằng Pure English và ≤ 3 từ?
-- [ ] Không có hiện tượng đóng mở ngoặc giải thích song ngữ?
+- [ ] Nội dung tinh gọn, loại bỏ hết từ ngữ thừa thãi, không có hiện tượng đóng mở ngoặc song ngữ?
 - [ ] Bảng màu và typography tuân thủ đúng chuẩn Liquid Flow?
 - [ ] Mã năng lực được định dạng bằng code block (`GenAI.1.1`)?
+
