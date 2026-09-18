@@ -2990,7 +2990,7 @@ Provide:
                                                           <div className="flex items-center justify-between">
                                                             <span className="text-xs font-bold text-stone-800 uppercase tracking-wider flex items-center gap-1.5">
                                                               <Sliders className="w-3.5 h-3.5 text-[#cc4e2d]" />
-                                                              {lang === 'VI' ? 'Thang Đánh Giá Năng Lực (5 Levels CBE Continuum)' : '5-Level CBE Continuum Rubrics'}
+                                                              {lang === 'VI' ? 'Thang Đánh Giá Năng Lực' : 'Continuum Rubrics'}
                                                             </span>
                                                             {role !== 'out_of_scope' && (
                                                               <span className="text-[11px] font-bold text-[#cc4e2d]">
@@ -3070,21 +3070,6 @@ Provide:
                                                             })}
                                                           </div>
                                                         </div>
-
-                                                        {/* Evidence Box */}
-                                                        {teenData.evidence && (
-                                                          <div className="p-3.5 rounded-xl bg-stone-50 border border-stone-200 flex items-start gap-2.5">
-                                                            <Award className="w-4 h-4 text-[#cc4e2d] shrink-0 mt-0.5" />
-                                                            <div className="text-xs space-y-0.5">
-                                                              <span className="font-bold text-stone-900 block">
-                                                                {lang === 'VI' ? 'Bằng chứng nghiệm thu sản phẩm (Artifact Evidence)' : 'Artifact Evidence'}
-                                                              </span>
-                                                              <p className="text-stone-600 leading-relaxed text-[11.5px]">
-                                                                {teenData.evidence}
-                                                              </p>
-                                                            </div>
-                                                          </div>
-                                                        )}
                                                       </div>
                                                     )}
                                                   </div>
