@@ -32,7 +32,8 @@ import {
   Edit3,
   Eye,
   RotateCcw,
-  MessageSquare
+  MessageSquare,
+  Star
 } from 'lucide-react';
 import competencyData from './data/competencyData.json';
 import { getEnrichedSkillData, getSkillExamplesAndMisconceptions } from './data/pedagogicalKnowledge';
@@ -191,9 +192,69 @@ function CompetencyTooltip({
   );
 }
 
+// Standardized CCS AI Prompt generator for skills & competencies (VI/EN Mode)
+export function getAiPromptText(item = {}, lang = 'VI') {
+  if (!item) return '';
+  const skillName = item.name || '';
+  const contextDesc = item.description || (lang === 'VI' ? `Thực hành kỹ năng cho ${skillName}` : `Skill practice for ${skillName}`);
+
+  if (lang === 'EN') {
+    return `[Role: Senior Educational Designer & Competency Expert]
+I need you to explain the following skill in the context of the Conan Competency System (CCS):
+- Skill Name: ${skillName}
+- Context Description: ${contextDesc}
+
+Please structure your response as follows:
+1. Detailed Concept: Explain the core meaning of this skill, why it is important, and how it fits into professional development.
+2. 3 Real-World Examples: Provide 3 concrete, high-quality, observable examples of this skill being performed correctly.
+3. 3 Counter-Examples (Phản ví dụ): Provide 3 clear examples where the skill is absent or performed poorly.
+4. 3 Misconceptions (Dễ bị hiểu lầm): Identify 3 actions/concepts that people commonly mistake for this skill, and explain why they are different.
+
+Response in English.`;
+  }
+
+  return `[Role: Senior Educational Designer & Competency Expert]
+Tôi cần bạn giải thích kỹ năng sau trong ngữ cảnh của Hệ thống Năng lực Conan (CCS):
+- Tên kỹ năng: ${skillName}
+- Mô tả ngữ cảnh: ${contextDesc}
+
+Vui lòng cấu trúc câu trả lời của bạn như sau:
+1. Khái niệm chi tiết: Giải thích ý nghĩa cốt lõi của kỹ năng này, tại sao nó lại quan trọng và cách nó phù hợp với sự phát triển chuyên môn.
+2. 3 Ví dụ thực tế: Cung cấp 3 ví dụ cụ thể, chất lượng cao, có thể quan sát được về kỹ năng này khi được thực hiện đúng.
+3. 3 Phản ví dụ: Cung cấp 3 ví dụ rõ ràng khi kỹ năng này bị thiếu hoặc thực hiện kém.
+4. 3 Dễ bị hiểu lầm: Xác định 3 hành động/khái niệm mà mọi người thường nhầm lẫn với kỹ năng này và giải thích tại sao chúng lại khác nhau.
+
+Phản hồi bằng Tiếng Việt.`;
+}
+
 // Dedicated AI Teen Metadata & Building 21 CBE 5-Level Continuum Indicators Matrix (Pedagogical Engine)
 function getAiTeenSkillData(skillName = '', compName = '', coreCode = '', lang = 'VI', skillCode = '', skillObj = null, domainSlug = '') {
   return getEnrichedSkillData(skillName, compName, coreCode, lang, skillCode, skillObj, domainSlug);
+}
+
+// Indicator metadata resolver helper
+function getIndicatorMeta(ind, skillKey = '', level = 1, iIdx = 0, disabledIndicators = {}, customPriorities = {}, lang = 'VI') {
+  const isObj = typeof ind === 'object' && ind !== null;
+  const text_vi = isObj ? (ind.text_vi || ind.text || ind.name || '') : ind;
+  const text_en = isObj ? (ind.text_en || ind.text || ind.name || '') : ind;
+  const text = lang === 'VI' ? text_vi : text_en;
+
+  const indKey = `${skillKey}_L${level}_I${iIdx}`;
+  const isDisabled = !!disabledIndicators[indKey];
+
+  const defaultPriority = (isObj && ind.priority) ? ind.priority : (iIdx === 0 ? 'core' : 'standard');
+  const priority = customPriorities[indKey] || defaultPriority;
+  const estHours = priority === 'core' ? 3.5 : 2.0;
+
+  return {
+    indKey,
+    text,
+    text_vi,
+    text_en,
+    isDisabled,
+    priority, // 'core' | 'standard'
+    estHours
+  };
 }
 
 // Icon helper per domain slug
@@ -276,7 +337,67 @@ export default function App() {
       return false;
     }
   });
+
+  // Disabled Indicators & Custom Priorities state persistence
+  const [disabledIndicators, setDisabledIndicators] = useState(() => {
+    try {
+      const saved = localStorage.getItem('simba_ai_teen_disabled_indicators');
+      return saved ? JSON.parse(saved) : {};
+    } catch (e) {
+      return {};
+    }
+  });
+
+  const [customPriorities, setCustomPriorities] = useState(() => {
+    try {
+      const saved = localStorage.getItem('simba_ai_teen_indicator_priorities');
+      return saved ? JSON.parse(saved) : {};
+    } catch (e) {
+      return {};
+    }
+  });
+
   const [targetToast, setTargetToast] = useState(null);
+
+  const handleToggleIndicator = (indKey, skillTitle = '') => {
+    setDisabledIndicators((prev) => {
+      const next = { ...prev, [indKey]: !prev[indKey] };
+      try {
+        localStorage.setItem('simba_ai_teen_disabled_indicators', JSON.stringify(next));
+      } catch (e) {}
+      return next;
+    });
+    const isVi = lang === 'VI';
+    const isNowDisabled = !disabledIndicators[indKey];
+    setTargetToast({
+      skillTitle,
+      message: isVi ? (isNowDisabled ? 'Đã bỏ chọn chỉ báo' : 'Đã tick giữ chỉ báo') : (isNowDisabled ? 'Indicator Omitted' : 'Indicator Retained'),
+      id: Date.now()
+    });
+    setTimeout(() => {
+      setTargetToast(null);
+    }, 2800);
+  };
+
+  const handleTogglePriority = (indKey, currentPriority) => {
+    const newPriority = currentPriority === 'core' ? 'standard' : 'core';
+    setCustomPriorities((prev) => {
+      const next = { ...prev, [indKey]: newPriority };
+      try {
+        localStorage.setItem('simba_ai_teen_indicator_priorities', JSON.stringify(next));
+      } catch (e) {}
+      return next;
+    });
+    const isVi = lang === 'VI';
+    setTargetToast({
+      skillTitle: 'Priority',
+      message: isVi ? `Mức độ: ${newPriority === 'core' ? '⭐ Trọng tâm (3.5h)' : '🔹 Tiêu chuẩn (2h)'}` : `Priority: ${newPriority === 'core' ? 'Core' : 'Standard'}`,
+      id: Date.now()
+    });
+    setTimeout(() => {
+      setTargetToast(null);
+    }, 2800);
+  };
 
   const handleSetTargetLevel = (skillKey, skillTitle, level) => {
     setCustomTargetLevels((prev) => {
@@ -322,12 +443,16 @@ export default function App() {
   };
 
   const handleResetAllCustomizations = () => {
-    if (window.confirm(lang === 'VI' ? 'Bạn có chắc muốn khôi phục tất cả thiết lập Target Level & Role về mặc định?' : 'Reset all Target Levels and Skill Roles to defaults?')) {
+    if (window.confirm(lang === 'VI' ? 'Bạn có chắc muốn khôi phục tất cả thiết lập Target Level, Role, Lựa chọn Indicator & Độ ưu tiên về mặc định?' : 'Reset all Target Levels, Roles, Indicator selections & Priorities to defaults?')) {
       setCustomTargetLevels({});
       setCustomSkillRoles({});
+      setDisabledIndicators({});
+      setCustomPriorities({});
       try {
         localStorage.removeItem('simba_ai_teen_target_levels');
         localStorage.removeItem('simba_ai_teen_skill_roles');
+        localStorage.removeItem('simba_ai_teen_disabled_indicators');
+        localStorage.removeItem('simba_ai_teen_indicator_priorities');
       } catch (e) {}
     }
   };
@@ -936,20 +1061,10 @@ export default function App() {
                           const isOverviewOpen = !!openOverview[competency.id];
 
                           // AI prompt template for this Competency
-                          const compPromptText = `[Role: Senior Educational Designer & Competency Expert]
-I need you to explain the following competency in the context of the Conan Competency System (CCS):
-- Competency: ${competency.name} (${competency.name_vi || ''})
-- Description: ${competency.description || ''} (${competency.description_vi || ''})
-- Why It Matters: ${competency.why_it_matters || ''} (${competency.why_it_matters_vi || ''})
-- Key Question: ${competency.key_question || ''} (${competency.key_question_vi || ''})
-
-Please structure your response as follows:
-1. Detailed Concept: Explain the core meaning of this competency, its value in the workforce, and its integration guidelines.
-2. 3 Real-World Examples: Provide 3 concrete examples of someone demonstrating this competency at a high level.
-3. 3 Counter-Examples (Phản ví dụ): Provide 3 clear examples where this competency is missing or failed.
-4. 3 Misconceptions (Dễ bị hiểu lầm): Identify 3 concepts commonly confused with this competency, explaining the key differences.
-
-Response in ${lang === 'VI' ? 'Vietnamese' : 'English'}.`;
+                          const compPromptText = getAiPromptText({
+                            name: lang === 'VI' ? competency.name_vi || competency.name : competency.name,
+                            description: lang === 'VI' ? competency.description_vi || competency.description : competency.description
+                          }, lang);
 
                           return (
                             <div
@@ -1037,16 +1152,7 @@ Response in ${lang === 'VI' ? 'Vietnamese' : 'English'}.`;
                                             const indicators = competency.competency_skills.filter(
                                               (s) => s.parent_id === skill.id
                                             );
-                                            const skillPromptText = `[Role: Senior Competency Trainer]
-I need you to break down this skill:
-- Skill: ${skill.name} (${skill.name_vi || ''})
-- Description: ${skill.description || ''}
-
-Provide:
-1. Operational Definition
-2. 3 Observable Behavioral Examples
-3. 3 Common Mistakes & Misconceptions
-4. 5-Level Rubric criteria for grading.`;
+                                            const skillPromptText = getAiPromptText({ name: lang === "VI" ? skill.name_vi || skill.name : skill.name, description: lang === "VI" ? skill.description_vi || skill.description : skill.description }, lang);
 
                                             const { examples, misconceptions } = getSkillExamplesAndMisconceptions(
                                               skill.name,
@@ -1485,25 +1591,40 @@ Provide:
                 // Calculate total course indicators and deliberate practice time
                 let totalPrimaryIndicators = 0;
                 let totalSupportingIndicators = 0;
+                let totalCoreIndicatorsCount = 0;
+                let totalStandardIndicatorsCount = 0;
+                let calibratedHoursSum = 0;
 
                 activeDomainsData.forEach((d) => {
                   d.filteredAreas.forEach((a) => {
                     a.filteredComps.forEach((c) => {
                       c.filteredSkills.forEach((s) => {
-                        if (s.effectiveRole === 'primary') {
-                          totalPrimaryIndicators += s.targetIndicators.length;
-                        } else {
-                          totalSupportingIndicators += s.targetIndicators.length;
-                        }
+                        const skillKey = s.id || s.code || s.name;
+                        (s.targetIndicators || []).forEach((ind, iIdx) => {
+                          const meta = getIndicatorMeta(ind, skillKey, s.targetLevel, iIdx, disabledIndicators, customPriorities, lang);
+                          if (!meta.isDisabled) {
+                            if (s.effectiveRole === 'primary') {
+                              totalPrimaryIndicators++;
+                            } else {
+                              totalSupportingIndicators++;
+                            }
+                            if (meta.priority === 'core') {
+                              totalCoreIndicatorsCount++;
+                            } else {
+                              totalStandardIndicatorsCount++;
+                            }
+                            calibratedHoursSum += meta.estHours;
+                          }
+                        });
                       });
                     });
                   });
                 });
 
                 const totalCourseIndicators = totalPrimaryIndicators + totalSupportingIndicators;
-                const minPracticeHours = (totalCourseIndicators * 2.0).toFixed(0);
-                const maxPracticeHours = (totalCourseIndicators * 2.5).toFixed(0);
-                const avgPracticeHours = (totalCourseIndicators * 2.25).toFixed(1);
+                const avgPracticeHours = calibratedHoursSum > 0 ? calibratedHoursSum.toFixed(1) : (totalCourseIndicators * 2.25).toFixed(1);
+                const minPracticeHours = Math.max(0, Math.round(calibratedHoursSum - 3));
+                const maxPracticeHours = Math.round(calibratedHoursSum + 3);
                 const standardBudgetHours = 40;
                 const budgetPercent = Math.round((avgPracticeHours / standardBudgetHours) * 100);
 
@@ -1583,6 +1704,178 @@ Provide:
                         </div>
                       </div>
                     </div>
+
+                    {/* FEATURED COMPETENCY CARD FOR COURSE 1 — INTENTIONAL PROMPTING & 40H BUDGET */}
+                    {selectedCourseIdx === 0 && (
+                      <div className="bg-gradient-to-br from-amber-50/90 via-orange-50/50 to-white rounded-2xl border border-amber-200/80 p-5 shadow-xs space-y-4">
+                        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-amber-200/60 pb-3">
+                          <div className="space-y-1">
+                            <div className="flex items-center gap-2 flex-wrap">
+                              <span className="px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-orange-600 text-white shadow-2xs">
+                                {lang === 'VI' ? 'Năng Lực Hạt Nhân Khóa 1' : 'Core Course 1 Competency'}
+                              </span>
+                              <span className="px-2 py-0.5 rounded text-xs font-mono font-bold bg-amber-100 text-amber-900 border border-amber-300/60">
+                                Target: Level 1.2 → Level 2.0 (Structured Practice)
+                              </span>
+                            </div>
+                            <h3 className="text-lg font-black text-stone-900 flex items-center gap-2 pt-1">
+                              <Sparkles className="w-5 h-5 text-orange-600 shrink-0" />
+                              <span>{lang === 'VI' ? 'Prompt có chủ đích (Intentional Prompting & Brief Conversion)' : 'Intentional Prompting & Brief Conversion'}</span>
+                            </h3>
+                            <p className="text-xs text-stone-600 leading-relaxed">
+                              {lang === 'VI'
+                                ? 'Chuyển hóa từ "chat ngẫu nhiên" sang điều khiển AI bằng Ý đồ Sản phẩm (Product Intent): xác định đích đến, mô tả hiện trạng & delta, cấu trúc prompt từ Product Brief, tinh chỉnh lặp lại và đóng gói bộ SP4 Prompt Cookbook.'
+                                : 'Master intentional AI direction: define target destination, analyze current state vs delta, structure prompt from brief, refine iteratively, and package into SP4 Prompt Cookbook.'}
+                            </p>
+                          </div>
+
+                          <div className="bg-white/90 backdrop-blur-xs rounded-xl p-3 border border-amber-200/70 text-right shrink-0 space-y-0.5">
+                            <span className="text-[10px] uppercase font-bold tracking-wider text-amber-800 block">
+                              {lang === 'VI' ? 'Tổng Quỹ Thời Gian' : 'Total Hours Budget'}
+                            </span>
+                            <span className="text-xl font-black text-[#cc4e2d] font-mono block">40.0 GIỜ</span>
+                            <span className="text-[10px] text-stone-500 font-medium block">
+                              24h Lớp (12 Buổi) + 16h Studio Lab
+                            </span>
+                          </div>
+                        </div>
+
+                        {/* 5 SUB-SKILLS & 15 BINARY INDICATORS MATRIX */}
+                        <div className="space-y-3">
+                          <h4 className="text-xs font-bold uppercase tracking-wider text-stone-700 flex items-center justify-between">
+                            <span>{lang === 'VI' ? '5 Kỹ năng thành phần & 15 Chỉ báo hành vi nhị phân (Binary Indicators)' : '5 Sub-skills & 15 Binary Indicators'}</span>
+                            <span className="text-[11px] font-mono text-stone-500 font-normal">Binary Check [ 1 / 0 ]</span>
+                          </h4>
+
+                          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+                            {/* Sub-skill 1 */}
+                            <div className="bg-white rounded-xl border border-stone-200 p-3.5 space-y-2 shadow-2xs">
+                              <div className="flex items-center justify-between border-b border-stone-100 pb-2">
+                                <span className="text-xs font-bold text-stone-900 flex items-center gap-1.5">
+                                  <span className="w-5 h-5 rounded-md bg-orange-100 text-[#cc4e2d] font-mono text-[11px] font-black flex items-center justify-center">1</span>
+                                  <span>{lang === 'VI' ? 'Asks Clarifying Questions' : 'Asks Clarifying Questions'}</span>
+                                </span>
+                                <span className="text-[10px] font-mono font-bold px-1.5 py-0.5 rounded bg-stone-100 text-stone-600">6.0h</span>
+                              </div>
+                              <ul className="space-y-1.5 text-[11px] text-stone-600">
+                                <li className="flex items-start gap-1.5">
+                                  <span className="text-emerald-600 font-bold font-mono">1.1</span>
+                                  <span>Gán vai trò Persona chuyên gia phù hợp với ý đồ bài toán trong prompt.</span>
+                                </li>
+                                <li className="flex items-start gap-1.5">
+                                  <span className="text-emerald-600 font-bold font-mono">1.2</span>
+                                  <span>Cung cấp bối cảnh bài toán (Context) và đối tượng người dùng đích.</span>
+                                </li>
+                                <li className="flex items-start gap-1.5">
+                                  <span className="text-emerald-600 font-bold font-mono">1.3</span>
+                                  <span>Đặt câu hỏi/trả lời làm rõ (Clarifying Questions) khi AI báo thiếu thông tin.</span>
+                                </li>
+                              </ul>
+                            </div>
+
+                            {/* Sub-skill 2 */}
+                            <div className="bg-white rounded-xl border border-stone-200 p-3.5 space-y-2 shadow-2xs">
+                              <div className="flex items-center justify-between border-b border-stone-100 pb-2">
+                                <span className="text-xs font-bold text-stone-900 flex items-center gap-1.5">
+                                  <span className="w-5 h-5 rounded-md bg-orange-100 text-[#cc4e2d] font-mono text-[11px] font-black flex items-center justify-center">2</span>
+                                  <span>{lang === 'VI' ? 'Context Window Management' : 'Context Window Management'}</span>
+                                </span>
+                                <span className="text-[10px] font-mono font-bold px-1.5 py-0.5 rounded bg-stone-100 text-stone-600">8.0h</span>
+                              </div>
+                              <ul className="space-y-1.5 text-[11px] text-stone-600">
+                                <li className="flex items-start gap-1.5">
+                                  <span className="text-emerald-600 font-bold font-mono">2.1</span>
+                                  <span>Dán mã nguồn/nội dung hiện tại (Current State) vào prompt kèm nhãn.</span>
+                                </li>
+                                <li className="flex items-start gap-1.5">
+                                  <span className="text-emerald-600 font-bold font-mono">2.2</span>
+                                  <span>Chỉ rõ vị trí và mô tả chính xác lỗi/điểm chưa hài lòng hiện tại.</span>
+                                </li>
+                                <li className="flex items-start gap-1.5">
+                                  <span className="text-emerald-600 font-bold font-mono">2.3</span>
+                                  <span>Ràng buộc phạm vi thay đổi Delta (Add/Edit/Delete) không làm hỏng code cũ.</span>
+                                </li>
+                              </ul>
+                            </div>
+
+                            {/* Sub-skill 3 */}
+                            <div className="bg-white rounded-xl border border-stone-200 p-3.5 space-y-2 shadow-2xs">
+                              <div className="flex items-center justify-between border-b border-stone-100 pb-2">
+                                <span className="text-xs font-bold text-stone-900 flex items-center gap-1.5">
+                                  <span className="w-5 h-5 rounded-md bg-orange-100 text-[#cc4e2d] font-mono text-[11px] font-black flex items-center justify-center">3</span>
+                                  <span>{lang === 'VI' ? 'Few-shot Design' : 'Few-shot Design'}</span>
+                                </span>
+                                <span className="text-[10px] font-mono font-bold px-1.5 py-0.5 rounded bg-stone-100 text-stone-600">10.0h</span>
+                              </div>
+                              <ul className="space-y-1.5 text-[11px] text-stone-600">
+                                <li className="flex items-start gap-1.5">
+                                  <span className="text-emerald-600 font-bold font-mono">3.1</span>
+                                  <span>Tuyên bố rõ ràng mục tiêu sản phẩm và định dạng đầu ra mong muốn.</span>
+                                </li>
+                                <li className="flex items-start gap-1.5">
+                                  <span className="text-emerald-600 font-bold font-mono">3.2</span>
+                                  <span>Cung cấp 1-2 ví dụ mẫu chuẩn (Few-shot Examples) trong prompt.</span>
+                                </li>
+                                <li className="flex items-start gap-1.5">
+                                  <span className="text-emerald-600 font-bold font-mono">3.3</span>
+                                  <span>Đưa vào tối thiểu 2 ràng buộc kỹ thuật (Constraints) để khống chế AI.</span>
+                                </li>
+                              </ul>
+                            </div>
+
+                            {/* Sub-skill 4 */}
+                            <div className="bg-white rounded-xl border border-stone-200 p-3.5 space-y-2 shadow-2xs">
+                              <div className="flex items-center justify-between border-b border-stone-100 pb-2">
+                                <span className="text-xs font-bold text-stone-900 flex items-center gap-1.5">
+                                  <span className="w-5 h-5 rounded-md bg-orange-100 text-[#cc4e2d] font-mono text-[11px] font-black flex items-center justify-center">4</span>
+                                  <span>{lang === 'VI' ? 'Chain-of-Thought Application' : 'Chain-of-Thought Application'}</span>
+                                </span>
+                                <span className="text-[10px] font-mono font-bold px-1.5 py-0.5 rounded bg-stone-100 text-stone-600">10.0h</span>
+                              </div>
+                              <ul className="space-y-1.5 text-[11px] text-stone-600">
+                                <li className="flex items-start gap-1.5">
+                                  <span className="text-emerald-600 font-bold font-mono">4.1</span>
+                                  <span>Yêu cầu AI "Suy nghĩ từng bước" (Chain-of-Thought) khi xử lý bài toán logic.</span>
+                                </li>
+                                <li className="flex items-start gap-1.5">
+                                  <span className="text-emerald-600 font-bold font-mono">4.2</span>
+                                  <span>Đối chiếu đầu ra với mục tiêu và tinh chỉnh lặp lại (Iterative Fix) ≥ 2 lượt.</span>
+                                </li>
+                                <li className="flex items-start gap-1.5">
+                                  <span className="text-emerald-600 font-bold font-mono">4.3</span>
+                                  <span>Truy vấn ngược AI (Socratic Prompting) nhờ tự phân tích lý do câu trả lời sai.</span>
+                                </li>
+                              </ul>
+                            </div>
+
+                            {/* Sub-skill 5 */}
+                            <div className="bg-white rounded-xl border border-stone-200 p-3.5 space-y-2 shadow-2xs md:col-span-2 lg:col-span-1">
+                              <div className="flex items-center justify-between border-b border-stone-100 pb-2">
+                                <span className="text-xs font-bold text-stone-900 flex items-center gap-1.5">
+                                  <span className="w-5 h-5 rounded-md bg-orange-100 text-[#cc4e2d] font-mono text-[11px] font-black flex items-center justify-center">5</span>
+                                  <span>{lang === 'VI' ? 'Prompt Testing & Validation' : 'Prompt Testing & Validation'}</span>
+                                </span>
+                                <span className="text-[10px] font-mono font-bold px-1.5 py-0.5 rounded bg-stone-100 text-stone-600">6.0h</span>
+                              </div>
+                              <ul className="space-y-1.5 text-[11px] text-stone-600">
+                                <li className="flex items-start gap-1.5">
+                                  <span className="text-emerald-600 font-bold font-mono">5.1</span>
+                                  <span>Kinh nghiệm nghiệm thu đầu ra AI theo tiêu chí Definition of Done.</span>
+                                </li>
+                                <li className="flex items-start gap-1.5">
+                                  <span className="text-emerald-600 font-bold font-mono">5.2</span>
+                                  <span>Lưu trữ và đóng gói ≥ 3 prompt mẫu chuẩn vào SP4 Prompt Cookbook.</span>
+                                </li>
+                                <li className="flex items-start gap-1.5">
+                                  <span className="text-emerald-600 font-bold font-mono">5.3</span>
+                                  <span>Tái sử dụng/tùy biến prompt mẫu cho bài toán sản phẩm mới &lt; 3 phút.</span>
+                                </li>
+                              </ul>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    )}
 
                     {/* HIERARCHICAL DOMAIN COMPETENCY TREE SECTION — Collapsible Accordions */}
                     <div className="space-y-3">
@@ -1750,19 +2043,33 @@ Provide:
                                                     )}
 
                                                     {/* Target Indicators */}
-                                                    <div className="space-y-1 pt-0.5">
-                                                      <div className="text-[11px] font-mono font-bold text-stone-400 uppercase tracking-wider">
-                                                        Level {skill.targetLevel} Indicators ({skill.targetIndicators.length})
+                                                    <div className="space-y-1.5 pt-0.5">
+                                                      <div className="text-[11px] font-mono font-bold text-stone-400 uppercase tracking-wider flex items-center justify-between">
+                                                        <span>Level {skill.targetLevel} Indicators ({skill.targetIndicators.filter((ind, iIdx) => !getIndicatorMeta(ind, skill.id || skill.code || skill.name, skill.targetLevel, iIdx, disabledIndicators, customPriorities, lang).isDisabled).length})</span>
                                                       </div>
-                                                      <ul className="space-y-1 text-xs text-stone-700">
-                                                        {skill.targetIndicators.map((ind, iIdx) => (
-                                                          <li key={iIdx} className="flex items-start gap-2">
-                                                            <span className={`w-1.5 h-1.5 rounded-full mt-1.5 shrink-0 ${
-                                                              isPrimary ? 'bg-[#cc4e2d]' : 'bg-stone-400'
-                                                            }`}></span>
-                                                            <span>{ind}</span>
-                                                          </li>
-                                                        ))}
+                                                      <ul className="space-y-1.5 text-xs text-stone-700">
+                                                        {skill.targetIndicators.map((ind, iIdx) => {
+                                                          const skillKey = skill.id || skill.code || skill.name;
+                                                          const meta = getIndicatorMeta(ind, skillKey, skill.targetLevel, iIdx, disabledIndicators, customPriorities, lang);
+                                                          if (meta.isDisabled && rubricViewMode !== 'editing') return null;
+
+                                                          return (
+                                                            <li key={iIdx} className={`flex items-start gap-2 ${meta.isDisabled ? 'opacity-40 line-through' : ''}`}>
+                                                              {meta.priority === 'core' ? (
+                                                                <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded bg-amber-50 text-amber-900 border border-amber-300 text-[10px] font-extrabold shrink-0 mt-0.5 shadow-2xs">
+                                                                  <Star className="w-3 h-3 fill-amber-500 text-amber-600" />
+                                                                  <span>Trọng tâm (3.5h)</span>
+                                                                </span>
+                                                              ) : (
+                                                                <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded bg-sky-50 text-sky-900 border border-sky-200 text-[10px] font-bold shrink-0 mt-0.5">
+                                                                  <span className="w-1.5 h-1.5 rounded-full bg-sky-500"></span>
+                                                                  <span>Tiêu chuẩn (2h)</span>
+                                                                </span>
+                                                              )}
+                                                              <span className="leading-relaxed">{meta.text}</span>
+                                                            </li>
+                                                          );
+                                                        })}
                                                       </ul>
                                                     </div>
                                                   </div>
@@ -3073,13 +3380,17 @@ Provide:
 
             <div className="space-y-3 text-xs">
               <p className="text-stone-600">
-                Sao chép đoạn Prompt chuẩn cấu trúc (Role - Context - Task - Constraint) dưới đây và dán vào <strong>Antigravity</strong> hoặc <strong>ChatGPT/Gemini</strong> để AI đóng vai gia sư hướng dẫn bạn rèn luyện kỹ năng này:
+                {lang === 'VI'
+                  ? 'Sao chép đoạn Prompt chuẩn cấu trúc (Role - Context - Task - Constraint) dưới đây và dán vào Antigravity hoặc ChatGPT/Gemini để AI đóng vai gia sư hướng dẫn bạn rèn luyện kỹ năng này:'
+                  : 'Copy the structured prompt (Role - Context - Task - Constraint) below and paste it into Antigravity or ChatGPT/Gemini to have AI act as your tutor:'}
               </p>
 
-              <div className="p-4 bg-stone-900 text-stone-100 rounded-xl font-mono text-xs leading-relaxed relative">
-                <p className="text-orange-300 font-bold mb-2">// Prompt Huấn Luyện Kỹ Năng Sư Tử Con:</p>
+              <div className="p-4 bg-stone-900 text-stone-100 rounded-xl font-mono text-xs leading-relaxed relative overflow-x-auto whitespace-pre-wrap">
+                <p className="text-orange-300 font-bold mb-2">
+                  {lang === 'VI' ? '// Prompt Phân Tích Kỹ Năng CCS:' : '// CCS Skill Analysis Prompt:'}
+                </p>
                 <p className="text-emerald-300">
-                  "Hãy đóng vai là Huấn Luyện Viên AI Simba. Tôi là học sinh cấp 2 đang xây dựng sản phẩm web cho dự án của mình. Hãy hướng dẫn tôi từng bước thực hành kỹ năng: '{selectedPromptSkill.name}'. Đừng cho tôi đáp án ngay, hãy đặt câu hỏi gợi mở từng bước để tôi tự tư duy và phản hồi!"
+                  {getAiPromptText(selectedPromptSkill, lang)}
                 </p>
               </div>
             </div>
@@ -3087,19 +3398,21 @@ Provide:
             <div className="pt-3 border-t border-stone-100 flex items-center justify-between">
               <button
                 onClick={() => {
-                  const promptText = `Hãy đóng vai là Huấn Luyện Viên AI Simba. Tôi là học sinh cấp 2 đang xây dựng sản phẩm web cho dự án của mình. Hãy hướng dẫn tôi từng bước thực hành kỹ năng: '${selectedPromptSkill.name}'. Đừng cho tôi đáp án ngay, hãy đặt câu hỏi gợi mở từng bước để tôi tự tư duy và phản hồi!`;
+                  const promptText = getAiPromptText(selectedPromptSkill, lang);
                   copyToClipboard(promptText, 'prompt-modal');
                 }}
-                className="px-4 py-2 bg-[#cc4e2d] text-white text-xs font-bold rounded-xl hover:bg-orange-700 flex items-center gap-1.5 shadow-sm"
+                className="px-4 py-2 bg-[#cc4e2d] text-white text-xs font-bold rounded-xl hover:bg-orange-700 flex items-center gap-1.5 shadow-sm cursor-pointer"
               >
                 {copiedId === 'prompt-modal' ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
-                {copiedId === 'prompt-modal' ? 'Đã sao chép prompt!' : 'Sao chép Prompt'}
+                {copiedId === 'prompt-modal'
+                  ? (lang === 'VI' ? 'Đã sao chép prompt!' : 'Prompt Copied!')
+                  : (lang === 'VI' ? 'Sao chép Prompt' : 'Copy Prompt')}
               </button>
               <button
                 onClick={() => setSelectedPromptSkill(null)}
-                className="px-4 py-2 bg-stone-100 text-stone-700 text-xs font-bold rounded-xl hover:bg-stone-200"
+                className="px-4 py-2 bg-stone-100 text-stone-700 text-xs font-bold rounded-xl hover:bg-stone-200 cursor-pointer"
               >
-                Đóng
+                {lang === 'VI' ? 'Đóng' : 'Close'}
               </button>
             </div>
           </div>

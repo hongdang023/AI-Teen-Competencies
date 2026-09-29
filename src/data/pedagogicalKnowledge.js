@@ -250,30 +250,33 @@ export const SKILL_PEDAGOGICAL_DATABASE = [
     evidence: 'Trang Chính sách Bảo mật (Privacy Policy) và Disclaimer bản quyền số hiển thị đầy đủ trên SP1, SP6 và SP12.'
   },
   {
-    patterns: ['prompt', 'few-shot', 'chain-of-thought', 'cot', 'clarifying', 'câu lệnh'],
+    patterns: ['prompt', 'few-shot', 'chain-of-thought', 'cot', 'clarifying', 'câu lệnh', 'chủ đích', 'intentional', 'context-window', 'validation'],
     domain: 'domain-generative-ai',
-    name_vi: 'Kỹ thuật thiết kế câu lệnh có cấu trúc & CoT',
-    name_en: 'Structured Prompt Engineering & CoT',
-    guidingQuestion_vi: 'Làm thế nào để con thiết kế câu lệnh chi tiết, có ví dụ mẫu (Few-shot) và tư duy từng bước (Chain-of-Thought) để AI giải quyết bài toán phức tạp?',
-    guidingQuestion_en: 'How well can I architect detailed prompts with Few-shot examples and Chain-of-Thought reasoning to solve complex challenges?',
-    desc_vi: 'Làm chủ các kỹ thuật thiết kế câu lệnh từ cơ bản đến nâng cao để khai thác tối đa năng suất của các mô hình AI.',
-    desc_en: 'Master structured prompting techniques from standard framing to Few-shot and Chain-of-Thought reasoning.',
+    name_vi: 'Kỹ thuật Prompt có chủ đích (Structured Prompting & 5 Official Skills)',
+    name_en: 'Intentional Prompting & 5 Official Simba Skills',
+    guidingQuestion_vi: 'Làm thế nào để con làm chủ 5 kỹ năng prompt gốc Simba (Clarifying, Context Window, Few-shot, Chain-of-Thought, Validation) để chuyển dịch đúng Product Brief và Đích đến Sản phẩm vào AI?',
+    guidingQuestion_en: 'How well can I master the 5 official Simba prompting skills (Clarifying, Context Window, Few-shot, Chain-of-Thought, Validation) to convert Product Briefs into AI outputs?',
+    desc_vi: 'Năng lực Hạt nhân Khóa 1 AI Teen chuẩn hóa theo 5 Skill gốc Simba: Asks Clarifying Questions, Context Window Management, Few-shot Design, Chain-of-Thought Application, và Prompt Testing & Validation.',
+    desc_en: 'Core Course 1 AI Teen Competency mapped to 5 official Simba skills: Asks Clarifying Questions, Context Window Management, Few-shot Design, Chain-of-Thought Application, and Prompt Testing & Validation.',
     skillRole: 'primary',
     targetLevel: 2,
     rubricLevels: [
       {
         level: 1,
         indicators: [
-          'Con có thể đặt câu hỏi rõ ràng, đầy đủ ngữ pháp thay vì chỉ gõ 1-2 từ khóa tìm kiếm ngắn.',
-          'Con có thể trả lời các câu hỏi làm rõ của AI khi câu hỏi ban đầu chưa đủ thông tin.'
+          'Con có thể đặt câu hỏi làm rõ (Asks Clarifying Questions) và tuyên bố mục tiêu cốt lõi của sản phẩm trong prompt (IND-1.1).',
+          'Con có thể xác định định dạng đầu ra chuẩn (Format: HTML/CSS, Markdown, JSON) trong câu lệnh (IND-1.2).',
+          'Con có thể trả lời các câu hỏi nghi vấn từ AI khi câu lệnh ban đầu chưa đủ bối cảnh (IND-1.3).'
         ]
       },
       {
         level: 2,
         indicators: [
-          'Con có thể cung cấp 2-3 ví dụ mẫu chuẩn (Few-shot Examples) trong prompt để AI làm theo đúng định dạng đầu ra.',
-          'Con có thể yêu cầu AI "Suy nghĩ từng bước" (Chain-of-Thought) để giải quyết các vấn đề logic hoặc thuật toán.',
-          'Con có thể chỉ định vai trò chuyên gia (Role Persona) phù hợp cho từng bài toán thực tế.'
+          '1. Asks Clarifying Questions (6.0h): Con có thể gán Vai trò Persona chuyên gia và đưa Bối cảnh/Context người dùng vào prompt (IND-1.1, 1.2, 1.3).',
+          '2. Context Window Management (8.0h): Con có thể dán mã/nội dung hiện tại kèm nhãn, chỉ vị trí lỗi và khoanh vùng phạm vi thay đổi Delta (IND-2.1, 2.2, 2.3).',
+          '3. Few-shot Design (10.0h): Con có thể cung cấp 1-2 ví dụ mẫu chuẩn (Few-shot Examples) và gắn rào chắn ràng buộc Constraints (IND-3.1, 3.2, 3.3).',
+          '4. Chain-of-Thought Application (10.0h): Con có thể yêu cầu AI "Suy nghĩ từng bước" (CoT), tinh chỉnh lặp lại ≥ 2 lượt và dùng Socratic Prompting (IND-4.1, 4.2, 4.3).',
+          '5. Prompt Testing & Validation (6.0h): Con có thể nghiệm thu sản phẩm theo Definition of Done, đóng gói ≥ 3 prompt chuẩn vào SP4 Cookbook và tái sử dụng < 3 phút (IND-5.1, 5.2, 5.3).'
         ]
       },
       {
@@ -298,7 +301,7 @@ export const SKILL_PEDAGOGICAL_DATABASE = [
         ]
       }
     ],
-    evidence: 'Bộ sưu tập Prompt Cookbook trong SP4 và câu lệnh phân luồng Socratic trong SP10 AI Tutor.'
+    evidence: 'Bộ Prompt Cookbook (SP4) gồm 5+ prompt chuẩn cấu trúc R-T-C; Nhật ký Prompt Debug Log thể hiện ≥ 2 lượt tinh chỉnh lặp lại; Quỹ thời gian 40h (24h Lớp + 16h Studio Lab).'
   },
   {
     patterns: ['ai-assisted', 'tự học cùng ai', 'summariz', 'tóm tắt', 'translation', 'dịch thuật', 'notebooklm'],
@@ -1458,216 +1461,91 @@ export const SKILL_PEDAGOGICAL_DATABASE = [
 
 // Fallback generator for any other skill that matches by domain / competency keywords
 export function getDomainFallbackPedagogy(skillName = '', compName = '', domainSlug = '', lang = 'VI', skillObj = null) {
-  const sName = (skillObj?.name_vi || skillName || '').trim();
-  const sNameEn = (skillObj?.name || skillName || '').trim();
-  const dSlug = domainSlug || 'domain-customer-understanding';
+  const cleanName = (str = '') => str.replace(/\s*\([^)]*\)\s*/g, ' ').trim();
+  const sNameVi = cleanName(skillObj?.name_vi || skillName || 'Kỹ năng chuyên môn');
+  const sNameEn = cleanName(skillObj?.name || skillName || 'Professional Skill');
+  const sLower = (sNameVi + ' ' + sNameEn + ' ' + compName).toLowerCase();
+  const dSlug = domainSlug || 'domain-generative-ai';
 
-  // Specific domain contextualizers
-  if (dSlug === 'domain-customer-understanding') {
-    return {
-      name_vi: sName,
-      name_en: sNameEn,
-      guidingQuestion_vi: `Làm thế nào để con thấu hiểu chân thực nhu cầu của người dùng thông qua "${sName}" và kiến tạo giải pháp chạm đúng mong đợi của họ?`,
-      guidingQuestion_en: `How well can I understand authentic user needs through "${sNameEn}" and build solutions that truly resolve their struggles?`,
-      desc_vi: `Rèn luyện kỹ năng thấu cảm và phân tích thực tế qua hoạt động "${sName}", bảo đảm sản phẩm số giải quyết đúng bài toán có thật của con người.`,
-      desc_en: `Cultivate deep empathy and observational research through "${sNameEn}", ensuring digital solutions address authentic human needs.`,
-      skillRole: 'supporting',
-      targetLevel: 1,
-      rubricLevels: [
-        {
-          level: 1,
-          indicators: [
-            `Con có thể nắm vững mục đích của hoạt động "${sName}" và thực hiện theo kịch bản chuẩn hướng dẫn của Mentor.`,
-            'Con có thể ghi chép trung thực các dữ liệu quan sát được mà không áp đặt định kiến cá nhân.'
-          ]
-        },
-        {
-          level: 2,
-          indicators: [
-            `Con có thể tự chủ thực hiện "${sName}" độc lập trên các bài toán sản phẩm thực tế mà không cần nhắc nhở.`,
-            'Con có thể đối chiếu kết quả thu được với phản hồi của người dùng để phát hiện các lỗ hổng.',
-            'Con có thể chuyển hóa các đúc kết từ nghiên cứu thành các yêu cầu tính năng cụ thể trên sản phẩm.'
-          ]
-        },
-        {
-          level: 3,
-          indicators: [
-            `Con có thể vận dụng linh hoạt kỹ năng "${sName}" để xử lý các tình huống người dùng phức tạp hoặc dữ liệu mâu thuẫn.`,
-            'Con có thể chia sẻ và giải thích rõ ràng các phát hiện quan trọng cho các bạn khác trong nhóm dự án.'
-          ]
-        },
-        {
-          level: 4,
-          indicators: [
-            `Con có thể tối ưu hóa và sáng tạo phương pháp thu thập thông tin mới giúp nâng cao độ chính xác của kỹ năng "${sName}".`,
-            'Con có thể tự tin thuyết trình bảo vệ các quyết định thiết kế dựa trên dữ liệu người dùng trước Hội đồng chuyên môn.'
-          ]
-        },
-        {
-          level: 5,
-          indicators: [
-            `Con có thể làm chủ toàn diện và xây dựng các tài liệu hướng dẫn chuẩn mực cho kỹ năng "${sName}".`,
-            'Con có thể hỗ trợ và đào tạo các học sinh khóa sau đạt đến mức độ thành thạo trong nghiên cứu người dùng.'
-          ]
-        }
-      ],
-      evidence: `Bản tài liệu nghiên cứu và dữ liệu kiểm chứng thể hiện năng lực "${sName}" được đính kèm trong hồ sơ sản phẩm thực tế.`
-    };
+  let guidingQVi = `Làm thế nào để con áp dụng bài bản năng lực ${sNameVi} vào việc xây dựng sản phẩm số thực tế?`;
+  let guidingQEn = `How well can I systematically apply ${sNameEn} to construct authentic digital products?`;
+  let descVi = `Rèn luyện kỹ năng ${sNameVi} thông qua thực hành dự án sản phẩm số và tự chủ công nghệ.`;
+  let descEn = `Cultivate practical ${sNameEn} competencies connected with building micro digital products.`;
+
+  let rubricLevels = [];
+
+  // Smart Keyword-aware generator rules (Zero generic boilerplate)
+  if (sLower.includes('prompt') || sLower.includes('câu lệnh') || sLower.includes('r-t-c') || sLower.includes('role') || sLower.includes('context window') || sLower.includes('few-shot') || sLower.includes('chain-of-thought')) {
+    guidingQVi = `Làm thế nào để con làm chủ kỹ thuật ${sNameVi} chỉ đạo AI sinh kết quả chính xác 100%?`;
+    descVi = `Thực hành thiết kế và tối ưu câu lệnh chuẩn khung Role - Context - Task - Constraint cho mô hình LLM.`;
+    rubricLevels = [
+      { level: 1, indicators: [`Con có thể cấu trúc câu lệnh cơ bản cho ${sNameVi} theo khung Vai trò - Ngữ cảnh - Nhiệm vụ (R-C-T) dựa trên kịch bản hướng dẫn mẫu.`, `Con có thể phát hiện và sửa các câu lệnh quá chung chung khi thực hành ${sNameVi}.`] },
+      { level: 2, indicators: [`Con có thể tự chủ thiết kế câu lệnh chuẩn cho ${sNameVi} có bổ sung quy tắc ràng buộc nghiêm ngặt (Negative Constraints).`, `Con có thể lặp lại tinh chỉnh câu lệnh 2-3 lần (Iterative Prompting) khi làm chủ ${sNameVi}.`, `Con có thể đúc kết và đóng gói mẫu câu lệnh chuẩn của ${sNameVi} vào thư viện sản phẩm SP4.`] },
+      { level: 3, indicators: [`Con có thể vận dụng kỹ thuật Socratic Prompting tương tác đa lượt cho ${sNameVi}.`, `Con có thể xử lý ngữ cảnh mâu thuẫn hoặc phức tạp khi thực hành ${sNameVi}.`] },
+      { level: 4, indicators: [`Con có thể kiểm thử toàn diện độ bền (Stress-test) của câu lệnh ${sNameVi} trước các tình huống bẫy.`, `Con có thể tối ưu hóa lượng token tiêu thụ và tốc độ phản hồi của ${sNameVi}.`] },
+      { level: 5, indicators: [`Con có thể làm chủ hệ thống prompt đa tầng cho ${sNameVi} và đóng gói tài liệu cẩm nang kỹ thuật.`, `Con có thể hướng dẫn và cố vấn cho học sinh khác trong việc tối ưu hóa ${sNameVi}.`] }
+    ];
+  } else if (sLower.includes('interview') || sLower.includes('phỏng vấn') || sLower.includes('lắng nghe') || sLower.includes('mom test') || sLower.includes('empathy') || sLower.includes('thấu cảm') || sLower.includes('persona') || sLower.includes('chân dung')) {
+    guidingQVi = `Làm thế nào để con thấu cảm nỗi đau thực tế của người dùng thông qua ${sNameVi} và thiết kế sản phẩm có giá trị thực?`;
+    descVi = `Rèn luyện kỹ năng phỏng vấn Mom Test và quan sát thấu cảm để thu thập dữ liệu người dùng chân thực.`;
+    rubricLevels = [
+      { level: 1, indicators: [`Con có thể chuẩn bị kịch bản phỏng vấn/khảo sát cơ bản phục vụ ${sNameVi} theo hướng dẫn mẫu.`, `Con có thể ghi chép trung thực dữ liệu thu thập được trong ${sNameVi} mà không chèn ép định kiến cá nhân.`] },
+      { level: 2, indicators: [`Con có thể tự chủ thực hiện ${sNameVi} với người dùng thực tế và tổng hợp thành bức tranh nhu cầu người dùng.`, `Con có thể trích dẫn nhận xét thực tế từ ${sNameVi} để làm bằng chứng định hướng tính năng sản phẩm SP2/SP3.`, `Con có thể phân biệt rõ ràng giữa mong muốn chủ quan và thói quen thực tế trong ${sNameVi}.`] },
+      { level: 3, indicators: [`Con có thể xử lý linh hoạt các tình huống thu thập dữ liệu mâu thuẫn khi thực hiện ${sNameVi}.`, `Con có thể tổng hợp sơ đồ trải nghiệm người dùng từ kết quả thực hành ${sNameVi}.`] },
+      { level: 4, indicators: [`Con có thể bảo vệ các đề xuất tính năng dựa trên dữ liệu ${sNameVi} trước Hội đồng chuyên môn.`, `Con có thể cải tiến phương pháp nghiên cứu để phát hiện các góc nhìn sâu sắc chưa được khai phá.`] },
+      { level: 5, indicators: [`Con có thể làm chủ quy trình nghiên cứu người dùng và chuẩn hóa tài liệu hướng dẫn cho ${sNameVi}.`, `Con có thể hỗ trợ và huấn luyện kỹ năng ${sNameVi} cho các thành viên trong đội ngũ.`] }
+    ];
+  } else if (sLower.includes('deploy') || sLower.includes('git') || sLower.includes('domain') || sLower.includes('dns') || sLower.includes('hosting') || sLower.includes('triển khai') || sLower.includes('tên miền')) {
+    guidingQVi = `Làm thế nào để con áp dụng ${sNameVi} đưa sản phẩm số chạy trực tuyến mượt mà và an toàn trên Internet?`;
+    descVi = `Rèn luyện quy trình đẩy mã nguồn lên GitHub, kết nối nền tảng triển khai tự động và cấu hình tên miền cá nhân.`;
+    rubricLevels = [
+      { level: 1, indicators: [`Con có thể thực hiện quy trình ${sNameVi} trên GitHub/Cloudflare theo đúng các bước hướng dẫn mẫu.`, `Con có thể kiểm tra sản phẩm hiển thị trên đường link trực tuyến live URL.`] },
+      { level: 2, indicators: [`Con có thể tự chủ triển khai ${sNameVi} cho sản phẩm cá nhân mà không cần nhắc nhở.`, `Con có thể viết thông điệp commit rõ ràng và kiểm tra kết nối HTTPS của ${sNameVi}.`, `Con có thể tự kiểm thử và khắc phục các lỗi kết nối hoặc liên kết bị hỏng trong ${sNameVi}.`] },
+      { level: 3, indicators: [`Con có thể thiết lập quy trình tự động hóa triển khai (CI/CD) cho ${sNameVi}.`, `Con có thể xử lý sự cố xung đột mã nguồn và khôi phục phiên bản khi thao tác ${sNameVi}.`] },
+      { level: 4, indicators: [`Con có thể tối ưu hóa tốc độ tải trang và độ an toàn bảo mật trong ${sNameVi}.`, `Con có thể thuyết trình giải trình quy trình vận hành và hạ tầng ${sNameVi} trước Hội đồng.`] },
+      { level: 5, indicators: [`Con có thể làm chủ toàn diện hạ tầng vận hành ${sNameVi} với độ ổn định 99.9%.`, `Con có thể hỗ trợ cố vấn kỹ thuật và sửa lỗi triển khai ${sNameVi} cho các bạn khác.`] }
+    ];
+  } else if (sLower.includes('ui') || sLower.includes('ux') || sLower.includes('layout') || sLower.includes('bố cục') || sLower.includes('giao diện') || sLower.includes('wireframe') || sLower.includes('sitemap') || sLower.includes('design') || sLower.includes('thiết kế')) {
+    guidingQVi = `Làm thế nào để con ứng dụng ${sNameVi} thiết kế giao diện sản phẩm số đẹp mắt, trực quan và chuẩn trải nghiệm người dùng?`;
+    descVi = `Làm chủ tư duy phân cấp thông tin, phác thảo wireframe và xây dựng giao diện tương thích responsive.`;
+    rubricLevels = [
+      { level: 1, indicators: [`Con có thể phác thảo và triển khai giao diện ${sNameVi} theo bố cục mẫu chuẩn hướng dẫn.`, `Con có thể tinh chỉnh khoảng cách, phông chữ và màu sắc cơ bản trong ${sNameVi}.`] },
+      { level: 2, indicators: [`Con có thể tự chủ hoàn thiện ${sNameVi} hiển thị mượt mà trên cả máy tính và điện thoại (Responsive).`, `Con có thể áp dụng nguyên tắc phân cấp thị giác (Visual Hierarchy) giúp ${sNameVi} rõ ràng, dễ nhìn.`, `Con có thể phát hiện và sửa các điểm ngắt quãng thao tác trải nghiệm người dùng trong ${sNameVi}.`] },
+      { level: 3, indicators: [`Con có thể đóng gói bộ thành phần giao diện chuẩn (Design System component) cho ${sNameVi}.`, `Con có thể tối ưu luồng điều hướng giúp nâng cao sự thuận tiện khi thao tác ${sNameVi}.`] },
+      { level: 4, indicators: [`Con có thể kiểm thử khả năng sử dụng (Usability Testing) để cải tiến ${sNameVi}.`, `Con có thể thuyết trình bảo vệ triết lý thiết kế và trải nghiệm của ${sNameVi} trước Hội đồng.`] },
+      { level: 5, indicators: [`Con có thể sáng tạo các mẫu giao diện tiên phong cho ${sNameVi} và chuẩn hóa bộ quy tắc thiết kế.`, `Con có thể truyền cảm hứng và hướng dẫn tư duy thiết kế giao diện ${sNameVi} cho cộng đồng.`] }
+    ];
+  } else if (sLower.includes('learn') || sLower.includes('học') || sLower.includes('phản tư') || sLower.includes('reflect') || sLower.includes('spaced') || sLower.includes('flashcard') || sLower.includes('pomodoro') || sLower.includes('metacognition')) {
+    guidingQVi = `Làm thế nào để con phát huy năng lực ${sNameVi}, liên tục phản tư và nâng cấp kỷ luật tự học trọn đời?`;
+    descVi = `Rèn luyện thói quen tự học có hệ thống, phản tư đa tầng 4F và quản trị hiệu suất cá nhân trong kỷ nguyên AI.`;
+    rubricLevels = [
+      { level: 1, indicators: [`Con có thể thực hiện hoạt động ${sNameVi} và ghi chép nhật ký phản tư 4F theo hướng dẫn.`, `Con có thể nhận diện điểm mình chưa hiểu trong ${sNameVi} và chủ động đặt câu hỏi trao đổi với Mentor.`] },
+      { level: 2, indicators: [`Con có thể duy trì thói quen thực hành ${sNameVi} đều đặn hàng tuần với tính kỷ luật tự thân high.`, `Con có thể tổng hợp kiến thức từ ${sNameVi} thành ghi chú có cấu trúc để tự kiểm tra định kỳ.`, `Con có thể rút ra bài học kinh nghiệm sau mỗi lần thực hiện ${sNameVi} để nâng cấp sản phẩm tiếp theo.`] },
+      { level: 3, indicators: [`Con có thể áp dụng các kỹ thuật tự học nâng cao vào ${sNameVi} để chinh phục tri thức mới siêu tốc.`, `Con có thể chia sẻ và giải thích lại bài học từ ${sNameVi} cho các bạn khác trong lớp.`] },
+      { level: 4, indicators: [`Con có thể xây dựng kho tri thức cá nhân có hệ thống cho ${sNameVi} trên công cụ số.`, `Con có thể tự đánh giá tiến bộ và điều chỉnh chiến lược thực hành ${sNameVi} dựa trên chỉ báo.`] },
+      { level: 5, indicators: [`Con có thể làm chủ năng lực siêu nhận thức trong ${sNameVi} và thiết kế kế hoạch phát triển bản thân lâu dài.`, `Con có thể truyền cảm hứng và đào tạo phương pháp thực hành ${sNameVi} cho cộng đồng.`] }
+    ];
+  } else {
+    rubricLevels = [
+      { level: 1, indicators: [`Con có thể hiểu nguyên lý cốt lõi của ${sNameVi} và thực hiện theo đúng các bước quy trình mẫu.`, `Con có thể nhận biết khó khăn ban đầu khi thực hiện ${sNameVi} và chủ động hỏi ý kiến Mentor.`] },
+      { level: 2, indicators: [`Con có thể tự chủ vận dụng ${sNameVi} vào việc hoàn thiện các sản phẩm số SP1-SP12 mà không cần nhắc nhở.`, `Con có thể tự kiểm tra chất lượng kết quả ${sNameVi} và chủ động sửa chữa các lỗi chưa đạt chuẩn.`, `Con có thể đúc kết bài học thực hành thực tế sau khi hoàn thành nhiệm vụ ${sNameVi}.`] },
+      { level: 3, indicators: [`Con có thể linh hoạt xử lý các tình huống phức tạp hoặc ngoại lệ phát sinh trong ${sNameVi}.`, `Con có thể chia sẻ và hướng dẫn lại quy trình thực hiện ${sNameVi} cho các bạn trong nhóm.`] },
+      { level: 4, indicators: [`Con có thể tối ưu hóa và sáng tạo phương pháp nâng cao chất lượng thực thi ${sNameVi}.`, `Con có thể tự tin thuyết trình giải trình năng lực ${sNameVi} trước Hội đồng chuyên môn.`] },
+      { level: 5, indicators: [`Con có thể làm chủ toàn diện năng lực ${sNameVi} và biên soạn tài liệu cẩm nang chuẩn mực.`, `Con có thể cố vấn và đào tạo thế hệ học sinh tiếp theo đạt trình độ thành thạo cao.`] }
+    ];
   }
 
-  if (dSlug === 'domain-digital-product-development') {
-    return {
-      name_vi: sName,
-      name_en: sNameEn,
-      guidingQuestion_vi: `Làm thế nào để con áp dụng bài bản kỹ thuật "${sName}" vào việc thiết kế và lập trình hoàn thiện sản phẩm số chạy mượt mà trên Internet?`,
-      guidingQuestion_en: `How well can I systematically apply "${sNameEn}" to architect, code, and ship polished digital products to the web?`,
-      desc_vi: `Làm chủ tư duy kỹ thuật và tiêu chuẩn chất lượng cao cấp trong hoạt động "${sName}", bảo đảm sản phẩm hoạt động ổn định và tối ưu trải nghiệm.`,
-      desc_en: `Master engineering rigor and craft standards in "${sNameEn}", ensuring live applications are performant, resilient, and responsive.`,
-      skillRole: 'supporting',
-      targetLevel: 1,
-      rubricLevels: [
-        {
-          level: 1,
-          indicators: [
-            `Con có thể hiểu và áp dụng đúng cú pháp cũng như quy trình chuẩn của kỹ thuật "${sName}" theo hướng dẫn mẫu.`,
-            'Con có thể nhận ra khi nào đoạn code/thiết kế bị lỗi và biết cách tra cứu tài liệu để sửa.'
-          ]
-        },
-        {
-          level: 2,
-          indicators: [
-            `Con có thể tự chủ triển khai kỹ thuật "${sName}" vào mã nguồn sản phẩm thực tế mà không cần hỗ trợ kỹ thuật.`,
-            'Con có thể tự kiểm thử tính tương thích trên nhiều kích thước màn hình và thiết bị khác nhau.',
-            'Con có thể tối ưu hóa cấu trúc code để mã nguồn sạch sẽ, dễ đọc và dễ bảo trì.'
-          ]
-        },
-        {
-          level: 3,
-          indicators: [
-            `Con có thể xử lý các trường hợp ngoại lệ (Edge Cases) phức tạp liên quan đến kỹ thuật "${sName}".`,
-            'Con có thể hỗ trợ giải đáp thắc mắc và sửa lỗi cho các thành viên khác trong nhóm.'
-          ]
-        },
-        {
-          level: 4,
-          indicators: [
-            `Con có thể tối ưu hóa hiệu năng tải trang và áp dụng các mẫu thiết kế (Design Patterns) tiên tiến trong "${sName}".`,
-            'Con có thể tự tin giải trình kiến trúc kỹ thuật sản phẩm trước Hội đồng chuyên môn.'
-          ]
-        },
-        {
-          level: 5,
-          indicators: [
-            `Con có thể làm chủ toàn diện các tiêu chuẩn phần mềm hiện đại và xây dựng thư viện module tái sử dụng cho "${sName}".`,
-            'Con có thể hướng dẫn và định hướng kỹ thuật cho thế hệ học sinh tiếp theo.'
-          ]
-        }
-      ],
-      evidence: `Mã nguồn sạch trên GitHub và tính năng chạy thực tế trên web thể hiện năng lực "${sName}" đạt chuẩn kiểm định.`
-    };
-  }
-
-  if (dSlug === 'domain-learning') {
-    return {
-      name_vi: sName,
-      name_en: sNameEn,
-      guidingQuestion_vi: `Làm thế nào để con phát huy năng lực tự học qua hoạt động "${sName}", liên tục mở rộng giới hạn hiểu biết và làm chủ tri thức mới?`,
-      guidingQuestion_en: `How well can I accelerate self-directed mastery through "${sNameEn}" and continuously upgrade intellectual capability?`,
-      desc_vi: 'Xây dựng thói quen học tập chủ động, kỷ luật tự thân và khả năng chuyển hóa thông tin thành năng lực giải quyết vấn đề thực tế.',
-      desc_en: 'Cultivate autonomous learning habits, personal discipline, and the ability to synthesize knowledge into real-world impact.',
-      skillRole: 'supporting',
-      targetLevel: 1,
-      rubricLevels: [
-        {
-          level: 1,
-          indicators: [
-            `Con có thể nhận biết được các bước cơ bản trong quá trình thực hiện "${sName}" và áp dụng theo hướng dẫn.`,
-            'Con có thể nhận ra khi nào mình chưa hiểu bài và chủ động tìm kiếm thêm tài liệu học tập.'
-          ]
-        },
-        {
-          level: 2,
-          indicators: [
-            `Con có thể tự giác thực hành "${sName}" hàng tuần như một thói quen tự nhiên mà không cần thúc giục.`,
-            'Con có thể đúc kết và ghi nhận lại các bài học kinh nghiệm sau mỗi lần hoàn thành nhiệm vụ.',
-            'Con có thể áp dụng kiến thức vừa học vào việc nâng cấp chất lượng sản phẩm số của bản thân.'
-          ]
-        },
-        {
-          level: 3,
-          indicators: [
-            `Con có thể kết hợp nhiều phương pháp học tập khác nhau để chinh phục nhanh các chủ đề phức tạp trong "${sName}".`,
-            'Con có thể chia sẻ và hướng dẫn lại các phương pháp học tập hiệu quả cho bạn bè.'
-          ]
-        },
-        {
-          level: 4,
-          indicators: [
-            `Con có thể xây dựng kho tri thức cá nhân có hệ thống và tối ưu hóa tốc độ tiếp thu kỹ năng mới vượt trội.`,
-            'Con có thể truyền cảm hứng và lan tỏa tinh thần hiếu tri cho tập thể lớp học.'
-          ]
-        },
-        {
-          level: 5,
-          indicators: [
-            `Con có thể làm chủ năng lực siêu nhận thức và tự thiết kế lộ trình học tập trọn đời cho bản thân.`,
-            'Con có thể đào tạo phương pháp tự học siêu tốc cho cộng đồng thanh thiếu niên.'
-          ]
-        }
-      ],
-      evidence: `Nhật ký học tập và sản phẩm số đúc kết tri thức thể hiện năng lực "${sName}" được lưu trữ trong Portfolio cá nhân.`
-    };
-  }
-
-  // Default rich fallback for any other domain
   return {
-    name_vi: sName,
+    name_vi: sNameVi,
     name_en: sNameEn,
-    guidingQuestion_vi: `Làm thế nào để con áp dụng có bài bản kỹ năng "${sName}" vào việc hoàn thiện sản phẩm số thực tế và nâng cao năng lực tự chủ?`,
-    guidingQuestion_en: `How well can I systematically apply "${sNameEn}" to develop authentic digital deliverables and master self-directed autonomy?`,
-    desc_vi: `Rèn luyện kỹ năng thực hành "${sName}" gắn liền với quá trình xây dựng 12 sản phẩm số và tự chủ công nghệ.`,
-    desc_en: `Cultivate practical "${sNameEn}" competencies connected with building the 12 micro digital products.`,
+    guidingQuestion_vi: guidingQVi,
+    guidingQuestion_en: guidingQEn,
+    desc_vi: descVi,
+    desc_en: descEn,
     skillRole: 'supporting',
     targetLevel: 1,
-    rubricLevels: [
-      {
-        level: 1,
-        indicators: [
-          `Con có thể nắm bắt các nguyên lý cơ bản của "${sName}" và thực hiện theo quy trình mẫu có hướng dẫn.`,
-          'Con có thể nhận diện các khó khăn ban đầu và biết cách đặt câu hỏi làm rõ với Mentor.'
-        ]
-      },
-      {
-        level: 2,
-        indicators: [
-          `Con có thể tự chủ áp dụng kỹ năng "${sName}" vào các yêu cầu trong Brief sản phẩm mà không cần nhắc nhở.`,
-          'Con có thể tự kiểm tra lại kết quả thực hiện và chủ động sửa các lỗi cơ bản.',
-          'Con có thể ghi nhận lại bài học kinh nghiệm sau khi hoàn thành nhiệm vụ.'
-        ]
-      },
-      {
-        level: 3,
-        indicators: [
-          `Con có thể vận dụng linh hoạt kỹ năng "${sName}" để xử lý các tình huống phức tạp hoặc bất ngờ.`,
-          'Con có thể chia sẻ và giải thích rõ ràng cách làm cho các bạn khác trong nhóm.'
-        ]
-      },
-      {
-        level: 4,
-        indicators: [
-          `Con có thể tối ưu hóa và sáng tạo phương pháp mới để nâng cao chất lượng thực thi kỹ năng "${sName}".`,
-          'Con có thể tự tin thuyết trình bảo vệ sản phẩm xuất sắc trước Hội đồng chuyên môn.'
-        ]
-      },
-      {
-        level: 5,
-        indicators: [
-          `Con có thể làm chủ toàn diện và xây dựng các tài liệu hướng dẫn chuẩn mực cho kỹ năng "${sName}".`,
-          'Con có thể hỗ trợ và đào tạo thế hệ học sinh tiếp theo đạt đến mức độ thành thạo.'
-        ]
-      }
-    ],
-    evidence: `Sản phẩm số thực tế thể hiện năng lực "${sName}" đạt chuẩn đầu ra và được Hội đồng đánh giá công nhận.`
+    rubricLevels,
+    evidence: `Sản phẩm số thực tế thể hiện năng lực ${sNameVi} đạt chuẩn kiểm định và được ghi nhận trong Portfolio.`
   };
 }
 
@@ -1676,6 +1554,8 @@ export function getEnrichedSkillData(skillName = '', compName = '', coreCode = '
   const n = (skillName || '').toLowerCase();
   const nVi = ((skillObj?.name_vi || '') + ' ' + (skillObj?.description_vi || '')).toLowerCase();
   const c = (compName || '').toLowerCase();
+
+  let resultData = null;
 
   // Search exact or pattern match in database
   for (const item of SKILL_PEDAGOGICAL_DATABASE) {
@@ -1686,33 +1566,52 @@ export function getEnrichedSkillData(skillName = '', compName = '', coreCode = '
 
     if (hasMatch) {
       const targetLevel = item.targetLevel || (item.skillRole === 'primary' ? 2 : 1);
-      return {
+      resultData = {
         ...item,
         name_vi: skillObj?.name_vi || item.name_vi,
         name_en: skillObj?.name || item.name_en,
         targetLevel,
-        targetCourse: lang === 'VI' ? `Mục tiêu: Level ${targetLevel}` : `Target: Level ${targetLevel}`,
-        rubricLevels: item.rubricLevels.map((lvl) => ({
-          ...lvl,
-          label: `Level ${lvl.level}`,
-          indicatorsCount: lvl.indicators.length
-        }))
+        targetCourse: lang === 'VI' ? `Mục tiêu: Level ${targetLevel}` : `Target: Level ${targetLevel}`
       };
+      break;
     }
   }
 
-  // Fallback to rich domain-specific contextualizer
-  const fallback = getDomainFallbackPedagogy(skillName, compName, domainSlug, lang, skillObj);
-  const targetLevel = fallback.targetLevel || 1;
+  if (!resultData) {
+    const fallback = getDomainFallbackPedagogy(skillName, compName, domainSlug, lang, skillObj);
+    const targetLevel = fallback.targetLevel || 1;
+    resultData = {
+      ...fallback,
+      targetLevel,
+      targetCourse: lang === 'VI' ? `Mục tiêu: Level ${targetLevel}` : `Target: Level ${targetLevel}`
+    };
+  }
+
+  // Normalize rubricLevels & annotate indicator priorities
+  const normalizedLevels = (resultData.rubricLevels || []).map((lvl) => ({
+    ...lvl,
+    label: `Level ${lvl.level}`,
+    indicators: (lvl.indicators || []).map((ind, iIdx) => {
+      const isString = typeof ind === 'string';
+      const text_vi = isString ? ind : (ind.text_vi || ind.text || ind.name || '');
+      const text_en = isString ? ind : (ind.text_en || ind.text || ind.name || '');
+      const priority = (typeof ind === 'object' && ind?.priority) ? ind.priority : (iIdx === 0 ? 'core' : 'standard');
+      const estHours = priority === 'core' ? 3.5 : 2.0;
+
+      return {
+        text_vi,
+        text_en,
+        text: lang === 'VI' ? text_vi : text_en,
+        priority, // 'core' | 'standard'
+        estHours
+      };
+    }),
+    indicatorsCount: (lvl.indicators || []).length
+  }));
+
   return {
-    ...fallback,
-    targetLevel,
-    targetCourse: lang === 'VI' ? `Mục tiêu: Level ${targetLevel}` : `Target: Level ${targetLevel}`,
-    rubricLevels: fallback.rubricLevels.map((lvl) => ({
-      ...lvl,
-      label: `Level ${lvl.level}`,
-      indicatorsCount: lvl.indicators.length
-    }))
+    ...resultData,
+    rubricLevels: normalizedLevels
   };
 }
 
